@@ -1,8 +1,11 @@
 # Specifications
 This is a **planning document**. Not final implementation
 
-## Multithreading
-Thread safety is not a requirement, however, access to graphical concepts must be allowed from any thread.
+* C or C++
+* access to graphical concepts must be allowed from any thread
+* user must be able to switch backend without recompiling source
+
+
 
 ## Concepts
 These are the graphical concepts the API must include
@@ -11,8 +14,11 @@ These are the graphical concepts the API must include
 * Mesh<sup>1</sup>
 * Shader Pipeline
 * Shader Program (vs, fs)
+* Vertex Layout
+* Image
+* ImageView
+* Sampler
 * Render Targets
-* Textures
 * Draw Lists<sup>2</sup>
 * Command Buffers<sup>2</sup>
 
