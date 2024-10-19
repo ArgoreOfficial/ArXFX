@@ -26,3 +26,12 @@ These are the graphical concepts the API must include
 <sup>2</sup> list of draw command for indirect drawing  
 <sup>3</sup> queued up commands that allow multithreaded command buffering  
 
+
+## Usage
+
+```c
+
+ghiContext ctx = gfxLoad();
+
+
+```
