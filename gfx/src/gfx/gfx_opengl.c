@@ -1,15 +1,16 @@
-
 #include "gfx.h"
-
-#include <stdio.h>
 #include "gfx_opengl.h"
 
-void gfxClear_implopengl( unsigned int _mask )
+#include <glad/glad.h>
+
+void gfxViewport_opengl( int _x, int _y, int _width, int _height )
 {
-	printf( "clear opengl\n" );
+	glViewport( _x, _y, _width, _height );
 }
 
-void gfxLoadOpenGL()
+void gfxClearColor_opengl( float _r, float _g, float _b, float _a )
 {
-	gfxClear = gfxClear_implopengl;
+	glClearColor( _r, _g, _b, _a );
+	glClear( GL_COLOR_BUFFER_BIT );
 }
+
