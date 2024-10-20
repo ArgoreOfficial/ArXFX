@@ -4,7 +4,6 @@
 #include <GLFW/glfw3.h>
 
 #include "gfx/gfx.h"
-#include "gfx/gfx_opengl.h"
 
 GLFWwindow* window;
 
@@ -44,10 +43,12 @@ int main()
 
 	glfwSwapInterval( 1 );
 
+	gfxViewport( 0, 0, 640, 480 );
+
 	while ( !glfwWindowShouldClose( window ) )
 	{
-		gfxViewport( 0, 0, 640, 480 );
-		gfxClearColor( 1.0f, 0.0f, 0.0f, 1.0f );
+		gfxSetClearColor( 1.0f, 0.0f, 0.0f, 1.0f );
+		gfxClearRenderTarget( GFX_CLEAR_MASK_COLOR );
 
 		glfwSwapBuffers( window );
 		glfwPollEvents();
