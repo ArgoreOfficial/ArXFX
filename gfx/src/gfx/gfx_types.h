@@ -1,26 +1,39 @@
 #pragma once
 
-typedef unsigned short PipelineID;
-typedef unsigned short RenderTargetID;
-typedef unsigned short ProgramID;
-typedef unsigned short GPUBufferID;
-typedef unsigned short TextureID;
-typedef unsigned short MeshID;
+#include <stdint.h>
 
-typedef unsigned short BufferBindingIndex;
+//#define GFX_ID( _name ) typedef struct _name { uint16_t v; } _name
+#define GFX_ID( _name ) typedef uint16_t _name
+#define GFX_FDEC( _name ) typedef struct _name _name
 
-typedef struct sMeshDesc sMeshDesc;
-typedef struct sMeshNode sMeshNode;
-typedef struct sMesh sMesh;
-typedef struct sTextureDesc sTextureDesc;
-typedef struct sTexture sTexture;
-typedef struct sPipelineDesc sPipelineDesc;
-typedef struct sPipeline sPipeline;
-typedef struct sProgramDesc sProgramDesc;
-typedef struct sProgram sProgram;
-typedef struct sRenderTargetDesc sRenderTargetDesc;
-typedef struct sRenderTarget sRenderTarget;
-typedef struct sGPUBufferDesc sGPUBufferDesc;
+typedef unsigned short bufferBindingIndex_t;
+typedef uint32_t GfxHandle;
+
+GFX_ID( GfxDrawListID );
+
+GFX_FDEC( sGfxTextureDesc );
+GFX_FDEC( sGfxTexture );
+GFX_ID( GfxTextureID );
+
+GFX_FDEC( sGfxPipelineDesc );
+GFX_FDEC( sGfxPipeline );
+GFX_ID( GfxPipelineID );
+
+GFX_FDEC( sGfxProgramDesc );
+GFX_FDEC( sGfxProgram );
+GFX_ID( GfxProgramID );
+
+struct fdec;
+
+GFX_FDEC( sGfxRenderTargetDesc );
+GFX_FDEC( sGfxRenderTarget );
+GFX_ID( GfxRenderTargetID );
+
+GFX_FDEC( sGfxGPUBufferDesc );
+GFX_FDEC( sGfxGPUBuffer );
+GFX_ID( GfxGPUBufferID );
+
+GFX_FDEC( sGfxVertexLayout );
 
 typedef enum GfxFillMode
 {

@@ -3,7 +3,8 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#include "gfx/gfx.h"
+#include <gfx/gfx.h>
+#include <gfx/impl/gfx_opengl.h>
 
 GLFWwindow* window;
 
@@ -20,6 +21,7 @@ int initWindow()
 	if ( !window )
 	{
 		glfwTerminate();
+		printf( "failed to create window\n" );
 		return 0;
 	}
 
@@ -38,12 +40,18 @@ int main()
 		return 1;
 
 	glfwMakeContextCurrent( window );
+	glfwSwapInterval( 1 );
 	
 	gfxLoadOpenGL( glfwGetProcAddress );
-
-	glfwSwapInterval( 1 );
-
 	gfxViewport( 0, 0, 640, 480 );
+
+	sGfxGPUBufferDesc vbDesc;
+	vbDesc.name = "vb";
+	vbDesc.size = 64;
+	vbDesc.type = GFX_BUFFER_TYPE_VERTEX;
+	vbDesc.usage = GFX_BUFFER_USAGE_DYNAMIC_DRAW;
+
+	GfxGPUBufferID vb = gfxCreateGPUBuffer( 0, &vbDesc );
 
 	while ( !glfwWindowShouldClose( window ) )
 	{
