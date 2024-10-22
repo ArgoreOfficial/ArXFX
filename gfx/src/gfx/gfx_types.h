@@ -23,8 +23,6 @@ GFX_FDEC( sGfxProgramDesc );
 GFX_FDEC( sGfxProgram );
 GFX_ID( GfxProgramID );
 
-struct fdec;
-
 GFX_FDEC( sGfxRenderTargetDesc );
 GFX_FDEC( sGfxRenderTarget );
 GFX_ID( GfxRenderTargetID );
