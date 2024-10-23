@@ -4,3 +4,4 @@
 #include "gfx_funcdefs.h"
 
 #include "framework/GPUBuffer.h"
+#include "framework/Program.h"

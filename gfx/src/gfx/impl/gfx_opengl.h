@@ -13,14 +13,14 @@ void gfxSetRenderTarget_opengl( GfxRenderTargetID _renderTargetID );
 void gfxSetClearColor_opengl( float _r, float _g, float _b, float _a );
 void gfxClearRenderTarget_opengl( GfxClearMask _mask );
 
-GfxProgramID gfxCreateProgram_opengl( GfxProgramID _programID, sGfxProgramDesc* _desc );
+GfxProgram* gfxCreateProgram_opengl( GfxProgramDesc* _desc );
 void gfxDestroyProgram_opengl( GfxProgramID _programID );
 
 GfxPipelineID gfxCreatePipeline_opengl( GfxPipelineID _pipelineID, sGfxPipelineDesc* _desc );
 void gfxDestroyPipeline_opengl( GfxPipelineID _pipelineID );
 void gfxBindPipeline_opengl( GfxPipelineID _pipelineID );
 
-GfxGPUBufferID gfxCreateGPUBuffer_opengl( GfxGPUBufferID _bufferID, sGfxGPUBufferDesc* _desc );
+GfxGPUBufferID gfxCreateGPUBuffer_opengl( GfxGPUBufferID _bufferID, GfxGPUBufferDesc* _desc );
 void gfxDestroyGPUBuffer_opengl( GfxGPUBufferID _bufferID );
 
 void gfxBindBuffer_opengl( GfxGPUBufferID _bufferID );

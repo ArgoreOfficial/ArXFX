@@ -45,7 +45,7 @@ int main()
 	gfxLoadOpenGL( glfwGetProcAddress );
 	gfxViewport( 0, 0, 640, 480 );
 
-	sGfxGPUBufferDesc vbDesc;
+	GfxGPUBufferDesc vbDesc;
 	vbDesc.name = "vb";
 	vbDesc.size = 64;
 	vbDesc.type = GFX_BUFFER_TYPE_VERTEX;

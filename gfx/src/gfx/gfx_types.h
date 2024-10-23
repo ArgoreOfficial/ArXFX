@@ -9,27 +9,20 @@
 typedef unsigned short bufferBindingIndex_t;
 typedef uint32_t GfxHandle;
 
-GFX_ID( GfxDrawListID );
-
 GFX_FDEC( sGfxTextureDesc );
 GFX_FDEC( sGfxTexture );
-GFX_ID( GfxTextureID );
 
 GFX_FDEC( sGfxPipelineDesc );
 GFX_FDEC( sGfxPipeline );
-GFX_ID( GfxPipelineID );
 
-GFX_FDEC( sGfxProgramDesc );
-GFX_FDEC( sGfxProgram );
-GFX_ID( GfxProgramID );
+GFX_FDEC( GfxProgramDesc );
+GFX_FDEC( GfxProgram );
 
 GFX_FDEC( sGfxRenderTargetDesc );
 GFX_FDEC( sGfxRenderTarget );
-GFX_ID( GfxRenderTargetID );
 
-GFX_FDEC( sGfxGPUBufferDesc );
+GFX_FDEC( GfxGPUBufferDesc );
 GFX_FDEC( sGfxGPUBuffer );
-GFX_ID( GfxGPUBufferID );
 
 GFX_FDEC( sGfxVertexLayout );
 

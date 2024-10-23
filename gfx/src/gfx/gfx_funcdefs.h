@@ -27,7 +27,7 @@ typedef void (*gfxClearRenderTarget_t)( GfxClearMask _mask );
 gfxClearRenderTarget_t fp_gfxClearRenderTarget;
 #define gfxClearRenderTarget fp_gfxClearRenderTarget
 
-typedef GfxProgramID (*gfxCreateProgram_t)( GfxProgramID _programID, sGfxProgramDesc* _desc );
+typedef GfxProgramID (*gfxCreateProgram_t)( GfxProgramID _programID, GfxProgramDesc* _desc );
 gfxCreateProgram_t fp_gfxCreateProgram;
 #define gfxCreateProgram fp_gfxCreateProgram
 
@@ -47,7 +47,7 @@ typedef void (*gfxBindPipeline_t)( GfxPipelineID _pipelineID );
 gfxBindPipeline_t fp_gfxBindPipeline;
 #define gfxBindPipeline fp_gfxBindPipeline
 
-typedef GfxGPUBufferID (*gfxCreateGPUBuffer_t)( GfxGPUBufferID _bufferID, sGfxGPUBufferDesc* _desc );
+typedef GfxGPUBufferID (*gfxCreateGPUBuffer_t)( GfxGPUBufferID _bufferID, GfxGPUBufferDesc* _desc );
 gfxCreateGPUBuffer_t fp_gfxCreateGPUBuffer;
 #define gfxCreateGPUBuffer fp_gfxCreateGPUBuffer
 

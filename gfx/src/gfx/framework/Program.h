@@ -1,51 +1,29 @@
 #pragma once
 
-#include <wv/Resource/Resource.h>
-#include <wv/Graphics/Uniform.h>
-#include <wv/Graphics/GPUBuffer.h>
 
-#include <vector>
-
-#include <wv/Graphics/Types.h>
+#include "../gfx_types.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-namespace wv
+typedef enum eGfxShaderProgramType
 {
+	WV_SHADER_TYPE_VERTEX,
+	WV_SHADER_TYPE_FRAGMENT
+} GfxShaderProgramType;
 
-///////////////////////////////////////////////////////////////////////////////////////
+typedef struct sGfxProgramDesc
+{
+	GfxShaderProgramType type;
+	const char* source;
+} GfxProgramDesc;
 
-	struct Memory;
-	struct sProgram;
+typedef struct sGfxProgram
+{
+	GfxHandle handle;
+	GfxShaderProgramType type;
 
-	enum eShaderProgramType
-	{
-		WV_SHADER_TYPE_VERTEX,
-		WV_SHADER_TYPE_FRAGMENT
-	};
+	// std::vector<GPUBufferID> shaderBuffers;
+	// std::vector<sUniform> textureUniforms;
 
-	struct sShaderProgramSource
-	{
-		Memory* data;
-	};
-
-	struct sProgramDesc
-	{
-		eShaderProgramType type;
-		sShaderProgramSource source;
-	};
-
-	struct sProgram
-	{
-		Handle handle;
-
-		eShaderProgramType type;
-		sShaderProgramSource source;
-
-		std::vector<GPUBufferID> shaderBuffers;
-		std::vector<sUniform> textureUniforms;
-
-		void* pPlatformData;
-	};
-	
-}
+	void* pPlatformData;
+} GfxProgram;

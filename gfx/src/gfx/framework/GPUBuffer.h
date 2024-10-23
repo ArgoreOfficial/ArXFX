@@ -24,7 +24,7 @@ typedef struct sGfxGPUBufferDesc
 	eGfxGPUBufferType type;
 	eGfxGPUBufferUsage usage;
 	int32_t size;
-} sGfxGPUBufferDesc;
+} GfxGPUBufferDesc;
 
 typedef struct sGfxGPUBuffer
 {
@@ -39,7 +39,7 @@ typedef struct sGfxGPUBuffer
 
 	GfxHandle blockIndex;
 	bufferBindingIndex_t bindingIndex;
-		
+	
 	int complete;
 
 	void* pPlatformData;
