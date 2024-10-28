@@ -8,7 +8,6 @@
 
 void parseFunc( FILE* _pOutFile, const char* _str )
 {
-	const char* nameSuffix = "gfx";
 	const char* typeSuffix = "_t";
 
 	char* end_str = 0;
@@ -21,9 +20,9 @@ void parseFunc( FILE* _pOutFile, const char* _str )
 	char l2[ 200 ];
 	char l3[ 200 ];
 
-	sprintf( l1, "typedef %s (*%s%s%s)(%s);", ret, nameSuffix, name, typeSuffix, args );
-	sprintf( l2, "%s%s%s fp_%s%s;", nameSuffix, name, typeSuffix, nameSuffix, name );
-	sprintf( l3, "#define %s%s fp_%s%s", nameSuffix, name, nameSuffix, name );
+	sprintf( l1, "typedef %s (*%s%s)(%s);", ret, name, typeSuffix, args );
+	sprintf( l2, "%s%s fp_%s;", name, typeSuffix, name );
+	sprintf( l3, "#define %s fp_%s", name, name );
 
 	if ( _pOutFile )
 		fprintf( _pOutFile, "%s\n%s\n%s\n\n", l1, l2, l3 );
@@ -69,7 +68,7 @@ int main( int argc, char* argv[] )
 	/*
 	if ( argc < 2 )
 	{
-		const char* testStr = "void Test(int _a, int _b);";
+		const char* testStr = "void gfxTest(int _a, int _b);";
 		parseFunc( 0, testStr );
 		
 		return 0;

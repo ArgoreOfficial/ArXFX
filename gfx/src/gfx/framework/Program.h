@@ -5,19 +5,19 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-typedef enum eGfxShaderProgramType
+typedef enum GfxShaderProgramType
 {
-	WV_SHADER_TYPE_VERTEX,
-	WV_SHADER_TYPE_FRAGMENT
+	GFX_SHADER_TYPE_VERTEX,
+	GFX_SHADER_TYPE_FRAGMENT
 } GfxShaderProgramType;
 
-typedef struct sGfxProgramDesc
+typedef struct GfxProgramDesc
 {
 	GfxShaderProgramType type;
 	const char* source;
 } GfxProgramDesc;
 
-typedef struct sGfxProgram
+typedef struct GfxProgramObject
 {
 	GfxHandle handle;
 	GfxShaderProgramType type;
@@ -26,4 +26,4 @@ typedef struct sGfxProgram
 	// std::vector<sUniform> textureUniforms;
 
 	void* pPlatformData;
-} GfxProgram;
+} GfxProgramObject;

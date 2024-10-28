@@ -7,15 +7,15 @@ typedef void (*gfxViewport_t)( int _x, int _y, int _width, int _height );
 gfxViewport_t fp_gfxViewport;
 #define gfxViewport fp_gfxViewport
 
-typedef GfxRenderTargetID (*gfxCreateRenderTarget_t)( GfxRenderTargetID _renderTargetID, sGfxRenderTargetDesc* _desc );
+typedef GfxRenderTarget (*gfxCreateRenderTarget_t)( GfxRenderTarget _renderTarget, GfxRenderTargetDesc* _desc );
 gfxCreateRenderTarget_t fp_gfxCreateRenderTarget;
 #define gfxCreateRenderTarget fp_gfxCreateRenderTarget
 
-typedef void (*gfxDestroyRenderTarget_t)( GfxRenderTargetID _renderTargetID );
+typedef void (*gfxDestroyRenderTarget_t)( GfxRenderTarget _renderTarget );
 gfxDestroyRenderTarget_t fp_gfxDestroyRenderTarget;
 #define gfxDestroyRenderTarget fp_gfxDestroyRenderTarget
 
-typedef void (*gfxSetRenderTarget_t)( GfxRenderTargetID _renderTargetID );
+typedef void (*gfxSetRenderTarget_t)( GfxRenderTarget _renderTarget );
 gfxSetRenderTarget_t fp_gfxSetRenderTarget;
 #define gfxSetRenderTarget fp_gfxSetRenderTarget
 
@@ -27,71 +27,71 @@ typedef void (*gfxClearRenderTarget_t)( GfxClearMask _mask );
 gfxClearRenderTarget_t fp_gfxClearRenderTarget;
 #define gfxClearRenderTarget fp_gfxClearRenderTarget
 
-typedef GfxProgramID (*gfxCreateProgram_t)( GfxProgramID _programID, GfxProgramDesc* _desc );
+typedef GfxProgram (*gfxCreateProgram_t)( GfxProgram _program, GfxProgramDesc* _desc );
 gfxCreateProgram_t fp_gfxCreateProgram;
 #define gfxCreateProgram fp_gfxCreateProgram
 
-typedef void (*gfxDestroyProgram_t)( GfxProgramID _programID );
+typedef void (*gfxDestroyProgram_t)( GfxProgram _program );
 gfxDestroyProgram_t fp_gfxDestroyProgram;
 #define gfxDestroyProgram fp_gfxDestroyProgram
 
-typedef GfxPipelineID (*gfxCreatePipeline_t)( GfxPipelineID _pipelineID, sGfxPipelineDesc* _desc );
+typedef GfxPipeline (*gfxCreatePipeline_t)( GfxPipeline _pipeline, GfxPipelineDesc* _desc );
 gfxCreatePipeline_t fp_gfxCreatePipeline;
 #define gfxCreatePipeline fp_gfxCreatePipeline
 
-typedef void (*gfxDestroyPipeline_t)( GfxPipelineID _pipelineID );
+typedef void (*gfxDestroyPipeline_t)( GfxPipeline _pipeline );
 gfxDestroyPipeline_t fp_gfxDestroyPipeline;
 #define gfxDestroyPipeline fp_gfxDestroyPipeline
 
-typedef void (*gfxBindPipeline_t)( GfxPipelineID _pipelineID );
+typedef void (*gfxBindPipeline_t)( GfxPipeline _pipeline );
 gfxBindPipeline_t fp_gfxBindPipeline;
 #define gfxBindPipeline fp_gfxBindPipeline
 
-typedef GfxGPUBufferID (*gfxCreateGPUBuffer_t)( GfxGPUBufferID _bufferID, GfxGPUBufferDesc* _desc );
+typedef GfxGPUBuffer (*gfxCreateGPUBuffer_t)( GfxGPUBuffer _buffer, GfxGPUBufferDesc* _desc );
 gfxCreateGPUBuffer_t fp_gfxCreateGPUBuffer;
 #define gfxCreateGPUBuffer fp_gfxCreateGPUBuffer
 
-typedef void (*gfxDestroyGPUBuffer_t)( GfxGPUBufferID _bufferID );
+typedef void (*gfxDestroyGPUBuffer_t)( GfxGPUBuffer _buffer );
 gfxDestroyGPUBuffer_t fp_gfxDestroyGPUBuffer;
 #define gfxDestroyGPUBuffer fp_gfxDestroyGPUBuffer
 
-typedef void (*gfxBindBuffer_t)( GfxGPUBufferID _bufferID );
+typedef void (*gfxBindBuffer_t)( GfxGPUBuffer _buffer );
 gfxBindBuffer_t fp_gfxBindBuffer;
 #define gfxBindBuffer fp_gfxBindBuffer
 
-typedef void (*gfxBindBufferIndex_t)( GfxGPUBufferID _bufferID, int32_t _bindingIndex );
+typedef void (*gfxBindBufferIndex_t)( GfxGPUBuffer _buffer, int32_t _bindingIndex );
 gfxBindBufferIndex_t fp_gfxBindBufferIndex;
 #define gfxBindBufferIndex fp_gfxBindBufferIndex
 
-typedef void (*gfxBufferData_t)( GfxGPUBufferID _bufferID, void* _pData, size_t _size );
+typedef void (*gfxBufferData_t)( GfxGPUBuffer _buffer, void* _pData, size_t _size );
 gfxBufferData_t fp_gfxBufferData;
 #define gfxBufferData fp_gfxBufferData
 
-typedef void (*gfxBufferSubData_t)( GfxGPUBufferID _bufferID, void* _pData, size_t _size, size_t _base );
+typedef void (*gfxBufferSubData_t)( GfxGPUBuffer _buffer, void* _pData, size_t _size, size_t _base );
 gfxBufferSubData_t fp_gfxBufferSubData;
 #define gfxBufferSubData fp_gfxBufferSubData
 
-typedef void (*gfxCopyBufferSubData_t)( GfxGPUBufferID _readBufferID, GfxGPUBufferID _writeBufferID, size_t _readOffset, size_t _writeOffset, size_t _size );
+typedef void (*gfxCopyBufferSubData_t)( GfxGPUBuffer _readBuffer, GfxGPUBuffer _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size );
 gfxCopyBufferSubData_t fp_gfxCopyBufferSubData;
 #define gfxCopyBufferSubData fp_gfxCopyBufferSubData
 
-typedef GfxTextureID (*gfxCreateTexture_t)( GfxTextureID _textureID, sGfxTextureDesc* _pDesc );
+typedef GfxTexture (*gfxCreateTexture_t)( GfxTexture _texture, GfxTextureDesc* _pDesc );
 gfxCreateTexture_t fp_gfxCreateTexture;
 #define gfxCreateTexture fp_gfxCreateTexture
 
-typedef void (*gfxBufferTextureData_t)( GfxTextureID _textureID, void* _pData, int _generateMipMaps );
+typedef void (*gfxBufferTextureData_t)( GfxTexture _texture, void* _pData, int _generateMipMaps );
 gfxBufferTextureData_t fp_gfxBufferTextureData;
 #define gfxBufferTextureData fp_gfxBufferTextureData
 
-typedef void (*gfxDestroyTexture_t)( GfxTextureID _textureID );
+typedef void (*gfxDestroyTexture_t)( GfxTexture _texture );
 gfxDestroyTexture_t fp_gfxDestroyTexture;
 #define gfxDestroyTexture fp_gfxDestroyTexture
 
-typedef void (*gfxBindTextureToSlot_t)( GfxTextureID _textureID, unsigned int _slot );
+typedef void (*gfxBindTextureToSlot_t)( GfxTexture _texture, unsigned int _slot );
 gfxBindTextureToSlot_t fp_gfxBindTextureToSlot;
 #define gfxBindTextureToSlot fp_gfxBindTextureToSlot
 
-typedef void (*gfxBindVertexBuffer_t)( GfxGPUBufferID _vertexPullBufferID );
+typedef void (*gfxBindVertexBuffer_t)( GfxGPUBuffer _vertexPullBuffer );
 gfxBindVertexBuffer_t fp_gfxBindVertexBuffer;
 #define gfxBindVertexBuffer fp_gfxBindVertexBuffer
 

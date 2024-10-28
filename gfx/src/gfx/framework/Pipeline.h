@@ -2,23 +2,17 @@
 
 #include "../gfx_types.h"
 
-typedef struct sGfxPipeline
+typedef struct GfxPipelineObject
 {
 	GfxHandle handle;
-	const char* name;
-	sGfxProgram* vertexProgramID;
-	sGfxProgram* fragmentProgramID;
+	GfxProgram vertexProgram;
+	GfxProgram fragmentProgram;
+} GfxPipelineObject;
 
-	void* pPlatformData;
-} sGfxPipeline;
-
-typedef struct sGfxPipelineDesc
+typedef struct GfxPipelineDesc
 {
-	const char* name;
-	sGfxVertexLayout* pVertexLayout;
-	sGfxProgram* vertexProgramID;
-	sGfxProgram* fragmentProgramID;
-
-	bool reflect;
-} sGfxPipelineDesc;
+	GfxVertexLayout* pVertexLayout;
+	GfxProgram vertexProgram;
+	GfxProgram fragmentProgram;
+} GfxPipelineDesc;
 

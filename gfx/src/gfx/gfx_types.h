@@ -2,29 +2,42 @@
 
 #include <stdint.h>
 
-//#define GFX_ID( _name ) typedef struct _name { uint16_t v; } _name
-#define GFX_ID( _name ) typedef uint16_t _name
+#if !defined( GFX_STACK_ALLOCATED_OBJECTS ) and !defined( GFX_HEAP_ALLOCATED_OBJECTS )
+#define GFX_STACK_ALLOCATED_OBJECTS
+#endif
+
+#if defined( GFX_STACK_ALLOCATED_OBJECTS )
+#define GFX_HANDLE( _name ) typedef uint16_t _name
+#elif defined( GFX_HEAP_ALLOCATED_OBJECTS )
+#define GFX_HANDLE( _name ) typedef void* _name
+#endif
+
 #define GFX_FDEC( _name ) typedef struct _name _name
 
 typedef unsigned short bufferBindingIndex_t;
 typedef uint32_t GfxHandle;
 
-GFX_FDEC( sGfxTextureDesc );
-GFX_FDEC( sGfxTexture );
+GFX_FDEC( GfxTextureDesc );
+GFX_FDEC( GfxTextureObject );
+GFX_HANDLE( GfxTexture );
 
-GFX_FDEC( sGfxPipelineDesc );
-GFX_FDEC( sGfxPipeline );
+GFX_FDEC( GfxPipelineDesc );
+GFX_FDEC( GfxPipelineObject );
+GFX_HANDLE( GfxPipeline );
 
 GFX_FDEC( GfxProgramDesc );
-GFX_FDEC( GfxProgram );
+GFX_FDEC( GfxProgramObject );
+GFX_HANDLE( GfxProgram );
 
-GFX_FDEC( sGfxRenderTargetDesc );
-GFX_FDEC( sGfxRenderTarget );
+GFX_FDEC( GfxRenderTargetDesc );
+GFX_FDEC( GfxRenderTargetObject );
+GFX_HANDLE( GfxRenderTarget );
 
 GFX_FDEC( GfxGPUBufferDesc );
-GFX_FDEC( sGfxGPUBuffer );
+GFX_FDEC( GfxGPUBufferObject );
+GFX_HANDLE( GfxGPUBuffer );
 
-GFX_FDEC( sGfxVertexLayout );
+GFX_FDEC( GfxVertexLayout );
 
 typedef enum GfxFillMode
 {

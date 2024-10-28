@@ -8,7 +8,39 @@
 #include <memory.h>
 #include <stdio.h>
 
-static GLenum getGlBufferEnum( eGfxGPUBufferType _type )
+#ifdef GFX_STACK_ALLOCATED_OBJECTS
+#define OBJECT_ALLOC_FUNC( _handle, _buffer, _max ) \
+static _handle allocate##_handle()                  \
+{                                                   \
+	for( size_t i = 0; i < _max; i++ )              \
+		if( _buffer[ i ].handle == 0 )              \
+			return i + 1;                           \
+	return 0;                                       \
+}
+
+#define GFX_MAX_PROGRAMS 128
+#define GFX_MAX_GPU_BUFFERS 128
+#define GFX_MAX_PIPELINES 128
+
+static GfxProgramObject s_programObjects[ GFX_MAX_PROGRAMS ];
+static GfxGPUBufferObject s_bufferObjects[ GFX_MAX_GPU_BUFFERS ];
+static GfxPipelineObject s_pipelineObjects[ GFX_MAX_PIPELINES ];
+
+#define GFX_GET_PROGRAM( _program ) &s_programObjects[ _program - 1 ]
+#define GFX_GET_PIPELINE( _pipeline ) &s_pipelineObjects[ _pipeline - 1 ]
+
+OBJECT_ALLOC_FUNC( GfxProgram, s_bufferObjects, GFX_MAX_PROGRAMS )
+OBJECT_ALLOC_FUNC( GfxGPUBuffer, s_bufferObjects, GFX_MAX_GPU_BUFFERS )
+OBJECT_ALLOC_FUNC( GfxPipeline, s_pipelineObjects, GFX_MAX_PIPELINES )
+
+#endif // GFX_STACK_ALLOCATED_OBJECTS
+
+void glMessageCallback( GLenum _source, GLenum _type, GLuint _id, GLenum _severity, GLsizei _length, GLchar const* _message, void const* _userData )
+{
+	printf( "%s\n", _message );
+}
+
+static GLenum getGlBufferEnum( GfxGPUBufferType _type )
 {
 	switch( _type )
 	{
@@ -21,7 +53,7 @@ static GLenum getGlBufferEnum( eGfxGPUBufferType _type )
 	return GL_NONE;
 }
 
-static GLenum getGlBufferUsage( eGfxGPUBufferUsage _usage )
+static GLenum getGlBufferUsage( GfxGPUBufferUsage _usage )
 {
 	switch( _usage )
 	{
@@ -51,20 +83,30 @@ void gfxClearRenderTarget_opengl( GfxClearMask _mask )
 	glClear( mask );
 }
 
-GfxProgram* gfxCreateProgram_opengl( GfxProgramDesc* _desc )
+GfxProgram gfxCreateProgram_opengl( GfxProgram _program, GfxProgramDesc* _desc )
 {
 	GfxShaderProgramType type = _desc->type;
 	const char* sourceStr = _desc->source;
 
-	GfxProgram* program = malloc( sizeof( GfxProgram ) );
+#ifdef GFX_STACK_ALLOCATED_OBJECTS
+	if( _program == 0 )
+	{
+		_program = allocateGfxProgram();
+
+		if( _program == 0 ) // error
+			return 0;
+	}
+#endif
+
+	GfxProgramObject* program = GFX_GET_PROGRAM( _program );
 	program->type = type;
 	
 	GLenum glType = GL_NONE;
 	{
 		switch( type )
 		{
-		case WV_SHADER_TYPE_FRAGMENT: glType = GL_FRAGMENT_SHADER; break;
-		case WV_SHADER_TYPE_VERTEX:   glType = GL_VERTEX_SHADER;   break;
+		case GFX_SHADER_TYPE_FRAGMENT: glType = GL_FRAGMENT_SHADER; break;
+		case GFX_SHADER_TYPE_VERTEX:   glType = GL_VERTEX_SHADER;   break;
 		}
 	}
 
@@ -78,103 +120,71 @@ GfxProgram* gfxCreateProgram_opengl( GfxProgramDesc* _desc )
 		glGetProgramInfoLog( program->handle, 512, NULL, infoLog );
 		printf( "Failed to link program\n %s \n", infoLog );
 	}
-
-	GLint numActiveResources;
-	glGetProgramInterfaceiv( program.handle, GL_UNIFORM_BLOCK, GL_ACTIVE_RESOURCES, &numActiveResources );
-
-	for( GLuint i = 0; i < numActiveResources; i++ )
-	{
-		GLenum props[ 1 ] = { GL_NAME_LENGTH };
-		GLint res[ 1 ];
-		glGetProgramResourceiv( program.handle, GL_UNIFORM_BLOCK, i, std::size( props ), props, std::size( res ), nullptr, res );
-
-		std::string name( (GLuint)res[ 0 ] - 1, '\0' );
-		glGetProgramResourceName( program.handle, GL_UNIFORM_BLOCK, i, name.capacity() + 1, nullptr, name.data() );
-
-		// create uniform buffer
-
-		GfxGPUBufferDesc ubDesc;
-		ubDesc.name = name;
-		ubDesc.type = GFX_BUFFER_TYPE_UNIFORM;
-		ubDesc.usage = GFX_BUFFER_USAGE_DYNAMIC_DRAW;
-
-		bufferBindingIndex_t index;
-		if( m_uniformBindingNameMap.contains( name ) )
-		{
-			index = m_uniformBindingNameMap.at( name );
-			m_uniformBindingIndices.get( index )++; // increase num users
-		}
-		else
-		{
-			index = m_uniformBindingIndices.allocate();
-			m_uniformBindingNameMap[ name ] = index;
-		}
-
-		wv::Handle blockIndex = glGetUniformBlockIndex( program.handle, name.c_str() );
-		glGetActiveUniformBlockiv( program.handle, blockIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &ubDesc.size );
-
-		GPUBufferID bufID = createGPUBuffer( 0, &ubDesc );
-		sGPUBuffer& buf = m_gpuBuffers.get( bufID );
-
-		buf.bindingIndex = index;
-		buf.blockIndex = blockIndex;
-
-		//WV_ASSERT_GL( glBindBufferBase( GL_UNIFORM_BUFFER, buf.bindingIndex.value, buf.handle ) );
-		glUniformBlockBinding( program.handle, buf.blockIndex, buf.bindingIndex.value );
-
-		program.shaderBuffers.push_back( bufID );
-	}
-
-
-	GLint numActiveSSBOs;
-	glGetProgramInterfaceiv( program.handle, GL_SHADER_STORAGE_BLOCK, GL_ACTIVE_RESOURCES, &numActiveSSBOs );
-	for( GLuint i = 0; i < numActiveSSBOs; i++ )
-	{
-		GLenum props[ 1 ] = { GL_NAME_LENGTH };
-		GLint res[ 1 ];
-		glGetProgramResourceiv( program.handle, GL_SHADER_STORAGE_BLOCK, i, std::size( props ), props, std::size( res ), nullptr, res );
-
-		std::string name( (GLuint)res[ 0 ] - 1, '\0' );
-		glGetProgramResourceName( program.handle, GL_SHADER_STORAGE_BLOCK, i, name.capacity() + 1, nullptr, name.data() );
-
-		// create ssbo
-
-		sGPUBufferDesc ubDesc;
-		ubDesc.name = name;
-		ubDesc.type = WV_BUFFER_TYPE_DYNAMIC;
-		ubDesc.usage = WV_BUFFER_USAGE_DYNAMIC_DRAW;
-		ubDesc.size = 0;
-
-		GPUBufferID bufID = createGPUBuffer( 0, &ubDesc );
-		sGPUBuffer& buf = m_gpuBuffers.get( bufID );
-
-		buf.bindingIndex = m_ssboBindingIndices.allocate();
-		buf.blockIndex = glGetProgramResourceIndex( program.handle, GL_SHADER_STORAGE_BLOCK, name.data() );
-
-		glBindBufferBase( GL_SHADER_STORAGE_BUFFER, buf.bindingIndex.value, buf.handle );
-		glShaderStorageBlockBinding( program.handle, buf.blockIndex, buf.bindingIndex.value );
-
-		program.shaderBuffers.push_back( bufID );
-	}
-
-	return _programID;
+	
+	return _program;
 }
 
-GfxGPUBufferID gfxCreateGPUBuffer_opengl( GfxGPUBufferID _bufferID, GfxGPUBufferDesc* _desc )
+GfxPipeline gfxCreatePipeline_opengl( GfxPipeline _pipeline, GfxPipelineDesc* _desc )
 {
-	if( _bufferID == 0 )
-		_bufferID = 1; // get new id
+	if( _pipeline == 0 )
+	{
+		_pipeline = allocateGfxPipeline();
+		if( _pipeline == 0 ) // error
+			return 0;
+	}
+	GfxPipelineObject* pPipeline = GFX_GET_PIPELINE( _pipeline );
 
-	sGfxGPUBuffer* buffer = malloc( sizeof( sGfxGPUBuffer ) );// = m_gpuBuffers.get( _bufferID );
-	memset( buffer, 0, sizeof( sGfxGPUBuffer ) );
+	pPipeline->vertexProgram = _desc->vertexProgram;
+	pPipeline->fragmentProgram = _desc->fragmentProgram;
 
-	if( buffer == NULL )
+	glCreateProgramPipelines( 1, &pPipeline->handle );
+
+	if( pPipeline->handle == 0 )
 		return 0;
+	
+	GfxProgramObject* vs = GFX_GET_PROGRAM( _desc->vertexProgram );
+	GfxProgramObject* fs = GFX_GET_PROGRAM( _desc->fragmentProgram );
 
-	buffer->type  = _desc->type;
+	glUseProgramStages( pPipeline->handle, GL_VERTEX_SHADER_BIT, vs->handle );
+	glUseProgramStages( pPipeline->handle, GL_FRAGMENT_SHADER_BIT, fs->handle );
+
+	return _pipeline;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+void gfxBindPipeline_opengl( GfxPipeline _pipeline )
+{
+	GfxPipelineObject* pPipeline = GFX_GET_PIPELINE( _pipeline );
+	glBindProgramPipeline( pPipeline->handle );
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+GfxGPUBuffer gfxCreateGPUBuffer_opengl( GfxGPUBuffer _buffer, GfxGPUBufferDesc* _desc )
+{
+	GfxGPUBufferObject* buffer = NULL;
+
+#if defined( GFX_STACK_ALLOCATED_OBJECTS )
+	if( _buffer == 0 )
+	{
+		_buffer = allocateGfxGPUBuffer();
+		if( _buffer == 0 ) // error
+			return 0;
+	}
+
+	buffer = &s_bufferObjects[ _buffer - 1 ];
+#elif defined( GFX_STACK_ALLOCATED_OBJECTS )
+	if( _buffer == 0 )
+	{
+		buffer = malloc( sizeof( GfxGPUBufferObject ) );
+		_buffer = &buffer;
+	}
+#endif
+
+	buffer->type = _desc->type;
 	buffer->usage = _desc->usage;
-	buffer->name  = _desc->name;
-
+	
 	GLenum target = getGlBufferEnum( buffer->type );
 
 	glCreateBuffers( 1, &buffer->handle );
@@ -184,18 +194,27 @@ GfxGPUBufferID gfxCreateGPUBuffer_opengl( GfxGPUBufferID _bufferID, GfxGPUBuffer
 
 	glNamedBufferData( buffer->handle, _desc->size, 0, usage );
 
-	buffer->complete = 1;
-
-	return _bufferID;
+	return _buffer;
 }
 
 void gfxLoadOpenGL( GLloadproc _loadProc )
 {
 	gladLoadGLLoader( _loadProc );
 
-	gfxViewport = gfxViewport_opengl;
+	glEnable( GL_DEBUG_OUTPUT );
+	glEnable( GL_DEBUG_OUTPUT_SYNCHRONOUS );
+	glDebugMessageCallback( glMessageCallback, NULL );
+	glDebugMessageControl( GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE );
+
+	gfxViewport      = gfxViewport_opengl;
 	gfxSetClearColor = gfxSetClearColor_opengl;
+	
 	gfxClearRenderTarget = gfxClearRenderTarget_opengl;
+
+	gfxCreateProgram = gfxCreateProgram_opengl;
+	
+	gfxCreatePipeline = gfxCreatePipeline_opengl;
+	gfxBindPipeline   = gfxBindPipeline_opengl;
+
 	gfxCreateGPUBuffer = gfxCreateGPUBuffer_opengl;
 }
-

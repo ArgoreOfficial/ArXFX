@@ -2,36 +2,35 @@
 
 #include "../gfx_types.h"
 
-typedef enum eGfxGPUBufferType
+typedef enum GfxGPUBufferType
 {
 	GFX_BUFFER_TYPE_NONE = 0,
 	GFX_BUFFER_TYPE_INDEX,
 	GFX_BUFFER_TYPE_VERTEX,
 	GFX_BUFFER_TYPE_UNIFORM,
 	GFX_BUFFER_TYPE_DYNAMIC
-} eGfxGPUBufferType;
+} GfxGPUBufferType;
 
-typedef enum eGfxGPUBufferUsage
+typedef enum GfxGPUBufferUsage
 {
 	GFX_BUFFER_USAGE_NONE = 0,
 	GFX_BUFFER_USAGE_STATIC_DRAW,
 	GFX_BUFFER_USAGE_DYNAMIC_DRAW
-} eGfxGPUBufferUsage;
+} GfxGPUBufferUsage;
 
-typedef struct sGfxGPUBufferDesc
+typedef struct GfxGPUBufferDesc
 {
-	const char* name;
-	eGfxGPUBufferType type;
-	eGfxGPUBufferUsage usage;
+	GfxGPUBufferType type;
+	GfxGPUBufferUsage usage;
 	int32_t size;
-} GfxGPUBufferDesc;
+};
 
-typedef struct sGfxGPUBuffer
+typedef struct GfxGPUBufferObject
 {
-	const char* name;
 	GfxHandle handle;
-	eGfxGPUBufferType type;
-	eGfxGPUBufferUsage usage;
+
+	GfxGPUBufferType type;
+	GfxGPUBufferUsage usage;
 
 	uint32_t count;
 	uint32_t stride;
@@ -39,8 +38,6 @@ typedef struct sGfxGPUBuffer
 
 	GfxHandle blockIndex;
 	bufferBindingIndex_t bindingIndex;
-	
-	int complete;
 
 	void* pPlatformData;
-} sGfxGPUBuffer;
+};

@@ -4,43 +4,43 @@
 #include "gfx_types.h"
 
 //
-void Viewport( int _x, int _y, int _width, int _height );
+void gfxViewport( int _x, int _y, int _width, int _height );
 
-GfxRenderTargetID CreateRenderTarget( GfxRenderTargetID _renderTargetID, sGfxRenderTargetDesc* _desc );
-void DestroyRenderTarget( GfxRenderTargetID _renderTargetID );
-void SetRenderTarget( GfxRenderTargetID _renderTargetID );
+GfxRenderTarget gfxCreateRenderTarget( GfxRenderTarget _renderTarget, GfxRenderTargetDesc* _desc );
+void gfxDestroyRenderTarget( GfxRenderTarget _renderTarget );
+void gfxSetRenderTarget( GfxRenderTarget _renderTarget );
 
-void SetClearColor( float _r, float _g, float _b, float _a );
-void ClearRenderTarget( GfxClearMask _mask );
+void gfxSetClearColor( float _r, float _g, float _b, float _a );
+void gfxClearRenderTarget( GfxClearMask _mask );
 
-GfxProgramID CreateProgram( GfxProgramID _programID, sGfxProgramDesc* _desc );
-void DestroyProgram( GfxProgramID _programID );
+GfxProgram gfxCreateProgram( GfxProgram _program, GfxProgramDesc* _desc );
+void gfxDestroyProgram( GfxProgram _program );
 
-GfxPipelineID CreatePipeline( GfxPipelineID _pipelineID, sGfxPipelineDesc* _desc );
-void DestroyPipeline( GfxPipelineID _pipelineID );
-void BindPipeline( GfxPipelineID _pipelineID );
+GfxPipeline gfxCreatePipeline( GfxPipeline _pipeline, GfxPipelineDesc* _desc );
+void gfxDestroyPipeline( GfxPipeline _pipeline );
+void gfxBindPipeline( GfxPipeline _pipeline );
 
-GfxGPUBufferID CreateGPUBuffer( GfxGPUBufferID _bufferID, sGfxGPUBufferDesc* _desc );
-void DestroyGPUBuffer( GfxGPUBufferID _bufferID );
+GfxGPUBuffer gfxCreateGPUBuffer( GfxGPUBuffer _buffer, GfxGPUBufferDesc* _desc );
+void gfxDestroyGPUBuffer( GfxGPUBuffer _buffer );
 		
-void BindBuffer( GfxGPUBufferID _bufferID );
-void BindBufferIndex( GfxGPUBufferID _bufferID, int32_t _bindingIndex );
+void gfxBindBuffer( GfxGPUBuffer _buffer );
+void gfxBindBufferIndex( GfxGPUBuffer _buffer, int32_t _bindingIndex );
 
-void BufferData( GfxGPUBufferID _bufferID, void* _pData, size_t _size );
-void BufferSubData( GfxGPUBufferID _bufferID, void* _pData, size_t _size, size_t _base );
+void gfxBufferData( GfxGPUBuffer _buffer, void* _pData, size_t _size );
+void gfxBufferSubData( GfxGPUBuffer _buffer, void* _pData, size_t _size, size_t _base );
 
-void CopyBufferSubData( GfxGPUBufferID _readBufferID, GfxGPUBufferID _writeBufferID, size_t _readOffset, size_t _writeOffset, size_t _size );
+void gfxCopyBufferSubData( GfxGPUBuffer _readBuffer, GfxGPUBuffer _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size );
 
-GfxTextureID CreateTexture( GfxTextureID _textureID, sGfxTextureDesc* _pDesc );
-void BufferTextureData( GfxTextureID _textureID, void* _pData, int _generateMipMaps );
-void DestroyTexture( GfxTextureID _textureID );
-void BindTextureToSlot( GfxTextureID _textureID, unsigned int _slot );
+GfxTexture gfxCreateTexture( GfxTexture _texture, GfxTextureDesc* _pDesc );
+void gfxBufferTextureData( GfxTexture _texture, void* _pData, int _generateMipMaps );
+void gfxDestroyTexture( GfxTexture _texture );
+void gfxBindTextureToSlot( GfxTexture _texture, unsigned int _slot );
 
-void BindVertexBuffer( GfxGPUBufferID _vertexPullBufferID );
+void gfxBindVertexBuffer( GfxGPUBuffer _vertexPullBuffer );
 
-void SetFillMode( GfxFillMode _mode );
+void gfxSetFillMode( GfxFillMode _mode );
 
-void Draw( uint32_t _firstVertex, uint32_t _numVertices );
-void DrawIndexed( uint32_t _numIndices );
-void DrawIndexedInstanced( uint32_t _numIndices, uint32_t _numInstances, uint32_t _baseVertex );
-void DrawMultiIndirect( GfxDrawListID _drawListID );
+void gfxDraw( uint32_t _firstVertex, uint32_t _numVertices );
+void gfxDrawIndexed( uint32_t _numIndices );
+void gfxDrawIndexedInstanced( uint32_t _numIndices, uint32_t _numInstances, uint32_t _baseVertex );
+void gfxDrawMultiIndirect( GfxDrawList _drawList );
