@@ -7,10 +7,13 @@
 #include <gfx/impl/gfx_opengl.h>
 #include <glad/glad.h>
 
-GLFWwindow* window;
+#include <malloc.h>
+#include <memory.h>
 
-GfxPipeline pipeline;
-GfxGPUBuffer vb;
+static GLFWwindow* window;
+static GfxPipeline pipeline;
+static GfxGPUBuffer vb;
+static unsigned int emptyVAO;
 
 int initWindow()
 {
@@ -37,31 +40,53 @@ void deinitWindow()
 	glfwTerminate();
 }
 
+size_t getFileSize( FILE* _pFile )
+{
+	fseek( _pFile, 0, SEEK_END );
+	size_t fileSize = ftell( _pFile );
+	rewind( _pFile );
+	return fileSize;
+}
+
 void createShaders()
 {
+	FILE* vsFile = fopen( "vs.glsl", "r" );
+	FILE* fsFile = fopen( "fs.glsl", "r" );
+
+	size_t vsSize = getFileSize( vsFile ) + 1;
+	char* vsBuffer = malloc( vsSize );
+	if( vsBuffer ) 
+	{ 
+		memset( vsBuffer, 0, vsSize );
+		fread( vsBuffer, 1, vsSize, vsFile );
+		vsBuffer[ vsSize - 1 ] = 0;
+	}
+
+	size_t fsSize = getFileSize( fsFile ) + 1;
+	char* fsBuffer = malloc( fsSize );
+	if( fsBuffer )
+	{
+		memset( fsBuffer, 0, fsSize );
+		fread( fsBuffer, 1, fsSize, fsFile );
+		fsBuffer[ fsSize - 1 ] = 0;
+	}
+	
+	fclose( vsFile );
+	fclose( fsFile );
+
 	GfxProgramDesc vsDesc;
 	vsDesc.type = GFX_SHADER_TYPE_VERTEX;
-	vsDesc.source =
-		"#version 330\n"
-		"layout (location = 0) in vec3 aPos;\n"
-		"void main()"
-		"{"
-			"gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);"
-		"}";
+	vsDesc.source = vsBuffer;
 	
 	GfxProgramDesc fsDesc;
 	fsDesc.type = GFX_SHADER_TYPE_FRAGMENT;
-	fsDesc.source =
-		"#version 330 core\n"
-		"out vec4 FragColor;\n"
-		"void main()"
-		"{"
-			"FragColor = vec4( 1.0f, 0.5f, 0.2f, 1.0f );"
-		"}";
+	fsDesc.source = fsBuffer;
 
-	
 	GfxProgram vs = gfxCreateProgram( 0, &vsDesc );
 	GfxProgram fs = gfxCreateProgram( 0, &fsDesc );
+
+	if( vsBuffer ) free( vsBuffer );
+	if( fsBuffer ) free( fsBuffer );
 
 	GfxPipelineDesc pipelineDesc;
 	pipelineDesc.fragmentProgram = fs;
@@ -70,22 +95,34 @@ void createShaders()
 	pipeline = gfxCreatePipeline( 0, &pipelineDesc );
 }
 
+typedef struct Vertex
+{
+	float position[ 3 ];
+} Vertex;
+
 void createVertexData()
 {
-	float vertices[] = {
-	-0.5f, -0.5f, 0.0f,
-	 0.5f, -0.5f, 0.0f,
-	 0.0f,  0.5f, 0.0f
+	Vertex vertices[ 3 ] = {
+		{ -0.5f, -0.5f, 0.0f },
+		{  0.5f, -0.5f, 0.0f },
+		{  0.0f,  0.5f, 0.0f }
 	};
 
 	GfxGPUBufferDesc vbDesc;
 	vbDesc.size  = sizeof( vertices );
-	vbDesc.type  = GFX_BUFFER_TYPE_VERTEX;
-	vbDesc.usage = GFX_BUFFER_USAGE_STATIC_DRAW;
+	vbDesc.type  = GFX_BUFFER_TYPE_DYNAMIC;
+	vbDesc.usage = GFX_BUFFER_USAGE_DYNAMIC_DRAW;
 
-	vb = gfxCreateGPUBuffer( 0, &vbDesc );
+
+	glGenVertexArrays( 1, &emptyVAO );
+	glCreateBuffers( 1, &vb );
+	glNamedBufferStorage( vb, sizeof( Vertex ) * 3, vertices, GL_DYNAMIC_STORAGE_BIT );
+	//vb = gfxCreateGPUBuffer( 0, &vbDesc );
 	// gfxBufferSubData( vb, vertices, sizeof( vertices ) );
-	glNamedBufferSubData( vb, 0, sizeof( vertices ), vertices );
+	// glNamedBufferSubData( vb, 0, sizeof( vertices ), vertices );
+
+
+	glBindVertexArray( emptyVAO );
 }
 
 int main()
@@ -103,11 +140,7 @@ int main()
 	createVertexData();
 
 	gfxBindPipeline( pipeline );
-	glBindBuffer( GL_ARRAY_BUFFER, vb );
-
-	glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof( float ), (void*)0 );
-	glEnableVertexAttribArray( 0 );
-
+	glBindBufferBase( GL_SHADER_STORAGE_BUFFER, 0, vb );
 
 	while ( !glfwWindowShouldClose( window ) )
 	{

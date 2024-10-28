@@ -29,7 +29,7 @@ static GfxPipelineObject s_pipelineObjects[ GFX_MAX_PIPELINES ];
 #define GFX_GET_PROGRAM( _program ) &s_programObjects[ _program - 1 ]
 #define GFX_GET_PIPELINE( _pipeline ) &s_pipelineObjects[ _pipeline - 1 ]
 
-OBJECT_ALLOC_FUNC( GfxProgram, s_bufferObjects, GFX_MAX_PROGRAMS )
+OBJECT_ALLOC_FUNC( GfxProgram, s_programObjects, GFX_MAX_PROGRAMS )
 OBJECT_ALLOC_FUNC( GfxGPUBuffer, s_bufferObjects, GFX_MAX_GPU_BUFFERS )
 OBJECT_ALLOC_FUNC( GfxPipeline, s_pipelineObjects, GFX_MAX_PIPELINES )
 
@@ -204,7 +204,7 @@ void gfxLoadOpenGL( GLloadproc _loadProc )
 	glEnable( GL_DEBUG_OUTPUT );
 	glEnable( GL_DEBUG_OUTPUT_SYNCHRONOUS );
 	glDebugMessageCallback( glMessageCallback, NULL );
-	glDebugMessageControl( GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE );
+	//glDebugMessageControl( GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE );
 
 	gfxViewport      = gfxViewport_opengl;
 	gfxSetClearColor = gfxSetClearColor_opengl;
