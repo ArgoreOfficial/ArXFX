@@ -8,13 +8,14 @@ typedef struct ArgGfxPipelineObject
 	ArgHandle handle;
 	ArgGfxProgram vertexProgram;
 	ArgGfxProgram fragmentProgram;
+	ArgGfxVertexLayout* pVertexLayout;
 } ArgGfxPipelineObject;
 
 typedef struct ArgGfxPipelineDesc
 {
-	ArgGfxVertexLayout* pVertexLayout;
 	ArgGfxProgram vertexProgram;
 	ArgGfxProgram fragmentProgram;
+	ArgGfxVertexLayout* pVertexLayout;
 } ArgGfxPipelineDesc;
 
 #endif

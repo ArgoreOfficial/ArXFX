@@ -38,6 +38,7 @@ ARG_GFX_FDEC( ArgGfxBufferDesc );
 ARG_GFX_FDEC( ArgGfxBufferObject );
 ARG_GFX_HANDLE( ArgGfxBuffer );
 
+ARG_GFX_FDEC( ArgGfxVertexAttrib );
 ARG_GFX_FDEC( ArgGfxVertexLayout );
 
 typedef enum ArgGfxFillMode

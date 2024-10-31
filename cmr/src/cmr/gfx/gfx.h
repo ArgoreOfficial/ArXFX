@@ -11,5 +11,11 @@
 #include <gfx/buffer.h>
 #include <gfx/program.h>
 #include <gfx/pipeline.h>
+#include <gfx/vertex_layout.h>
 
+#endif
+
+
+#ifdef TST && !defined(TST_IMPL)
+#define TST_IMPL
 #endif

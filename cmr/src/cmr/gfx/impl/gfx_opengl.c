@@ -25,6 +25,7 @@ static _handle allocate##_handle()                  \
 static ArgGfxProgramObject s_programObjects[ ARG_GFX_MAX_PROGRAMS ];
 static ArgGfxBufferObject s_bufferObjects[ ARG_GFX_MAX_GPU_BUFFERS ];
 static ArgGfxPipelineObject s_pipelineObjects[ ARG_GFX_MAX_PIPELINES ];
+static ArgGfxPipeline s_currentlyBoundPipeline;
 
 #define ARG_GFX_GET_PROGRAM( _program ) &s_programObjects[ _program - 1 ]
 #define ARG_GFX_GET_PIPELINE( _pipeline ) &s_pipelineObjects[ _pipeline - 1 ]
@@ -34,12 +35,15 @@ OBJECT_ALLOC_FUNC( ArgGfxProgram, s_programObjects, ARG_GFX_MAX_PROGRAMS )
 OBJECT_ALLOC_FUNC( ArgGfxBuffer, s_bufferObjects, ARG_GFX_MAX_GPU_BUFFERS )
 OBJECT_ALLOC_FUNC( ArgGfxPipeline, s_pipelineObjects, ARG_GFX_MAX_PIPELINES )
 
+
 #endif // ARG_GFX_STACK_ALLOCATED_OBJECTS
 
 void glMessageCallback( GLenum _source, GLenum _type, GLuint _id, GLenum _severity, GLsizei _length, GLchar const* _message, void const* _userData )
 {
 	printf( "%s\n", _message );
 }
+
+///////////////////////////////////////////////////////////////////////////////////////
 
 static GLenum getGlBufferEnum( ArgGfxBufferType _type )
 {
@@ -54,6 +58,8 @@ static GLenum getGlBufferEnum( ArgGfxBufferType _type )
 	return GL_NONE;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
+
 static GLenum getGlBufferUsage( ArgGfxBufferUsage _usage )
 {
 	switch( _usage )
@@ -65,15 +71,45 @@ static GLenum getGlBufferUsage( ArgGfxBufferUsage _usage )
 	return GL_NONE;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
+
+static void bindVertexLayout( ArgGfxVertexLayout* _pVertexLayout )
+{
+	int pointer = 0;
+	for ( size_t i = 0; i < _pVertexLayout->numAttributes; i++ )
+	{
+		ArgGfxVertexAttrib* attrib = &_pVertexLayout->attributes[ i ];
+
+		GLenum type = GL_NONE;
+		switch ( attrib->type )
+		{
+		case ARG_FLOAT:        type = GL_FLOAT;        break;
+		case ARG_INT:          type = GL_INT;          break;
+		case ARG_UNSIGNED_INT: type = GL_UNSIGNED_INT; break;
+		}
+		
+		glVertexAttribPointer( i, attrib->componentCount, type, attrib->normalized, _pVertexLayout->stride, pointer );
+		glEnableVertexAttribArray( i );
+
+		pointer += attrib->size;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
 void argGfxViewport_opengl( int _x, int _y, int _width, int _height )
 {
 	glViewport( _x, _y, _width, _height );
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
+
 void argGfxSetClearColor_opengl( float _r, float _g, float _b, float _a )
 {
 	glClearColor( _r, _g, _b, _a );
 }
+
+///////////////////////////////////////////////////////////////////////////////////////
 
 void argGfxClearRenderTarget_opengl( ArgGfxClearMask _mask )
 {
@@ -83,6 +119,8 @@ void argGfxClearRenderTarget_opengl( ArgGfxClearMask _mask )
 
 	glClear( mask );
 }
+
+///////////////////////////////////////////////////////////////////////////////////////
 
 ArgGfxProgram argGfxCreateProgram_opengl( ArgGfxProgram _program, ArgGfxProgramDesc* _desc )
 {
@@ -125,6 +163,8 @@ ArgGfxProgram argGfxCreateProgram_opengl( ArgGfxProgram _program, ArgGfxProgramD
 	return _program;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
+
 ArgGfxPipeline argGfxCreatePipeline_opengl( ArgGfxPipeline _pipeline, ArgGfxPipelineDesc* _desc )
 {
 	if( _pipeline == 0 )
@@ -135,8 +175,9 @@ ArgGfxPipeline argGfxCreatePipeline_opengl( ArgGfxPipeline _pipeline, ArgGfxPipe
 	}
 	ArgGfxPipelineObject* pPipeline = ARG_GFX_GET_PIPELINE( _pipeline );
 
-	pPipeline->vertexProgram = _desc->vertexProgram;
+	pPipeline->vertexProgram   = _desc->vertexProgram;
 	pPipeline->fragmentProgram = _desc->fragmentProgram;
+	pPipeline->pVertexLayout   = _desc->pVertexLayout;
 
 	glCreateProgramPipelines( 1, &pPipeline->handle );
 
@@ -156,6 +197,8 @@ ArgGfxPipeline argGfxCreatePipeline_opengl( ArgGfxPipeline _pipeline, ArgGfxPipe
 
 void argGfxBindPipeline_opengl( ArgGfxPipeline _pipeline )
 {
+	s_currentlyBoundPipeline = _pipeline;
+
 	ArgGfxPipelineObject* pPipeline = ARG_GFX_GET_PIPELINE( _pipeline );
 	glBindProgramPipeline( pPipeline->handle );
 }
@@ -232,7 +275,20 @@ void argGfxBufferSubData_opengl( ArgGfxBuffer _buffer, void* _pData, size_t _siz
 
 void argGfxDraw_opengl( uint32_t _firstVertex, uint32_t _numVertices )
 {
+	ArgGfxPipelineObject* pPipeline = ARG_GFX_GET_PIPELINE( s_currentlyBoundPipeline );
+	bindVertexLayout( pPipeline->pVertexLayout );
+
 	glDrawArrays( GL_TRIANGLES, _firstVertex, _numVertices );
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+void argGfxDrawIndexed_opengl( uint32_t _numIndices )
+{
+	ArgGfxPipelineObject* pPipeline = ARG_GFX_GET_PIPELINE( s_currentlyBoundPipeline );
+	bindVertexLayout( pPipeline->pVertexLayout );
+
+	glDrawElements( GL_TRIANGLES, _numIndices, GL_UNSIGNED_INT, 0 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -246,6 +302,10 @@ void argGfxLoadOpenGL( GLloadproc _loadProc )
 	glDebugMessageCallback( glMessageCallback, NULL );
 	//glDebugMessageControl( GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE );
 
+#ifdef TST_IMPL
+	printf( "test\n" );
+#endif
+
 	argGfxViewport      = argGfxViewport_opengl;
 	argGfxSetClearColor = argGfxSetClearColor_opengl;
 	
@@ -257,10 +317,13 @@ void argGfxLoadOpenGL( GLloadproc _loadProc )
 	argGfxBindPipeline   = argGfxBindPipeline_opengl;
 
 	argGfxCreateBuffer    = argGfxCreateBuffer_opengl;
+	argGfxBufferData      = argGfxBufferData_opengl;
 	argGfxBufferSubData   = argGfxBufferSubData_opengl;
 	argGfxBindBufferIndex = argGfxBindBufferIndex_opengl;
+	argGfxBindBuffer      = argGfxBindBuffer_opengl;
 
-	argGfxDraw = argGfxDraw_opengl;
+	argGfxDraw        = argGfxDraw_opengl;
+	argGfxDrawIndexed = argGfxDrawIndexed_opengl;
 }
 
 

@@ -3,6 +3,7 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
+#define TST
 #include <gfx/gfx.h>
 #include <gfx/impl/gfx_opengl.h>
 
@@ -28,10 +29,15 @@ typedef struct ScreenData
 // variables //////////////////////////////////////////////////////////////////////////
 
 GLFWwindow* window;
+
+
 ArgGfxPipeline pipeline;
+#define NUM_ATTRIBS 2
+ArgGfxVertexLayout vertexLayout;
+ArgGfxVertexAttrib vertexAttribs[ NUM_ATTRIBS ];
 unsigned int emptyVAO;
 
-ArgGfxBuffer vb;
+ArgGfxBuffer vb, ib;
 ArgGfxBuffer screenDataBuffer;
 
 ScreenData screenData;
@@ -59,13 +65,18 @@ int main()
 	argGfxLoadOpenGL( glfwGetProcAddress );
 	argGfxViewport( 0, 0, 640, 480 );
 
+	// remove
+	glCreateVertexArrays( 1, &emptyVAO );
+
 	createShaders();
 	initBuffers();
 
 	argGfxBindPipeline( pipeline );
-	argGfxBindBufferIndex( vb, 0 );
-	argGfxBindBufferIndex( screenDataBuffer, 1 );
-	
+	argGfxBindBuffer( vb );
+	argGfxBindBuffer( ib );
+
+	argGfxBindBufferIndex( screenDataBuffer, 0 );
+
 	while ( !glfwWindowShouldClose( window ) )
 	{
 		glfwGetWindowSize( window, &screenData.width, &screenData.height );
@@ -75,9 +86,7 @@ int main()
 		argGfxSetClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 		argGfxClearRenderTarget( ARG_GFX_CLEAR_MASK_COLOR );
 
-		// argGfxBeginDraw();
-		argGfxDraw( 0, 3 );
-		// argGfxEndDraw();
+		argGfxDrawIndexed( 6 );
 
 		glfwSwapBuffers( window );
 		glfwPollEvents();
@@ -102,7 +111,7 @@ int initWindow()
 
 	glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 2 );
 	glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 0 );
-	window = glfwCreateWindow( 640, 480, "Chimera - gfx", NULL, NULL );
+	window = glfwCreateWindow( 640, 480, "argGfx", NULL, NULL );
 
 	if( !window )
 	{
@@ -136,8 +145,8 @@ size_t getFileSize( FILE* _pFile )
 
 void createShaders()
 {
-	FILE* vsFile = fopen( "vs.glsl", "r" );
-	FILE* fsFile = fopen( "fs.glsl", "r" );
+	FILE* vsFile = fopen( "vs2.glsl", "r" );
+	FILE* fsFile = fopen( "fs2.glsl", "r" );
 
 	size_t vsSize = getFileSize( vsFile ) + 1;
 	char* vsBuffer = malloc( vsSize );
@@ -174,36 +183,56 @@ void createShaders()
 	if( vsBuffer ) free( vsBuffer );
 	if( fsBuffer ) free( fsBuffer );
 
+
+	// we're using a stack allocated vertex layout here, but it could just as well be heap allocated
+	ArgGfxVertexAttrib posAttrib = { "POSITION", 3, ARG_FLOAT, false, sizeof(float) * 3 };
+	ArgGfxVertexAttrib colAttrib = { "COLOR",    3, ARG_FLOAT, false, sizeof(float) * 3 };
+	vertexAttribs[ 0 ] = posAttrib;
+	vertexAttribs[ 1 ] = colAttrib;
+
+	vertexLayout.attributes = vertexAttribs;
+	vertexLayout.numAttributes = NUM_ATTRIBS;
+	vertexLayout.stride = sizeof( Vertex );
+
 	ArgGfxPipelineDesc pipelineDesc;
 	pipelineDesc.fragmentProgram = fs;
 	pipelineDesc.vertexProgram = vs;
-	pipelineDesc.pVertexLayout = NULL;
+	pipelineDesc.pVertexLayout = &vertexLayout;
 	pipeline = argGfxCreatePipeline( 0, &pipelineDesc );
+		
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
 void initBuffers()
 {
-	// remove
-	glGenVertexArrays( 1, &emptyVAO );
-	glBindVertexArray( emptyVAO );
-
 	// create vertex buffer
-	Vertex vertices[ 3 ] = {
+	Vertex vertices[] = {
 		{ -0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f },
+		{ -0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f },
 		{  0.5f, -0.5f, 0.0f,     0.0f, 1.0f, 0.0f },
-		{  0.0f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f }
+		{  0.5f,  0.5f, 0.0f,     1.0f, 1.0f, 1.0f }
 	};
 
 	ArgGfxBufferDesc vbDesc;
-	vbDesc.size = sizeof( vertices );
-	vbDesc.type = ARG_GFX_BUFFER_TYPE_DYNAMIC;
-	vbDesc.usage = ARG_GFX_BUFFER_USAGE_DYNAMIC_DRAW;
+	vbDesc.type  = ARG_GFX_BUFFER_TYPE_VERTEX;
+	vbDesc.usage = ARG_GFX_BUFFER_USAGE_STATIC_DRAW;
+	vbDesc.size  = sizeof( vertices );
 
 	vb = argGfxCreateBuffer( 0, &vbDesc );
 	argGfxBufferSubData( vb, vertices, sizeof( vertices ), 0 );
 
+	// create index buffer
+	unsigned int indices[] = { 0, 1, 2, 1, 3, 2 };
+	
+	ArgGfxBufferDesc ibDesc;
+	ibDesc.type  = ARG_GFX_BUFFER_TYPE_INDEX;
+	ibDesc.usage = ARG_GFX_BUFFER_USAGE_STATIC_DRAW;
+	ibDesc.size  = sizeof( indices );
+	
+	ib = argGfxCreateBuffer( 0, &ibDesc );
+	argGfxBufferSubData( ib, indices, sizeof( indices ), 0 );
+	
 	// create screen data buffer
 	ArgGfxBufferDesc screenDataDesc;
 	screenDataDesc.size = sizeof( ScreenData );
@@ -211,4 +240,5 @@ void initBuffers()
 	screenDataDesc.usage = ARG_GFX_BUFFER_USAGE_DYNAMIC_DRAW;
 
 	screenDataBuffer = argGfxCreateBuffer( 0, &screenDataDesc );
+
 }
