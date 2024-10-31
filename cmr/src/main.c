@@ -100,6 +100,12 @@ typedef struct Vertex
 	float position[ 3 ];
 } Vertex;
 
+typedef struct ScreenData
+{
+	int width;
+	int height;
+} ScreenData;
+
 void createVertexData()
 {
 	Vertex vertices[ 3 ] = {
@@ -115,12 +121,13 @@ void createVertexData()
 
 	// remove
 	glGenVertexArrays( 1, &emptyVAO );
+	glBindVertexArray( emptyVAO );
 	
 	vb = argGfxCreateBuffer( 0, &vbDesc );
 	argGfxBufferSubData( vb, vertices, sizeof( vertices ), 0 );
-	
-	glBindVertexArray( emptyVAO );
 }
+
+
 
 int main()
 {
@@ -136,19 +143,44 @@ int main()
 	createShaders();
 	createVertexData();
 
-	argGfxBindPipeline( pipeline );
-	glBindBufferBase( GL_SHADER_STORAGE_BUFFER, 0, vb );
 
+	ArgGfxBufferDesc screenDataDesc;
+	screenDataDesc.size = sizeof( ScreenData );
+	screenDataDesc.type = ARG_GFX_BUFFER_TYPE_DYNAMIC;
+	screenDataDesc.usage = ARG_GFX_BUFFER_USAGE_DYNAMIC_DRAW;
+
+	ScreenData screenData;
+	screenData.width  = 2;
+	screenData.height = 1;
+
+	ArgGfxBuffer screenDataBuffer = argGfxCreateBuffer( 0, &screenDataDesc );
+	argGfxBufferSubData( screenDataBuffer, &screenData, sizeof( ScreenData ), 0 );
+
+	argGfxBindPipeline( pipeline );
+	argGfxBindBufferIndex( vb, 0 );
+	argGfxBindBufferIndex( screenDataBuffer, 1 );
+	
 	while ( !glfwWindowShouldClose( window ) )
 	{
+		glfwGetWindowSize( window, &screenData.width, &screenData.height );
+		argGfxViewport( 0, 0, screenData.width, screenData.height );
+		argGfxBufferSubData( screenDataBuffer, &screenData, sizeof( ScreenData ), 0 );
+
 		argGfxSetClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 		argGfxClearRenderTarget( ARG_GFX_CLEAR_MASK_COLOR );
 
-		glDrawArrays( GL_TRIANGLES, 0, 3 );
+		// argGfxBeginDraw();
+		argGfxDraw( 0, 3 );
+		// argGfxEndDraw();
 
 		glfwSwapBuffers( window );
 		glfwPollEvents();
 	}
+
+	// not implemented
+	argGfxDestroyBuffer( vb );
+	argGfxDestroyBuffer( screenDataBuffer );
+	argGfxDestroyPipeline( pipeline );
 
 	deinitWindow();
 

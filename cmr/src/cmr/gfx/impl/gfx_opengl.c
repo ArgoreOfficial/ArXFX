@@ -164,7 +164,7 @@ void argGfxBindPipeline_opengl( ArgGfxPipeline _pipeline )
 
 ArgGfxBuffer argGfxCreateBuffer_opengl( ArgGfxBuffer _buffer, ArgGfxBufferDesc* _desc )
 {
-	ArgGfxBufferObject* buffer = NULL;
+	ArgGfxBufferObject* pBuffer = NULL;
 
 #if defined( ARG_GFX_STACK_ALLOCATED_OBJECTS )
 	if( _buffer == 0 )
@@ -174,7 +174,7 @@ ArgGfxBuffer argGfxCreateBuffer_opengl( ArgGfxBuffer _buffer, ArgGfxBufferDesc* 
 			return 0;
 	}
 
-	buffer = &s_bufferObjects[ _buffer - 1 ];
+	pBuffer = &s_bufferObjects[ _buffer - 1 ];
 #elif defined( ARG_GFX_STACK_ALLOCATED_OBJECTS )
 	if( _buffer == 0 )
 	{
@@ -183,27 +183,56 @@ ArgGfxBuffer argGfxCreateBuffer_opengl( ArgGfxBuffer _buffer, ArgGfxBufferDesc* 
 	}
 #endif
 
-	buffer->type = _desc->type;
-	buffer->usage = _desc->usage;
+	pBuffer->type = _desc->type;
+	pBuffer->usage = _desc->usage;
+	pBuffer->size = _desc->size;
 	
-	GLenum target = getGlBufferEnum( buffer->type );
+	GLenum usage = getGlBufferUsage( pBuffer->usage );
 
-	glCreateBuffers( 1, &buffer->handle );
-
-	GLenum usage = getGlBufferUsage( buffer->usage );
-	buffer->size = _desc->size;
-
-	glNamedBufferData( buffer->handle, _desc->size, 0, usage );
+	glCreateBuffers( 1, &pBuffer->handle );
+	glNamedBufferData( pBuffer->handle, _desc->size, 0, usage );
 
 	return _buffer;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
+void argGfxBindBuffer_opengl( ArgGfxBuffer _buffer )
+{
+	ArgGfxBufferObject* pBuffer = ARG_GFX_GET_BUFFER( _buffer );
+	GLenum target = getGlBufferEnum( pBuffer->type );
+	glBindBuffer( target, pBuffer->handle );
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+void argGfxBindBufferIndex_opengl( ArgGfxBuffer _buffer, int32_t _bindingIndex )
+{
+	ArgGfxBufferObject* pBuffer = ARG_GFX_GET_BUFFER( _buffer );
+	GLenum target = getGlBufferEnum( pBuffer->type );
+	glBindBufferBase( target, _bindingIndex, pBuffer->handle );
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+void argGfxBufferData_opengl( ArgGfxBuffer _buffer, void* _pData, size_t _size )
+{
+	ArgGfxBufferObject* pBuffer = ARG_GFX_GET_BUFFER( _buffer );
+	GLenum usage = getGlBufferUsage( pBuffer->usage );
+	glNamedBufferData( pBuffer->handle, _size, _pData, usage );
+}
+
 void argGfxBufferSubData_opengl( ArgGfxBuffer _buffer, void* _pData, size_t _size, size_t _base )
 {
-	ArgGfxBufferObject* bufferObject = ARG_GFX_GET_BUFFER( _buffer );
-	glNamedBufferSubData( bufferObject->handle, _base, _size, _pData );
+	ArgGfxBufferObject* pBuffer = ARG_GFX_GET_BUFFER( _buffer );
+	glNamedBufferSubData( pBuffer->handle, _base, _size, _pData );
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+void argGfxDraw_opengl( uint32_t _firstVertex, uint32_t _numVertices )
+{
+	glDrawArrays( GL_TRIANGLES, _firstVertex, _numVertices );
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -227,8 +256,11 @@ void argGfxLoadOpenGL( GLloadproc _loadProc )
 	argGfxCreatePipeline = argGfxCreatePipeline_opengl;
 	argGfxBindPipeline   = argGfxBindPipeline_opengl;
 
-	argGfxCreateBuffer = argGfxCreateBuffer_opengl;
+	argGfxCreateBuffer    = argGfxCreateBuffer_opengl;
 	argGfxBufferSubData   = argGfxBufferSubData_opengl;
+	argGfxBindBufferIndex = argGfxBindBufferIndex_opengl;
+
+	argGfxDraw = argGfxDraw_opengl;
 }
 
 
