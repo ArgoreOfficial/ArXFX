@@ -20,23 +20,23 @@ ArgGfxPipeline argGfxCreatePipeline( ArgGfxPipeline _pipeline, ArgGfxPipelineDes
 void argGfxDestroyPipeline( ArgGfxPipeline _pipeline );
 void argGfxBindPipeline( ArgGfxPipeline _pipeline );
 
-ArgGfxGPUBuffer argGfxCreateGPUBuffer( ArgGfxGPUBuffer _buffer, ArgGfxGPUBufferDesc* _desc );
-void argGfxDestroyGPUBuffer( ArgGfxGPUBuffer _buffer );
+ArgGfxBuffer argGfxCreateBuffer( ArgGfxBuffer _buffer, ArgGfxBufferDesc* _desc );
+void argGfxDestroyBuffer( ArgGfxBuffer _buffer );
 
-void argGfxBindBuffer( ArgGfxGPUBuffer _buffer );
-void argGfxBindBufferIndex( ArgGfxGPUBuffer _buffer, int32_t _bindingIndex );
+void argGfxBindBuffer( ArgGfxBuffer _buffer );
+void argGfxBindBufferIndex( ArgGfxBuffer _buffer, int32_t _bindingIndex );
 
-void argGfxBufferData( ArgGfxGPUBuffer _buffer, void* _pData, size_t _size );
-void argGfxBufferSubData( ArgGfxGPUBuffer _buffer, void* _pData, size_t _size, size_t _base );
+void argGfxBufferData( ArgGfxBuffer _buffer, void* _pData, size_t _size );
+void argGfxBufferSubData( ArgGfxBuffer _buffer, void* _pData, size_t _size, size_t _base );
 
-void argGfxCopyBufferSubData( ArgGfxGPUBuffer _readBuffer, ArgGfxGPUBuffer _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size );
+void argGfxCopyBufferSubData( ArgGfxBuffer _readBuffer, ArgGfxBuffer _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size );
 
 ArgGfxTexture argGfxCreateTexture( ArgGfxTexture _texture, ArgGfxTextureDesc* _pDesc );
 void argGfxBufferTextureData( ArgGfxTexture _texture, void* _pData, int _generateMipMaps );
 void argGfxDestroyTexture( ArgGfxTexture _texture );
 void argGfxBindTextureToSlot( ArgGfxTexture _texture, unsigned int _slot );
 
-void argGfxBindVertexBuffer( ArgGfxGPUBuffer _vertexPullBuffer );
+void argGfxBindVertexBuffer( ArgGfxBuffer _vertexPullBuffer );
 
 void argGfxSetFillMode( ArgGfxFillMode _mode );
 

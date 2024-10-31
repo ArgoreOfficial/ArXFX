@@ -3,35 +3,35 @@
 
 #include <gfx/gfx_types.h>
 
-typedef enum ArgGfxGPUBufferType
+typedef enum ArgGfxBufferType
 {
 	ARG_GFX_BUFFER_TYPE_NONE = 0,
 	ARG_GFX_BUFFER_TYPE_INDEX,
 	ARG_GFX_BUFFER_TYPE_VERTEX,
 	ARG_GFX_BUFFER_TYPE_UNIFORM,
 	ARG_GFX_BUFFER_TYPE_DYNAMIC
-} ArgGfxGPUBufferType;
+} ArgGfxBufferType;
 
-typedef enum ArgGfxGPUBufferUsage
+typedef enum ArgGfxBufferUsage
 {
 	ARG_GFX_BUFFER_USAGE_NONE = 0,
 	ARG_GFX_BUFFER_USAGE_STATIC_DRAW,
 	ARG_GFX_BUFFER_USAGE_DYNAMIC_DRAW
-} ArgGfxGPUBufferUsage;
+} ArgGfxBufferUsage;
 
-typedef struct ArgGfxGPUBufferDesc
+typedef struct ArgGfxBufferDesc
 {
-	ArgGfxGPUBufferType type;
-	ArgGfxGPUBufferUsage usage;
+	ArgGfxBufferType type;
+	ArgGfxBufferUsage usage;
 	int32_t size;
 };
 
-typedef struct ArgGfxGPUBufferObject
+typedef struct ArgGfxBufferObject
 {
 	ArgHandle handle;
 
-	ArgGfxGPUBufferType type;
-	ArgGfxGPUBufferUsage usage;
+	ArgGfxBufferType type;
+	ArgGfxBufferUsage usage;
 
 	uint32_t count;
 	uint32_t stride;

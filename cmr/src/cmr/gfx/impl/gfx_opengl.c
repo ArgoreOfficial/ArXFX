@@ -23,14 +23,15 @@ static _handle allocate##_handle()                  \
 #define ARG_GFX_MAX_PIPELINES 128
 
 static ArgGfxProgramObject s_programObjects[ ARG_GFX_MAX_PROGRAMS ];
-static ArgGfxGPUBufferObject s_bufferObjects[ ARG_GFX_MAX_GPU_BUFFERS ];
+static ArgGfxBufferObject s_bufferObjects[ ARG_GFX_MAX_GPU_BUFFERS ];
 static ArgGfxPipelineObject s_pipelineObjects[ ARG_GFX_MAX_PIPELINES ];
 
 #define ARG_GFX_GET_PROGRAM( _program ) &s_programObjects[ _program - 1 ]
 #define ARG_GFX_GET_PIPELINE( _pipeline ) &s_pipelineObjects[ _pipeline - 1 ]
+#define ARG_GFX_GET_BUFFER( _buffer ) &s_bufferObjects[ _buffer - 1 ]
 
 OBJECT_ALLOC_FUNC( ArgGfxProgram, s_programObjects, ARG_GFX_MAX_PROGRAMS )
-OBJECT_ALLOC_FUNC( ArgGfxGPUBuffer, s_bufferObjects, ARG_GFX_MAX_GPU_BUFFERS )
+OBJECT_ALLOC_FUNC( ArgGfxBuffer, s_bufferObjects, ARG_GFX_MAX_GPU_BUFFERS )
 OBJECT_ALLOC_FUNC( ArgGfxPipeline, s_pipelineObjects, ARG_GFX_MAX_PIPELINES )
 
 #endif // ARG_GFX_STACK_ALLOCATED_OBJECTS
@@ -40,7 +41,7 @@ void glMessageCallback( GLenum _source, GLenum _type, GLuint _id, GLenum _severi
 	printf( "%s\n", _message );
 }
 
-static GLenum getGlBufferEnum( ArgGfxGPUBufferType _type )
+static GLenum getGlBufferEnum( ArgGfxBufferType _type )
 {
 	switch( _type )
 	{
@@ -53,7 +54,7 @@ static GLenum getGlBufferEnum( ArgGfxGPUBufferType _type )
 	return GL_NONE;
 }
 
-static GLenum getGlBufferUsage( ArgGfxGPUBufferUsage _usage )
+static GLenum getGlBufferUsage( ArgGfxBufferUsage _usage )
 {
 	switch( _usage )
 	{
@@ -161,14 +162,14 @@ void argGfxBindPipeline_opengl( ArgGfxPipeline _pipeline )
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgGfxGPUBuffer argGfxCreateGPUBuffer_opengl( ArgGfxGPUBuffer _buffer, ArgGfxGPUBufferDesc* _desc )
+ArgGfxBuffer argGfxCreateBuffer_opengl( ArgGfxBuffer _buffer, ArgGfxBufferDesc* _desc )
 {
-	ArgGfxGPUBufferObject* buffer = NULL;
+	ArgGfxBufferObject* buffer = NULL;
 
 #if defined( ARG_GFX_STACK_ALLOCATED_OBJECTS )
 	if( _buffer == 0 )
 	{
-		_buffer = allocateArgGfxGPUBuffer();
+		_buffer = allocateArgGfxBuffer();
 		if( _buffer == 0 ) // error
 			return 0;
 	}
@@ -177,7 +178,7 @@ ArgGfxGPUBuffer argGfxCreateGPUBuffer_opengl( ArgGfxGPUBuffer _buffer, ArgGfxGPU
 #elif defined( ARG_GFX_STACK_ALLOCATED_OBJECTS )
 	if( _buffer == 0 )
 	{
-		buffer = malloc( sizeof( ArgGfxGPUBufferObject ) );
+		buffer = malloc( sizeof( ArgGfxBufferObject ) );
 		_buffer = &buffer;
 	}
 #endif
@@ -196,6 +197,16 @@ ArgGfxGPUBuffer argGfxCreateGPUBuffer_opengl( ArgGfxGPUBuffer _buffer, ArgGfxGPU
 
 	return _buffer;
 }
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+void argGfxBufferSubData_opengl( ArgGfxBuffer _buffer, void* _pData, size_t _size, size_t _base )
+{
+	ArgGfxBufferObject* bufferObject = ARG_GFX_GET_BUFFER( _buffer );
+	glNamedBufferSubData( bufferObject->handle, _base, _size, _pData );
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
 
 void argGfxLoadOpenGL( GLloadproc _loadProc )
 {
@@ -216,5 +227,8 @@ void argGfxLoadOpenGL( GLloadproc _loadProc )
 	argGfxCreatePipeline = argGfxCreatePipeline_opengl;
 	argGfxBindPipeline   = argGfxBindPipeline_opengl;
 
-	argGfxCreateGPUBuffer = argGfxCreateGPUBuffer_opengl;
+	argGfxCreateBuffer = argGfxCreateBuffer_opengl;
+	argGfxBufferSubData   = argGfxBufferSubData_opengl;
 }
+
+

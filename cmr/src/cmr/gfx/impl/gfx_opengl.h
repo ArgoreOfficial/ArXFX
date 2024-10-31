@@ -19,23 +19,23 @@ ArgGfxPipeline argGfxCreatePipeline_opengl( ArgGfxPipeline _pipeline, ArgGfxPipe
 void argGfxDestroyPipeline_opengl( ArgGfxPipeline _pipeline );
 void argGfxBindPipeline_opengl( ArgGfxPipeline _pipeline );
 
-ArgGfxGPUBuffer argGfxCreateGPUBuffer_opengl( ArgGfxGPUBuffer _buffer, ArgGfxGPUBufferDesc* _desc );
-void argGfxDestroyGPUBuffer_opengl( ArgGfxGPUBuffer _buffer );
+ArgGfxBuffer argGfxCreateBuffer_opengl( ArgGfxBuffer _buffer, ArgGfxBufferDesc* _desc );
+void argGfxDestroyBuffer_opengl( ArgGfxBuffer _buffer );
 
-void argGfxBindBuffer_opengl( ArgGfxGPUBuffer _buffer );
-void argGfxBindBufferIndex_opengl( ArgGfxGPUBuffer _buffer, int32_t _bindingIndex );
+void argGfxBindBuffer_opengl( ArgGfxBuffer _buffer );
+void argGfxBindBufferIndex_opengl( ArgGfxBuffer _buffer, int32_t _bindingIndex );
 
-void argGfxBufferData_opengl( ArgGfxGPUBuffer _buffer, void* _pData, size_t _size );
-void argGfxBufferSubData_opengl( ArgGfxGPUBuffer _buffer, void* _pData, size_t _size, size_t _base );
+void argGfxBufferData_opengl( ArgGfxBuffer _buffer, void* _pData, size_t _size );
+void argGfxBufferSubData_opengl( ArgGfxBuffer _buffer, void* _pData, size_t _size, size_t _base );
 
-void argGfxCopyBufferSubData_opengl( ArgGfxGPUBuffer _readBuffer, ArgGfxGPUBuffer _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size );
+void argGfxCopyBufferSubData_opengl( ArgGfxBuffer _readBuffer, ArgGfxBuffer _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size );
 
 ArgGfxTexture argGfxCreateTexture_opengl( ArgGfxTexture _texture, ArgGfxTextureDesc* _pDesc );
 void argGfxBufferTextureData_opengl( ArgGfxTexture _texture, void* _pData, int _generateMipMaps );
 void argGfxDestroyTexture_opengl( ArgGfxTexture _texture );
 void argGfxBindTextureToSlot_opengl( ArgGfxTexture _texture, unsigned int _slot );
 
-void argGfxBindVertexBuffer_opengl( ArgGfxGPUBuffer _vertexPullBuffer );
+void argGfxBindVertexBuffer_opengl( ArgGfxBuffer _vertexPullBuffer );
 
 void argGfxSetFillMode_opengl( ArgGfxFillMode _mode );
 

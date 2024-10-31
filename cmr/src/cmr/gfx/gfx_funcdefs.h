@@ -47,31 +47,31 @@ typedef void (*argGfxBindPipeline_t)( ArgGfxPipeline _pipeline );
 argGfxBindPipeline_t fp_argGfxBindPipeline;
 #define argGfxBindPipeline fp_argGfxBindPipeline
 
-typedef ArgGfxGPUBuffer (*argGfxCreateGPUBuffer_t)( ArgGfxGPUBuffer _buffer, ArgGfxGPUBufferDesc* _desc );
-argGfxCreateGPUBuffer_t fp_argGfxCreateGPUBuffer;
-#define argGfxCreateGPUBuffer fp_argGfxCreateGPUBuffer
+typedef ArgGfxBuffer (*argGfxCreateBuffer_t)( ArgGfxBuffer _buffer, ArgGfxBufferDesc* _desc );
+argGfxCreateBuffer_t fp_argGfxCreateBuffer;
+#define argGfxCreateBuffer fp_argGfxCreateBuffer
 
-typedef void (*argGfxDestroyGPUBuffer_t)( ArgGfxGPUBuffer _buffer );
-argGfxDestroyGPUBuffer_t fp_argGfxDestroyGPUBuffer;
-#define argGfxDestroyGPUBuffer fp_argGfxDestroyGPUBuffer
+typedef void (*argGfxDestroyBuffer_t)( ArgGfxBuffer _buffer );
+argGfxDestroyBuffer_t fp_argGfxDestroyBuffer;
+#define argGfxDestroyBuffer fp_argGfxDestroyBuffer
 
-typedef void (*argGfxBindBuffer_t)( ArgGfxGPUBuffer _buffer );
+typedef void (*argGfxBindBuffer_t)( ArgGfxBuffer _buffer );
 argGfxBindBuffer_t fp_argGfxBindBuffer;
 #define argGfxBindBuffer fp_argGfxBindBuffer
 
-typedef void (*argGfxBindBufferIndex_t)( ArgGfxGPUBuffer _buffer, int32_t _bindingIndex );
+typedef void (*argGfxBindBufferIndex_t)( ArgGfxBuffer _buffer, int32_t _bindingIndex );
 argGfxBindBufferIndex_t fp_argGfxBindBufferIndex;
 #define argGfxBindBufferIndex fp_argGfxBindBufferIndex
 
-typedef void (*argGfxBufferData_t)( ArgGfxGPUBuffer _buffer, void* _pData, size_t _size );
+typedef void (*argGfxBufferData_t)( ArgGfxBuffer _buffer, void* _pData, size_t _size );
 argGfxBufferData_t fp_argGfxBufferData;
 #define argGfxBufferData fp_argGfxBufferData
 
-typedef void (*argGfxBufferSubData_t)( ArgGfxGPUBuffer _buffer, void* _pData, size_t _size, size_t _base );
+typedef void (*argGfxBufferSubData_t)( ArgGfxBuffer _buffer, void* _pData, size_t _size, size_t _base );
 argGfxBufferSubData_t fp_argGfxBufferSubData;
 #define argGfxBufferSubData fp_argGfxBufferSubData
 
-typedef void (*argGfxCopyBufferSubData_t)( ArgGfxGPUBuffer _readBuffer, ArgGfxGPUBuffer _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size );
+typedef void (*argGfxCopyBufferSubData_t)( ArgGfxBuffer _readBuffer, ArgGfxBuffer _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size );
 argGfxCopyBufferSubData_t fp_argGfxCopyBufferSubData;
 #define argGfxCopyBufferSubData fp_argGfxCopyBufferSubData
 
@@ -91,7 +91,7 @@ typedef void (*argGfxBindTextureToSlot_t)( ArgGfxTexture _texture, unsigned int 
 argGfxBindTextureToSlot_t fp_argGfxBindTextureToSlot;
 #define argGfxBindTextureToSlot fp_argGfxBindTextureToSlot
 
-typedef void (*argGfxBindVertexBuffer_t)( ArgGfxGPUBuffer _vertexPullBuffer );
+typedef void (*argGfxBindVertexBuffer_t)( ArgGfxBuffer _vertexPullBuffer );
 argGfxBindVertexBuffer_t fp_argGfxBindVertexBuffer;
 #define argGfxBindVertexBuffer fp_argGfxBindVertexBuffer
 

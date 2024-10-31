@@ -30,9 +30,9 @@ namespace wv
 	{
 		PipelineID pipeline;
 		
-		GPUBufferID viewDataBufferID;
-		GPUBufferID instanceBufferID;
-		GPUBufferID vertexBufferID;
+		BufferID viewDataBufferID;
+		BufferID instanceBufferID;
+		BufferID vertexBufferID;
 		
 		std::vector<sDrawIndexedIndirectCommand> cmds;
 		std::vector<sMeshInstanceData> instances;

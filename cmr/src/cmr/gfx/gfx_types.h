@@ -34,9 +34,9 @@ ARG_GFX_FDEC( ArgGfxRenderTargetDesc );
 ARG_GFX_FDEC( ArgGfxRenderTargetObject );
 ARG_GFX_HANDLE( ArgGfxRenderTarget );
 
-ARG_GFX_FDEC( ArgGfxGPUBufferDesc );
-ARG_GFX_FDEC( ArgGfxGPUBufferObject );
-ARG_GFX_HANDLE( ArgGfxGPUBuffer );
+ARG_GFX_FDEC( ArgGfxBufferDesc );
+ARG_GFX_FDEC( ArgGfxBufferObject );
+ARG_GFX_HANDLE( ArgGfxBuffer );
 
 ARG_GFX_FDEC( ArgGfxVertexLayout );
 

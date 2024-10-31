@@ -12,7 +12,7 @@
 
 static GLFWwindow* window;
 static ArgGfxPipeline pipeline;
-static ArgGfxGPUBuffer vb;
+static ArgGfxBuffer vb;
 static unsigned int emptyVAO;
 
 int initWindow()
@@ -108,20 +108,17 @@ void createVertexData()
 		{  0.0f,  0.5f, 0.0f }
 	};
 
-	ArgGfxGPUBufferDesc vbDesc;
+	ArgGfxBufferDesc vbDesc;
 	vbDesc.size  = sizeof( vertices );
 	vbDesc.type  = ARG_GFX_BUFFER_TYPE_DYNAMIC;
 	vbDesc.usage = ARG_GFX_BUFFER_USAGE_DYNAMIC_DRAW;
 
-
+	// remove
 	glGenVertexArrays( 1, &emptyVAO );
-	glCreateBuffers( 1, (int*)&vb);
-	glNamedBufferStorage( vb, sizeof( Vertex ) * 3, vertices, GL_DYNAMIC_STORAGE_BIT );
-	//vb = argGfxCreateGPUBuffer( 0, &vbDesc );
-	// argGfxBufferSubData( vb, vertices, sizeof( vertices ) );
-	// glNamedBufferSubData( vb, 0, sizeof( vertices ), vertices );
-
-
+	
+	vb = argGfxCreateBuffer( 0, &vbDesc );
+	argGfxBufferSubData( vb, vertices, sizeof( vertices ), 0 );
+	
 	glBindVertexArray( emptyVAO );
 }
 

@@ -22,7 +22,7 @@ typedef struct ArgGfxProgramObject
 	ArgHandle handle;
 	ArgGfxShaderProgramType type;
 
-	// std::vector<GPUBufferID> shaderBuffers;
+	// std::vector<BufferID> shaderBuffers;
 	// std::vector<sUniform> textureUniforms;
 
 	void* pPlatformData;
