@@ -11,8 +11,8 @@
 #include <memory.h>
 
 static GLFWwindow* window;
-static GfxPipeline pipeline;
-static GfxGPUBuffer vb;
+static ArgGfxPipeline pipeline;
+static ArgGfxGPUBuffer vb;
 static unsigned int emptyVAO;
 
 int initWindow()
@@ -22,7 +22,7 @@ int initWindow()
 
 	glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 2 );
 	glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 0 );
-	window = glfwCreateWindow( 640, 480, "gfx", NULL, NULL );
+	window = glfwCreateWindow( 640, 480, "Chimera - gfx", NULL, NULL );
 
 	if ( !window )
 	{
@@ -74,25 +74,25 @@ void createShaders()
 	fclose( vsFile );
 	fclose( fsFile );
 
-	GfxProgramDesc vsDesc;
-	vsDesc.type = GFX_SHADER_TYPE_VERTEX;
+	ArgGfxProgramDesc vsDesc;
+	vsDesc.type = ARG_GFX_SHADER_TYPE_VERTEX;
 	vsDesc.source = vsBuffer;
 	
-	GfxProgramDesc fsDesc;
-	fsDesc.type = GFX_SHADER_TYPE_FRAGMENT;
+	ArgGfxProgramDesc fsDesc;
+	fsDesc.type = ARG_GFX_SHADER_TYPE_FRAGMENT;
 	fsDesc.source = fsBuffer;
 
-	GfxProgram vs = gfxCreateProgram( 0, &vsDesc );
-	GfxProgram fs = gfxCreateProgram( 0, &fsDesc );
+	ArgGfxProgram vs = argGfxCreateProgram( 0, &vsDesc );
+	ArgGfxProgram fs = argGfxCreateProgram( 0, &fsDesc );
 
 	if( vsBuffer ) free( vsBuffer );
 	if( fsBuffer ) free( fsBuffer );
 
-	GfxPipelineDesc pipelineDesc;
+	ArgGfxPipelineDesc pipelineDesc;
 	pipelineDesc.fragmentProgram = fs;
 	pipelineDesc.vertexProgram = vs;
 	pipelineDesc.pVertexLayout = NULL;
-	pipeline = gfxCreatePipeline( 0, &pipelineDesc );
+	pipeline = argGfxCreatePipeline( 0, &pipelineDesc );
 }
 
 typedef struct Vertex
@@ -108,17 +108,17 @@ void createVertexData()
 		{  0.0f,  0.5f, 0.0f }
 	};
 
-	GfxGPUBufferDesc vbDesc;
+	ArgGfxGPUBufferDesc vbDesc;
 	vbDesc.size  = sizeof( vertices );
-	vbDesc.type  = GFX_BUFFER_TYPE_DYNAMIC;
-	vbDesc.usage = GFX_BUFFER_USAGE_DYNAMIC_DRAW;
+	vbDesc.type  = ARG_GFX_BUFFER_TYPE_DYNAMIC;
+	vbDesc.usage = ARG_GFX_BUFFER_USAGE_DYNAMIC_DRAW;
 
 
 	glGenVertexArrays( 1, &emptyVAO );
-	glCreateBuffers( 1, &vb );
+	glCreateBuffers( 1, (int*)&vb);
 	glNamedBufferStorage( vb, sizeof( Vertex ) * 3, vertices, GL_DYNAMIC_STORAGE_BIT );
-	//vb = gfxCreateGPUBuffer( 0, &vbDesc );
-	// gfxBufferSubData( vb, vertices, sizeof( vertices ) );
+	//vb = argGfxCreateGPUBuffer( 0, &vbDesc );
+	// argGfxBufferSubData( vb, vertices, sizeof( vertices ) );
 	// glNamedBufferSubData( vb, 0, sizeof( vertices ), vertices );
 
 
@@ -133,19 +133,19 @@ int main()
 	glfwMakeContextCurrent( window );
 	glfwSwapInterval( 1 );
 	
-	gfxLoadOpenGL( glfwGetProcAddress );
-	gfxViewport( 0, 0, 640, 480 );
+	argGfxLoadOpenGL( glfwGetProcAddress );
+	argGfxViewport( 0, 0, 640, 480 );
 
 	createShaders();
 	createVertexData();
 
-	gfxBindPipeline( pipeline );
+	argGfxBindPipeline( pipeline );
 	glBindBufferBase( GL_SHADER_STORAGE_BUFFER, 0, vb );
 
 	while ( !glfwWindowShouldClose( window ) )
 	{
-		gfxSetClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
-		gfxClearRenderTarget( GFX_CLEAR_MASK_COLOR );
+		argGfxSetClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+		argGfxClearRenderTarget( ARG_GFX_CLEAR_MASK_COLOR );
 
 		glDrawArrays( GL_TRIANGLES, 0, 3 );
 

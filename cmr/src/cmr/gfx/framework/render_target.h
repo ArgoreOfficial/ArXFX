@@ -16,7 +16,7 @@ namespace wv
 		int width = 0;
 		int height = 0;
 		
-		wv::GfxTextureDesc* pTextureDescs = nullptr;
+		wv::ArgGfxTextureDesc* pTextureDescs = nullptr;
 		int numTextures = 0;
 	};
 

@@ -7,23 +7,23 @@ add_rules("plugin.vsxmake.autoupdate")
 set_targetdir "bin"
 set_objectdir "build/obj"
 
-target "gfx"
+target "cmr"
     set_kind "binary"
     set_default(true)
 
-    add_files( "gfx/src/**.c", "gfx/libs/**.c" )
-    add_headerfiles( "gfx/src/**.h", "gfx/libs/**.h" )
-    add_filegroups("src/", { rootdir="gfx/src/" } )
-    add_filegroups("libs/", { rootdir="gfx/libs/" } )
+    add_files( "cmr/src/**.c", "cmr/libs/**.c" )
+    add_headerfiles( "cmr/src/**.h", "cmr/libs/**.h" )
+    add_filegroups("src/", { rootdir="cmr/src/" } )
+    add_filegroups("libs/", { rootdir="cmr/libs/" } )
     
     add_packages( "glfw" )
-    add_includedirs( "gfx/src/", "gfx/libs/glad/include/" )
+    add_includedirs( "cmr/src/cmr/", "cmr/libs/glad/include/" )
 target_end()
 
-target "gfx_hgen"
+target "hgen"
     set_kind "binary"
     
-    add_files( "gfx_hgen/**.c" )
-    add_headerfiles( "gfx_hgen/**.h" )
-    add_filegroups("./", { rootdir="gfx_hgen/" } )
+    add_files( "hgen/**.c" )
+    add_headerfiles( "hgen/**.h" )
+    add_filegroups("./", { rootdir="hgen/" } )
 target_end()

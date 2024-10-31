@@ -21,7 +21,7 @@ namespace wv
 	struct sMeshNode;
 	struct sMesh;
 
-	struct GfxTextureDesc;
+	struct ArgGfxTextureDesc;
 	struct sTexture;
 
 	struct sPipelineDesc;

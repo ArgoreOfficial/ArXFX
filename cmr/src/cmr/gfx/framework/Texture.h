@@ -34,7 +34,7 @@ namespace wv
 
 	class cTextureResource;
 
-	struct GfxTextureDesc
+	struct ArgGfxTextureDesc
 	{
 		TextureChannels   channels  = WV_TEXTURE_CHANNELS_RGB;
 		eTextureFormat    format    = WV_TEXTURE_FORMAT_BYTE;

@@ -48,7 +48,7 @@ void parseFile( FILE* _pInputFile, FILE* _pOutFile )
 
 	char* endStr = 0;
 
-	char* prepend = strtok_r( inputStr, "//", &endStr );
+	char* prepend = strtok_r( inputStr, "?", &endStr );
 	fprintf( _pOutFile, prepend );
 	
 	char* line = strtok_r( NULL, "\n", &endStr );
@@ -68,7 +68,7 @@ int main( int argc, char* argv[] )
 	/*
 	if ( argc < 2 )
 	{
-		const char* testStr = "void gfxTest(int _a, int _b);";
+		const char* testStr = "void argGfxTest(int _a, int _b);";
 		parseFunc( 0, testStr );
 		
 		return 0;
