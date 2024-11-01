@@ -145,8 +145,8 @@ size_t getFileSize( FILE* _pFile )
 
 void createShaders()
 {
-	FILE* vsFile = fopen( "vs2.glsl", "r" );
-	FILE* fsFile = fopen( "fs2.glsl", "r" );
+	FILE* vsFile = fopen( "vs.glsl", "r" );
+	FILE* fsFile = fopen( "fs.glsl", "r" );
 
 	size_t vsSize = getFileSize( vsFile ) + 1;
 	char* vsBuffer = malloc( vsSize );
