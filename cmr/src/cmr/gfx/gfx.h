@@ -13,6 +13,9 @@
 #include <gfx/pipeline.h>
 #include <gfx/vertex_layout.h>
 
+#ifdef ARG_GFX_IMP_OPENGL
+#include <gfx/impl/gfx_opengl.h>
+#endif
 #endif
 
 

@@ -3,9 +3,8 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#define TST
+#define ARG_GFX_IMP_OPENGL
 #include <gfx/gfx.h>
-#include <gfx/impl/gfx_opengl.h>
 
 #include <glad/glad.h>
 
@@ -62,7 +61,7 @@ int main()
 	glfwMakeContextCurrent( window );
 	glfwSwapInterval( 1 );
 	
-	argGfxLoadOpenGL( glfwGetProcAddress );
+	argGfxLoadOpenGL( (GLloadproc)glfwGetProcAddress );
 	argGfxViewport( 0, 0, 640, 480 );
 
 	// remove
@@ -93,9 +92,9 @@ int main()
 	}
 
 	// not implemented
-	argGfxDestroyBuffer( vb );
-	argGfxDestroyBuffer( screenDataBuffer );
-	argGfxDestroyPipeline( pipeline );
+	//argGfxDestroyBuffer( vb );
+	//argGfxDestroyBuffer( screenDataBuffer );
+	//argGfxDestroyPipeline( pipeline );
 
 	deinitWindow();
 
