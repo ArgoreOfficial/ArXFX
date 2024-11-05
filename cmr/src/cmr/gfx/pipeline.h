@@ -1,7 +1,7 @@
 #ifndef _ARG_GFX_PIPELINE_H
 #define _ARG_GFX_PIPELINE_H
 
-#include <gfx/gfx_types.h>
+#include <gfx/types.h>
 
 typedef struct ArgGfxPipelineObject
 {

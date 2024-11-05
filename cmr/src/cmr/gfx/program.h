@@ -1,7 +1,7 @@
 #ifndef _ARG_GFX_PROGRAM_H
 #define _ARG_GFX_PROGRAM_H
 
-#include <gfx/gfx_types.h>
+#include <gfx/types.h>
 
 ///////////////////////////////////////////////////////////////////////////////////////
 

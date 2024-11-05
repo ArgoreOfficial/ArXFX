@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 
 #define ARG_GFX_IMP_OPENGL
-#include <gfx/gfx.h>
+#include <gfx.h>
 
 #include <glad/glad.h>
 

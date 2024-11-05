@@ -5,17 +5,12 @@
 #error defining ARG_GFX_STACK_ALLOCATED_OBJECTS and ARG_GFX_HEAP_ALLOCATED_OBJECTS is not allowed
 #endif
 
-#include <gfx/gfx_types.h>
+#include <gfx/types.h>
 
 #include <gfx/buffer.h>
 #include <gfx/program.h>
 #include <gfx/pipeline.h>
 #include <gfx/vertex_layout.h>
-
-#ifdef ARG_GFX_IMP_OPENGL
-#include <gfx/impl/gfx_opengl.h>
-#endif
-
 
 void argGfxViewport( int _x, int _y, int _width, int _height );
 
@@ -30,5 +25,10 @@ void argGfxDraw( uint32_t _firstVertex, uint32_t _numVertices );
 void argGfxDrawIndexed( uint32_t _numIndices );
 
 void argGfxDrawIndexedInstanced( uint32_t _numIndices, uint32_t _numInstances, uint32_t _baseVertex );
+
+
+#ifdef ARG_GFX_IMP_OPENGL
+#include <gfx/impl/gfx_opengl.h>
+#endif
 
 #endif
