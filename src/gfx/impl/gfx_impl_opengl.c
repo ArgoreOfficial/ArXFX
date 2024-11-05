@@ -1,6 +1,5 @@
 
-#include <gfx/impl/gfx_opengl.h>
-
+#include <gfx/impl/gfx_impl_opengl.h>
 #include <gfx.h>
 
 #include <glad/glad.h>
