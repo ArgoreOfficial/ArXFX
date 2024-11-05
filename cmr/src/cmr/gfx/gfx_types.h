@@ -1,7 +1,6 @@
 #pragma once
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <types.h>
 
 #if !defined( ARG_GFX_STACK_ALLOCATED_OBJECTS ) and !defined( ARG_GFX_HEAP_ALLOCATED_OBJECTS )
 #define ARG_GFX_STACK_ALLOCATED_OBJECTS
@@ -16,7 +15,6 @@
 #define ARG_GFX_FDEC( _name ) typedef struct _name _name
 
 typedef unsigned short bufferBindingIndex_t;
-typedef uint32_t ArgHandle;
 
 ARG_GFX_FDEC( ArgGfxTextureDesc );
 ARG_GFX_FDEC( ArgGfxTextureObject );

@@ -74,6 +74,8 @@ int main()
 	argGfxBindBuffer( vb );
 	argGfxBindBuffer( ib );
 
+	argGfxBindVertexLayout( &vertexLayout );
+
 	argGfxBindBufferIndex( screenDataBuffer, 0 );
 
 	while ( !glfwWindowShouldClose( window ) )

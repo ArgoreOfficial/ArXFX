@@ -38,3 +38,8 @@ namespace wv
 	};
 
 }
+
+
+ArgGfxRenderTarget argGfxCreateRenderTarget( ArgGfxRenderTarget _renderTarget, ArgGfxRenderTargetDesc* _desc );
+void argGfxDestroyRenderTarget( ArgGfxRenderTarget _renderTarget );
+void argGfxSetRenderTarget( ArgGfxRenderTarget _renderTarget );

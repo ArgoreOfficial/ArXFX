@@ -1,6 +1,9 @@
 #ifndef _ARG_TYPES_H
 #define _ARG_TYPES_H
 
+#include <stdint.h>
+#include <stdbool.h>
+
 typedef enum ArgType
 {
 	ARG_INT,
@@ -12,5 +15,7 @@ typedef enum ArgType
 	ARG_FLOAT,
 	ARG_DOUBLE
 } ArgType;
+
+typedef uint32_t ArgHandle;
 
 #endif

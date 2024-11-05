@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../gfx_funcdefs.h"
-#include "../gfx_types.h"
+#include <gfx/gfx_funcdefs.h>
+#include <gfx/gfx_types.h>
 
 #include <glad/glad.h>
 
@@ -70,30 +70,6 @@ static GLenum getGlBufferUsage( ArgGfxBufferUsage _usage )
 	}
 
 	return GL_NONE;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////
-
-static void bindVertexLayout( ArgGfxVertexLayout* _pVertexLayout )
-{
-	int pointer = 0;
-	for( size_t i = 0; i < _pVertexLayout->numAttributes; i++ )
-	{
-		ArgGfxVertexAttrib* attrib = &_pVertexLayout->attributes[ i ];
-
-		GLenum type = GL_NONE;
-		switch( attrib->type )
-		{
-		case ARG_FLOAT:        type = GL_FLOAT;        break;
-		case ARG_INT:          type = GL_INT;          break;
-		case ARG_UNSIGNED_INT: type = GL_UNSIGNED_INT; break;
-		}
-
-		glVertexAttribPointer( i, attrib->componentCount, type, attrib->normalized, _pVertexLayout->stride, pointer );
-		glEnableVertexAttribArray( i );
-
-		pointer += attrib->size;
-	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -194,6 +170,10 @@ ArgGfxPipeline argGfxCreatePipeline( ArgGfxPipeline _pipeline, ArgGfxPipelineDes
 	return _pipeline;
 }
 
+void argGfxDestroyPipeline( ArgGfxPipeline _pipeline )
+{
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 
 void argGfxBindPipeline( ArgGfxPipeline _pipeline )
@@ -276,8 +256,8 @@ void argGfxBufferSubData( ArgGfxBuffer _buffer, void* _pData, size_t _size, size
 
 void argGfxDraw( uint32_t _firstVertex, uint32_t _numVertices )
 {
-	ArgGfxPipelineObject* pPipeline = ARG_GFX_GET_PIPELINE( s_currentlyBoundPipeline );
-	bindVertexLayout( pPipeline->pVertexLayout );
+	//ArgGfxPipelineObject* pPipeline = ARG_GFX_GET_PIPELINE( s_currentlyBoundPipeline );
+	//argGfxBindVertexLayout( pPipeline->pVertexLayout );
 
 	glDrawArrays( GL_TRIANGLES, _firstVertex, _numVertices );
 }
@@ -286,10 +266,34 @@ void argGfxDraw( uint32_t _firstVertex, uint32_t _numVertices )
 
 void argGfxDrawIndexed( uint32_t _numIndices )
 {
-	ArgGfxPipelineObject* pPipeline = ARG_GFX_GET_PIPELINE( s_currentlyBoundPipeline );
-	bindVertexLayout( pPipeline->pVertexLayout );
+	//ArgGfxPipelineObject* pPipeline = ARG_GFX_GET_PIPELINE( s_currentlyBoundPipeline );
+	//argGfxBindVertexLayout( pPipeline->pVertexLayout );
 
 	glDrawElements( GL_TRIANGLES, _numIndices, GL_UNSIGNED_INT, 0 );
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+void argGfxBindVertexLayout( ArgGfxVertexLayout* _pVertexLayout )
+{
+	int pointer = 0;
+	for ( size_t i = 0; i < _pVertexLayout->numAttributes; i++ )
+	{
+		ArgGfxVertexAttrib* attrib = &_pVertexLayout->attributes[ i ];
+
+		GLenum type = GL_NONE;
+		switch ( attrib->type )
+		{
+		case ARG_FLOAT:        type = GL_FLOAT;        break;
+		case ARG_INT:          type = GL_INT;          break;
+		case ARG_UNSIGNED_INT: type = GL_UNSIGNED_INT; break;
+		}
+
+		glVertexAttribPointer( i, attrib->componentCount, type, attrib->normalized, _pVertexLayout->stride, pointer );
+		glEnableVertexAttribArray( i );
+
+		pointer += attrib->size;
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

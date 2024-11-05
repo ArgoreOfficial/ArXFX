@@ -19,4 +19,6 @@ typedef struct ArgGfxVertexLayout
 	unsigned int stride;
 } ArgGfxVertexLayout;
 
+void argGfxBindVertexLayout( ArgGfxVertexLayout* _pVertexLayout );
+
 #endif

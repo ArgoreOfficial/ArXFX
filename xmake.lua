@@ -19,11 +19,3 @@ target "cmr"
     add_packages( "glfw" )
     add_includedirs( "cmr/src/cmr/", "cmr/libs/glad/include/" )
 target_end()
-
-target "hgen"
-    set_kind "binary"
-    
-    add_files( "hgen/**.c" )
-    add_headerfiles( "hgen/**.h" )
-    add_filegroups("./", { rootdir="hgen/" } )
-target_end()

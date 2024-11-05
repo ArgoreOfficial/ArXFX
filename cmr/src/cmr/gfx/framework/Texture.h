@@ -4,61 +4,60 @@
 #include <wv/Graphics/Types.h>
 #include <wv/Resource/Resource.h>
 
-///////////////////////////////////////////////////////////////////////////////////////
-
-namespace wv
+enum TextureChannels
 {
+	WV_TEXTURE_CHANNELS_R = 1,
+	WV_TEXTURE_CHANNELS_RG,
+	WV_TEXTURE_CHANNELS_RGB,
+	WV_TEXTURE_CHANNELS_RGBA
+};
 
-///////////////////////////////////////////////////////////////////////////////////////
+enum eTextureFormat
+{
+	WV_TEXTURE_FORMAT_BYTE,
+	WV_TEXTURE_FORMAT_INT,
+	WV_TEXTURE_FORMAT_FLOAT
+};
 
-	enum TextureChannels
-	{
-		WV_TEXTURE_CHANNELS_R = 1,
-		WV_TEXTURE_CHANNELS_RG,
-		WV_TEXTURE_CHANNELS_RGB,
-		WV_TEXTURE_CHANNELS_RGBA
-	};
+enum eTextureFiltering
+{
+	WV_TEXTURE_FILTER_NEAREST,
+	WV_TEXTURE_FILTER_LINEAR,
+};
 
-	enum eTextureFormat
-	{
-		WV_TEXTURE_FORMAT_BYTE,
-		WV_TEXTURE_FORMAT_INT,
-		WV_TEXTURE_FORMAT_FLOAT
-	};
+class cTextureResource;
 
-	enum eTextureFiltering
-	{
-		WV_TEXTURE_FILTER_NEAREST,
-		WV_TEXTURE_FILTER_LINEAR,
-	};
+struct ArgGfxTextureDesc
+{
+	TextureChannels   channels  = WV_TEXTURE_CHANNELS_RGB;
+	eTextureFormat    format    = WV_TEXTURE_FORMAT_BYTE;
+	eTextureFiltering filtering = WV_TEXTURE_FILTER_NEAREST;
+	int width = 0;
+	int height = 0;
+	int numChannels = 0;
+	bool generateMipMaps = false;
+};
 
-	class cTextureResource;
+struct sTexture
+{
+	eTextureFiltering m_filtering;
 
-	struct ArgGfxTextureDesc
-	{
-		TextureChannels   channels  = WV_TEXTURE_CHANNELS_RGB;
-		eTextureFormat    format    = WV_TEXTURE_FORMAT_BYTE;
-		eTextureFiltering filtering = WV_TEXTURE_FILTER_NEAREST;
-		int width = 0;
-		int height = 0;
-		int numChannels = 0;
-		bool generateMipMaps = false;
-	};
-
-	struct sTexture
-	{
-		eTextureFiltering m_filtering;
-
-		wv::Handle textureObjectHandle = 0; // opengl specific
-		uint64_t textureHandle = 0; // opengl specific
+	wv::Handle textureObjectHandle = 0; // opengl specific
+	uint64_t textureHandle = 0; // opengl specific
 		
-		uint8_t* pData = nullptr;
-		unsigned int dataSize = 0;
+	uint8_t* pData = nullptr;
+	unsigned int dataSize = 0;
 
-		int width  = 0;
-		int height = 0;
-		int numChannels = 0;
+	int width  = 0;
+	int height = 0;
+	int numChannels = 0;
 
-		void* pPlatformData = nullptr;
-	};
-}
+	void* pPlatformData = nullptr;
+};
+
+
+
+ArgGfxTexture argGfxCreateTexture( ArgGfxTexture _texture, ArgGfxTextureDesc* _pDesc );
+void argGfxBufferTextureData( ArgGfxTexture _texture, void* _pData, int _generateMipMaps );
+void argGfxDestroyTexture( ArgGfxTexture _texture );
+void argGfxBindTextureToSlot( ArgGfxTexture _texture, unsigned int _slot );

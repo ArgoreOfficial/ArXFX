@@ -28,4 +28,11 @@ typedef struct ArgGfxProgramObject
 	void* pPlatformData;
 } ArgGfxProgramObject;
 
+
+
+ArgGfxProgram argGfxCreateProgram( ArgGfxProgram _program, ArgGfxProgramDesc* _desc );
+
+void argGfxDestroyProgram( ArgGfxProgram _program );
+
+
 #endif
