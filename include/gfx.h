@@ -26,9 +26,4 @@ void argGfxDrawIndexed( uint32_t _numIndices );
 
 void argGfxDrawIndexedInstanced( uint32_t _numIndices, uint32_t _numInstances, uint32_t _baseVertex );
 
-
-#ifdef ARG_GFX_IMP_OPENGL
-#include <gfx/impl/gfx_impl_opengl.h>
-#endif
-
 #endif

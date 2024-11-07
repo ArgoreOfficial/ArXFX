@@ -1,6 +1,6 @@
 
-#include <gfx/impl/gfx_impl_opengl.h>
 #include <gfx.h>
+#include <gfx/impl/gfx_impl_opengl.h>
 
 #include <glad/glad.h>
 
@@ -8,6 +8,7 @@
 #include <memory.h>
 #include <stdio.h>
 
+///////////////////////////////////////////////////////////////////////////////////////
 
 #ifdef ARG_GFX_STACK_ALLOCATED_OBJECTS
 
@@ -26,6 +27,7 @@ OBJECT_ALLOC_FUNC( ArgGfxBuffer, s_bufferObjects, ARG_GFX_MAX_GPU_BUFFERS )
 
 #endif // ARG_GFX_STACK_ALLOCATED_OBJECTS
 
+///////////////////////////////////////////////////////////////////////////////////////
 
 void glMessageCallback( GLenum _source, GLenum _type, GLuint _id, GLenum _severity, GLsizei _length, GLchar const* _message, void const* _userData )
 {
@@ -83,6 +85,18 @@ void argGfxClearRenderTarget( ArgGfxClearMask _mask )
 	if ( _mask && ARG_GFX_CLEAR_MASK_DEPTH ) mask |= GL_DEPTH_BUFFER_BIT;
 
 	glClear( mask );
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+void argGfxSetFillMode( ArgGfxFillMode _mode )
+{
+	switch( _mode )
+	{
+	case ARG_GFX_FILL_MODE_SOLID:     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );  break;
+	case ARG_GFX_FILL_MODE_WIREFRAME: glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );  break;
+	case ARG_GFX_FILL_MODE_POINTS:    glPolygonMode( GL_FRONT_AND_BACK, GL_POINT ); break;
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -214,6 +228,8 @@ void argGfxBindVertexLayout( ArgGfxVertexLayout* _pVertexLayout )
 	}
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
+
 ArgGfxBuffer argGfxCreateBuffer( ArgGfxBuffer _buffer, ArgGfxBufferDesc* _desc )
 {
 	ArgGfxBufferObject* pBuffer = NULL;
@@ -246,6 +262,8 @@ ArgGfxBuffer argGfxCreateBuffer( ArgGfxBuffer _buffer, ArgGfxBufferDesc* _desc )
 
 	return _buffer;
 }
+
+///////////////////////////////////////////////////////////////////////////////////////
 
 void argGfxDestroyBuffer( ArgGfxBuffer _buffer )
 {

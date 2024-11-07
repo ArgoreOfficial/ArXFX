@@ -3,8 +3,8 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#define ARG_GFX_IMP_OPENGL
 #include <gfx.h>
+#include <gfx/impl/gfx_impl_opengl.h>
 
 #include <glad/glad.h>
 
