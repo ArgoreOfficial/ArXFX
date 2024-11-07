@@ -93,10 +93,9 @@ int main()
 		glfwPollEvents();
 	}
 
-	// not implemented
-	//argGfxDestroyBuffer( vb );
-	//argGfxDestroyBuffer( screenDataBuffer );
-	//argGfxDestroyPipeline( pipeline );
+	argGfxDestroyBuffer( vb );
+	argGfxDestroyBuffer( screenDataBuffer );
+	argGfxDestroyPipeline( pipeline );
 
 	deinitWindow();
 

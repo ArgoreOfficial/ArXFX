@@ -39,8 +39,6 @@ typedef struct ArgGfxBufferObject
 
 	ArgHandle blockIndex;
 	bufferBindingIndex_t bindingIndex;
-
-	void* pPlatformData;
 };
 
 

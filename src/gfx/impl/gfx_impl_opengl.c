@@ -95,7 +95,7 @@ ArgGfxProgram argGfxCreateProgram( ArgGfxProgram _program, ArgGfxProgramDesc* _d
 #ifdef ARG_GFX_STACK_ALLOCATED_OBJECTS
 	if ( _program == 0 )
 	{
-		_program = allocateArgGfxProgram();
+		_program = argGfxAllocateArgGfxProgram();
 
 		if ( _program == 0 ) // error
 			return 0;
@@ -134,7 +134,7 @@ ArgGfxPipeline argGfxCreatePipeline( ArgGfxPipeline _pipeline, ArgGfxPipelineDes
 {
 	if ( _pipeline == 0 )
 	{
-		_pipeline = allocateArgGfxPipeline();
+		_pipeline = argGfxAllocateArgGfxPipeline();
 		if ( _pipeline == 0 ) // error
 			return 0;
 	}
@@ -158,8 +158,13 @@ ArgGfxPipeline argGfxCreatePipeline( ArgGfxPipeline _pipeline, ArgGfxPipelineDes
 	return _pipeline;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
+
 void argGfxDestroyPipeline( ArgGfxPipeline _pipeline )
 {
+	ArgGfxPipelineObject* pPipeline = ARG_GFX_GET_PIPELINE( _pipeline );
+	glDeleteProgramPipelines( 1, &pPipeline->handle );
+	argGfxDeallocateArgGfxPipeline( _pipeline );
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -167,13 +172,9 @@ void argGfxDestroyPipeline( ArgGfxPipeline _pipeline )
 void argGfxBindPipeline( ArgGfxPipeline _pipeline )
 {
 	s_currentlyBoundPipeline = _pipeline;
-
 	ArgGfxPipelineObject* pPipeline = ARG_GFX_GET_PIPELINE( _pipeline );
 	glBindProgramPipeline( pPipeline->handle );
 }
-
-///////////////////////////////////////////////////////////////////////////////////////
-
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -220,12 +221,12 @@ ArgGfxBuffer argGfxCreateBuffer( ArgGfxBuffer _buffer, ArgGfxBufferDesc* _desc )
 #if defined( ARG_GFX_STACK_ALLOCATED_OBJECTS )
 	if ( _buffer == 0 )
 	{
-		_buffer = allocateArgGfxBuffer();
+		_buffer = argGfxAllocateArgGfxBuffer();
 		if ( _buffer == 0 ) // error
 			return 0;
 	}
-
-	pBuffer = &s_bufferObjects[ _buffer - 1 ];
+	
+	pBuffer = ARG_GFX_GET_BUFFER( _buffer );
 #elif defined( ARG_GFX_STACK_ALLOCATED_OBJECTS )
 	if ( _buffer == 0 )
 	{
@@ -244,6 +245,13 @@ ArgGfxBuffer argGfxCreateBuffer( ArgGfxBuffer _buffer, ArgGfxBufferDesc* _desc )
 	glNamedBufferData( pBuffer->handle, _desc->size, 0, usage );
 
 	return _buffer;
+}
+
+void argGfxDestroyBuffer( ArgGfxBuffer _buffer )
+{
+	ArgGfxBufferObject* pBuffer = ARG_GFX_GET_BUFFER( _buffer );
+	glDeleteBuffers( 1, &pBuffer->handle );
+	argGfxDeallocateArgGfxBuffer( _buffer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

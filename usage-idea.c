@@ -4,7 +4,6 @@ typedef struct GpuImage { int width, height; } GpuImage;
 typedef struct GpuImageView GpuImageView;
 typedef struct GpxTexture GpxTexture;
 typedef struct GpxSprite GpxSprite;
-typedef struct GpsSpriteBatch GpsSpriteBatch;
 typedef struct GpxSpriteBatch GpxSpriteBatch;
 typedef struct GpxCamera GpxCamera;
 
@@ -36,7 +35,7 @@ int main()
     GpxSprite*  pEnemySprite  = gpxLoadSprite( pSpritesheet, 64, 0, 64, 64 );
     GpxSprite*  pHealthBarSprite;
 
-    GpsSpriteBatch* pBackgroundSB = gpxSpriteBatchBegin();
+    GpxSpriteBatch* pBackgroundSB = gpxSpriteBatchBegin();
     /* draw background sprites */
     gpxSpriteBatchEnd( pBackgroundSB );
 
