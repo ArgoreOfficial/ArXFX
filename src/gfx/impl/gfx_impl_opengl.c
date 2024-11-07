@@ -17,9 +17,9 @@ static ArgGfxBufferObject s_bufferObjects[ ARG_GFX_MAX_GPU_BUFFERS ];
 static ArgGfxPipelineObject s_pipelineObjects[ ARG_GFX_MAX_PIPELINES ];
 static ArgGfxPipeline s_currentlyBoundPipeline;
 
-#define ARG_GFX_GET_PROGRAM( _program ) &s_programObjects[ _program - 1 ]
-#define ARG_GFX_GET_PIPELINE( _pipeline ) &s_pipelineObjects[ _pipeline - 1 ]
-#define ARG_GFX_GET_BUFFER( _buffer ) &s_bufferObjects[ _buffer - 1 ]
+#define ARG_GFX_GET_PROGRAM( _program ) s_programObjects + ( _program - 1 )
+#define ARG_GFX_GET_PIPELINE( _pipeline ) s_pipelineObjects + ( _pipeline - 1 )
+#define ARG_GFX_GET_BUFFER( _buffer ) s_bufferObjects + ( _buffer - 1 )
 
 OBJECT_ALLOC_FUNC( ArgGfxProgram, s_programObjects, ARG_GFX_MAX_PROGRAMS )
 OBJECT_ALLOC_FUNC( ArgGfxPipeline, s_pipelineObjects, ARG_GFX_MAX_PIPELINES )
@@ -144,6 +144,15 @@ ArgGfxProgram argGfxCreateProgram( ArgGfxProgram _program, ArgGfxProgramDesc* _d
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
+void argGfxDestroyProgram( ArgGfxProgram _program )
+{
+	ArgGfxProgramObject* pProgram = ARG_GFX_GET_PROGRAM( _program );
+	glDeleteProgram( pProgram->handle );
+	argGfxDeallocateArgGfxProgram( _program );
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
 ArgGfxPipeline argGfxCreatePipeline( ArgGfxPipeline _pipeline, ArgGfxPipelineDesc* _desc )
 {
 	if ( _pipeline == 0 )
@@ -202,6 +211,13 @@ void argGfxDraw( uint32_t _firstVertex, uint32_t _numVertices )
 void argGfxDrawIndexed( uint32_t _numIndices )
 {
 	glDrawElements( GL_TRIANGLES, _numIndices, GL_UNSIGNED_INT, 0 );
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+void argGfxDrawIndexedInstanced( uint32_t _numIndices, uint32_t _numInstances, uint32_t _baseVertex )
+{
+	glDrawElementsInstancedBaseVertex( GL_TRIANGLES, _numIndices, GL_UNSIGNED_INT, 0, _numInstances, _baseVertex );
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -305,6 +321,25 @@ void argGfxBufferSubData( ArgGfxBuffer _buffer, void* _pData, size_t _size, size
 {
 	ArgGfxBufferObject* pBuffer = ARG_GFX_GET_BUFFER( _buffer );
 	glNamedBufferSubData( pBuffer->handle, _base, _size, _pData );
+}
+
+void argGfxCopyBufferSubData( ArgGfxBuffer _readBuffer, ArgGfxBuffer _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size )
+{
+	ArgGfxBufferObject* pReadBuffer  = ARG_GFX_GET_BUFFER( _readBuffer );
+	ArgGfxBufferObject* pWriteBuffer = ARG_GFX_GET_BUFFER( _writeBuffer );
+	
+	glCopyNamedBufferSubData( pReadBuffer->handle, pWriteBuffer->handle, _readOffset, _writeOffset, _size );
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+void argGfxBindVertexBuffer( ArgGfxBuffer _vertexBuffer )
+{
+	ArgGfxBufferObject* pBuffer = ARG_GFX_GET_BUFFER( _vertexBuffer );
+	printf( "argGfxBindVertexBuffer is not implemented\n" );
+
+	// bindBufferIndex( m_vertexBuffer, SbVertices.bindingIndex.value );
+	// bindBuffer( m_indexBuffer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

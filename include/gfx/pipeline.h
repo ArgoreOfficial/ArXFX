@@ -19,9 +19,7 @@ typedef struct ArgGfxPipelineDesc
 } ArgGfxPipelineDesc;
 
 ArgGfxPipeline argGfxCreatePipeline( ArgGfxPipeline _pipeline, ArgGfxPipelineDesc* _desc );
-
 void argGfxDestroyPipeline( ArgGfxPipeline _pipeline );
-
 void argGfxBindPipeline( ArgGfxPipeline _pipeline );
 
 #endif

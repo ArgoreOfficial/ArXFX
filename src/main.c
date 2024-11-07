@@ -145,8 +145,11 @@ size_t getFileSize( FILE* _pFile )
 
 void createShaders()
 {
+	// load shader files
 	FILE* vsFile = fopen( "vs.glsl", "r" );
 	FILE* fsFile = fopen( "fs.glsl", "r" );
+
+	// a lot of this should be moved to something like argFileXX later
 
 	size_t vsSize = getFileSize( vsFile ) + 1;
 	char* vsBuffer = malloc( vsSize );
@@ -169,20 +172,21 @@ void createShaders()
 	fclose( vsFile );
 	fclose( fsFile );
 
+	// create shader program descriptors
 	ArgGfxProgramDesc vsDesc;
-	vsDesc.type = ARG_GFX_SHADER_TYPE_VERTEX;
+	vsDesc.type   = ARG_GFX_SHADER_TYPE_VERTEX;
 	vsDesc.source = vsBuffer;
 
 	ArgGfxProgramDesc fsDesc;
-	fsDesc.type = ARG_GFX_SHADER_TYPE_FRAGMENT;
+	fsDesc.type   = ARG_GFX_SHADER_TYPE_FRAGMENT;
 	fsDesc.source = fsBuffer;
-
+	
+	// create shader programs
 	ArgGfxProgram vs = argGfxCreateProgram( 0, &vsDesc );
 	ArgGfxProgram fs = argGfxCreateProgram( 0, &fsDesc );
 
-	if( vsBuffer ) free( vsBuffer );
+	if( vsBuffer ) free( vsBuffer ); // delete source data, we don't need it anymore
 	if( fsBuffer ) free( fsBuffer );
-
 
 	// we're using a stack allocated vertex layout here, but it could just as well be heap allocated
 	ArgGfxVertexAttrib posAttrib = { "POSITION", 3, ARG_FLOAT, false, sizeof(float) * 3 };
@@ -199,7 +203,9 @@ void createShaders()
 	pipelineDesc.vertexProgram = vs;
 	pipelineDesc.pVertexLayout = &vertexLayout;
 	pipeline = argGfxCreatePipeline( 0, &pipelineDesc );
-		
+	
+	argGfxDestroyProgram( vs );
+	argGfxDestroyProgram( fs );
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -218,8 +224,8 @@ void initBuffers()
 	vbDesc.type  = ARG_GFX_BUFFER_TYPE_VERTEX;
 	vbDesc.usage = ARG_GFX_BUFFER_USAGE_STATIC_DRAW;
 	vbDesc.size  = sizeof( vertices );
-
 	vb = argGfxCreateBuffer( 0, &vbDesc );
+
 	argGfxBufferSubData( vb, vertices, sizeof( vertices ), 0 );
 
 	// create index buffer

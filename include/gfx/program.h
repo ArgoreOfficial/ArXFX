@@ -31,7 +31,6 @@ typedef struct ArgGfxProgramObject
 
 
 ArgGfxProgram argGfxCreateProgram( ArgGfxProgram _program, ArgGfxProgramDesc* _desc );
-
 void argGfxDestroyProgram( ArgGfxProgram _program );
 
 
