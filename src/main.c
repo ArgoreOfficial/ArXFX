@@ -212,7 +212,7 @@ void createShaders()
 
 void initBuffers()
 {
-	// create vertex buffer
+	// vertex data for the square
 	Vertex vertices[] = {
 		{ -0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f },
 		{ -0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f },
@@ -220,29 +220,33 @@ void initBuffers()
 		{  0.5f,  0.5f, 0.0f,     1.0f, 1.0f, 1.0f }
 	};
 
+	// create vertex buffer
 	ArgGfxBufferDesc vbDesc;
 	vbDesc.type  = ARG_GFX_BUFFER_TYPE_VERTEX;
 	vbDesc.usage = ARG_GFX_BUFFER_USAGE_STATIC_DRAW;
 	vbDesc.size  = sizeof( vertices );
 	vb = argGfxCreateBuffer( 0, &vbDesc );
 
-	argGfxBufferSubData( vb, vertices, sizeof( vertices ), 0 );
+	argGfxBufferSubData( vb, vertices, sizeof( vertices ), 0 ); // copy the data to the GPU
 
-	// create index buffer
+	// index data for the square
 	unsigned int indices[] = { 0, 1, 2, 1, 3, 2 };
 	
+	// cretae index buffer
 	ArgGfxBufferDesc ibDesc;
 	ibDesc.type  = ARG_GFX_BUFFER_TYPE_INDEX;
 	ibDesc.usage = ARG_GFX_BUFFER_USAGE_STATIC_DRAW;
 	ibDesc.size  = sizeof( indices );
-	
 	ib = argGfxCreateBuffer( 0, &ibDesc );
-	argGfxBufferSubData( ib, indices, sizeof( indices ), 0 );
+	
+	argGfxBufferSubData( ib, indices, sizeof( indices ), 0 ); // copy the data to the GPU
 	
 	// create screen data buffer
+	// OpenGL:   Shader Storage Buffer Object
+	// Direct3D: RWBuffer
 	ArgGfxBufferDesc screenDataDesc;
-	screenDataDesc.size = sizeof( ScreenData );
-	screenDataDesc.type = ARG_GFX_BUFFER_TYPE_DYNAMIC;
+	screenDataDesc.size  = sizeof( ScreenData );
+	screenDataDesc.type  = ARG_GFX_BUFFER_TYPE_DYNAMIC;
 	screenDataDesc.usage = ARG_GFX_BUFFER_USAGE_DYNAMIC_DRAW;
 
 	screenDataBuffer = argGfxCreateBuffer( 0, &screenDataDesc );
