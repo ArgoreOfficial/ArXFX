@@ -1,8 +1,6 @@
 #pragma once
 
-#include <wv/Types.h>
-#include <wv/Graphics/Types.h>
-#include <wv/Resource/Resource.h>
+#include <gfx/types.h>
 
 enum TextureChannels
 {
@@ -38,12 +36,13 @@ struct ArgGfxTextureDesc
 	bool generateMipMaps = false;
 };
 
-struct sTexture
+typedef struct ArgGfxTexture
 {
 	eTextureFiltering m_filtering;
 
-	wv::Handle textureObjectHandle = 0; // opengl specific
-	uint64_t textureHandle = 0; // opengl specific
+	/* opengl specific */
+	ArgHandle textureObjectHandle = 0; 
+	uint64_t textureHandle        = 0;
 		
 	uint8_t* pData = nullptr;
 	unsigned int dataSize = 0;
@@ -53,7 +52,7 @@ struct sTexture
 	int numChannels = 0;
 
 	void* pPlatformData = nullptr;
-};
+} ArgGfxTexture;
 
 
 
