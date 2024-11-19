@@ -1,9 +1,13 @@
-#ifndef _ARG_TYPES_H
-#define _ARG_TYPES_H
+#ifndef _TYPES_H
+#define _TYPES_H
 
 #include <stdint.h>
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+	
 typedef enum ArgType
 {
 	ARG_INT,
@@ -18,4 +22,8 @@ typedef enum ArgType
 
 typedef uint32_t ArgHandle;
 
-#endif
+#ifdef __cplusplus
+}
+#endif // __cplusplus
+
+#endif // _TYPES_H

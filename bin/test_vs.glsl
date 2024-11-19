@@ -5,12 +5,24 @@ layout (location = 1) in vec3 aColor;
 
 struct ScreenData
 {
+    mat4x4 proj;
     int width;
     int height;
 };
 
-layout(binding = 0, std430) buffer ssbo2 {
+struct PrimitiveData
+{
+	mat4x4 model;
+	int pixelPos[2];
+	int pixelSize[2];
+};
+
+layout(binding = 0, std430) buffer ssbo1 {
     ScreenData screenData;
+};
+
+layout(binding = 1, std430) buffer ssbo2 {
+    PrimitiveData primData;
 };
 
 out gl_PerVertex
@@ -23,10 +35,7 @@ out vec3 Color;
 void main()
 {
     vec3 pos = aPosition;
-
-    float aspect = float( screenData.width ) / float( screenData.height );
-    pos.x /= aspect;
     Color = aColor;
 
-    gl_Position = vec4( pos, 1.0 );
+    gl_Position = screenData.proj * primData.model * vec4( pos, 1.0 );
 }

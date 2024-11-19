@@ -1,6 +1,6 @@
 #pragma once
 
-#include <gfx/types.h>
+#include <ARG/gfx/types.h>
 
 enum TextureChannels
 {
