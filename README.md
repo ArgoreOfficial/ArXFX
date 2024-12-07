@@ -1,6 +1,4 @@
 # Argore GFX
-Another C++ Game framework  
-Built with modularity in mind, "include only what you use" kinda mindset
-
+C framework, currently only for (OpenGL) rendering. More to come
 
 README TODO
