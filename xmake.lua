@@ -12,15 +12,15 @@ target "ArgoreSDK"
     set_default(true)
 
     add_files( 
-            "arg/src/**.c",
+            "src/**.c",
             "libs/**.c"
         )
 
     add_headerfiles( 
-            "arg/include/**.h", 
+            "src/**.h", 
             "libs/**.h"
         )
     
     add_packages( "glfw", "glm" )
-    add_includedirs( "arg/include/", "libs/glad/include/" )
+    add_includedirs( "src/", "libs/glad/include/" )
 target_end()
