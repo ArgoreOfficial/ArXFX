@@ -1,4 +1,3 @@
-# Argore GFX
-C framework, currently only for (OpenGL) rendering. More to come
+# ArXFX
+game framework, currently only OpenGL rendering. More to come
 
-README TODO

@@ -1,0 +1,3 @@
+[submodule "ArX"]
+	path = ArX
+	url = https://github.com/ArgoreOfficial/ArX.git

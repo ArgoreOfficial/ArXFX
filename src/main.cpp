@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #include <ARG/gfx.h>
-#include <ARG/gfh/mesh.h>
+#include <arx/>
 
 #define GLFW_INCLUDE_NONE
 #define GLFW_EXPOSE_NATIVE_WIN32

@@ -1,3 +1,5 @@
+#ifdef asd
+
 #include <backends/imgui_impl_vulkan.h>
 
 #include "vk_imgui.h"
@@ -109,3 +111,5 @@ void vkImGuiEndFrame( VkCommandBuffer _cmd, VkImageView _targetImageView, VkExte
 	ImGui_ImplVulkan_RenderDrawData( ImGui::GetDrawData(), _cmd );
 	vkCmdEndRendering( _cmd );
 }
+
+#endif
