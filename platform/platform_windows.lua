@@ -27,6 +27,9 @@ function target_platform_windows( target )
     target:add( "headerfiles", "./libs/**.h" )
     target:add( "includedirs", "./libs/glad/include/" )
     
+	target:set( "targetdir", "./bin/Windows/$(mode)" )
+	target:set( "objectdir", "./build/obj/Windows/$(mode)" )
+
     if target:is_arch( "x64" ) then
         import( root .. "platform.support.glfw" )(target)
 
