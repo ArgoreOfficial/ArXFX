@@ -36,14 +36,6 @@ public:
 		static inline std::unordered_map<std::string, allocator_fptr_t> g_allocators{};
 
 	};
-	
-	struct Entry
-	{
-		Entry( const std::string& _name, allocator_fptr_t _allocator ) {
-			id = ILowLevelGraphics::Registry::addEntry( _name, _allocator );
-		}
-		int32_t id = -1;
-	};
 
 	virtual Result init() = 0;
 	virtual void viewport( int _x, int _y, int _width, int _height ) = 0;
@@ -214,6 +206,24 @@ protected:
 	arx::unordered_array<BufferID,         Buffer>           m_buffers;
 	
 	CmdBufferID m_currentCmdBuffer{};
+
+
+};
+
+template<typename _Ty, typename _Pty>
+class Registar : public _Pty
+{
+public:
+	struct Entry
+	{
+		Entry() {
+			id = _Pty::Registry::addEntry( _Ty::getName(), _Ty::allocate );
+		}
+		int32_t id = -1;
+	};
+
+private:
+	static inline Entry g_entry{};
 };
 
 }

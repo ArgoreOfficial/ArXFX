@@ -4,9 +4,12 @@
 
 namespace afx { 
 
-class OpenGLGraphics : public ILowLevelGraphics
+class OpenGLGraphics : public Registar<OpenGLGraphics, ILowLevelGraphics>
 {
 public:
+	static std::string getName() { return "OpenGL"; }
+	static ILowLevelGraphics* allocate( void* _pUserData ) { return new OpenGLGraphics(); }
+
 	// Inherited via ILowLevelRenderer
 	Result init() override;
 	void viewport( int _x, int _y, int _width, int _height ) override;
@@ -46,8 +49,6 @@ private:
 	void _cmdDrawIndexed( const CmdBuffer& _rCmd, uint32_t _indexCount, uint32_t _instanceCount, uint32_t _firstIndex, int32_t _vertexOffset, uint32_t _firstInstance ) override;
 	void _cmdCopyBuffer( const CmdBuffer& _rCmd, const Buffer& _rSrc, const Buffer& _rDst, size_t _srcOffset, size_t _dstOffset, size_t _size ) override;
 	void _cmdBindIndexBuffer( const CmdBuffer& _rCmd, const Buffer& _rIndexBuffer, size_t _offset, Type _type ) override;
-
-	static ILowLevelGraphics::Entry g_register;
 };
 
 }

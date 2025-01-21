@@ -11,13 +11,6 @@ typedef void* ( *GLloadproc )( const char* name );
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-static afx::ILowLevelGraphics* openGLRendererAllocator( void* _pUserData ) {
-    return new afx::OpenGLGraphics();
-}
-afx::ILowLevelGraphics::Entry afx::OpenGLGraphics::g_register{ "OpenGL", openGLRendererAllocator };
-
-///////////////////////////////////////////////////////////////////////////////////////
-
 static void glMessageCallback( GLenum _source, GLenum _type, GLuint _id, GLenum _severity, GLsizei _length, GLchar const* _message, void const* _userData )
 {
     printf( "%s\n", _message );
