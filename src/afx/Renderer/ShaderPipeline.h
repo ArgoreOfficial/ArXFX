@@ -10,6 +10,13 @@ enum class ShaderModuleType
 	kFRAGMENT
 };
 
+
+enum class FillMode
+{
+	kSOLID = 0,
+	kWIREFRAME,
+	kPOINTS
+};
 /* vertex.h ? */
 struct VertexAttrib
 {

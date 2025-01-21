@@ -10,8 +10,8 @@ public:
 	// Inherited via ILowLevelRenderer
 	Result init() override;
 	Result viewport( int _x, int _y, int _width, int _height ) override;
-	Result setClearColor( float _r, float _g, float _b, float _a ) override;
-	Result clearRenderTarget( ClearMask _mask ) override;
+	void clearColor( float _r, float _g, float _b, float _a ) override;
+	void clearDepth( float _r, float _g, float _b, float _a ) override;
 	Result setFillMode( FillMode _mode ) override;
 	Result draw( uint32_t _firstVertex, uint32_t _numVertices ) override;
 	Result drawIndexed( uint32_t _numIndices ) override;

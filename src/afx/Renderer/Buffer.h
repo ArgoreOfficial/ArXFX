@@ -4,18 +4,18 @@
 
 namespace afx {
 
-enum BufferType
+enum class BufferType
 {
-	kBufferType_NONE = 0,
+	kNONE = 0,
 	kINDEX,
 	kVERTEX,
 	kUNIFORM,
 	kDYNAMIC
 };
 
-enum BufferUsage
+enum class BufferUsage
 {
-	kBufferUsage_NONE = 0,
+	kNONE = 0,
 	kSTATIC_DRAW,
 	kDYNAMIC_DRAW
 };

@@ -15,20 +15,6 @@
 namespace afx
 {
 
-enum ClearMask
-{
-	kCOLOR = 1,
-	kDEPTH = 2
-};
-
-enum FillMode
-{
-	kSOLID = 0,
-	kWIREFRAME,
-	kPOINTS
-};
-
-
 class ILowLevelGraphics
 {
 public:
@@ -67,14 +53,19 @@ public:
 		int _width,
 		int _height ) = 0;
 
-	virtual Result setClearColor(
+	virtual void clearColor(
 		float _r,
 		float _g,
 		float _b,
-		float _a ) = 0;
+		float _a
+	) = 0;
 
-	virtual Result clearRenderTarget(
-		ClearMask _mask ) = 0;
+	virtual void clearDepth(
+		float _r,
+		float _g,
+		float _b,
+		float _a
+	) = 0;
 
 	virtual Result setFillMode(
 		FillMode _mode ) = 0;

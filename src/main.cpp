@@ -44,9 +44,8 @@ int main()
 		g_graphics->viewport( 0, 0, width, height );
 		
 		float flash = fabs( sin( frameNumber / 60.0f ) );
-		g_graphics->setClearColor( flash, 0.0f, flash, 1.0f );
-		g_graphics->clearRenderTarget( (afx::ClearMask)( afx::ClearMask::kCOLOR | afx::ClearMask::kDEPTH ) );
-
+		g_graphics->clearColor( flash, 0.0f, flash, 1.0f );
+		
 		glfwSwapBuffers( window );
 		glfwPollEvents();
 

@@ -79,21 +79,16 @@ Result OpenGLGraphics::viewport( int _x, int _y, int _width, int _height )
     return ARG_SUCESS;
 }
 
-Result OpenGLGraphics::setClearColor( float _r, float _g, float _b, float _a )
+void OpenGLGraphics::clearColor( float _r, float _g, float _b, float _a )
 {
     glClearColor( _r, _g, _b, _a );
-
-    return ARG_SUCESS;
+    glClear( GL_COLOR_BUFFER_BIT );
 }
 
-Result OpenGLGraphics::clearRenderTarget( ClearMask _mask )
+void OpenGLGraphics::clearDepth( float _r, float _g, float _b, float _a )
 {
-    GLbitfield mask = 0;
-    if( _mask && ClearMask::kCOLOR ) mask |= GL_COLOR_BUFFER_BIT;
-    if( _mask && ClearMask::kDEPTH ) mask |= GL_DEPTH_BUFFER_BIT;
-
-    glClear( mask );
-    return ARG_SUCESS;
+    glClearColor( _r, _g, _b, _a );
+    glClear( GL_DEPTH_BUFFER_BIT );
 }
 
 Result OpenGLGraphics::setFillMode( FillMode _mode )
