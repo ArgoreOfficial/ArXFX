@@ -1,4 +1,3 @@
-#include <ARG/gfx.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -6,90 +5,13 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#ifdef asd
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define ARG_GFX_MAX_GPU_BUFFERS 128
-#define ARG_GFX_MAX_PIPELINES 128
-#define ARG_GFX_MAX_PROGRAMS 128
-
-#define ARG_GET_OBJECT( _container, _handle ) _handle 
-
-#define ARG_GFX_GET_PROGRAM( _program ) s_programObjects + ( _program - 1 )
-#define ARG_GFX_GET_PIPELINE( _pipeline ) s_pipelineObjects + ( _pipeline - 1 )
-#define ARG_GFX_GET_BUFFER( _buffer ) s_bufferObjects + ( _buffer - 1 )
-
-#define ARG_GFX_OBJECT_ALLOC_FUNC( _object, _buffer, _max ) \
-static _object argGfxAlloc##_object( ArgGfxContext _ctx )   \
-{                                                           \
-	for( size_t i = 0; i < _max; i++ )                      \
-		if( _ctx->_buffer[ i ].handle == 0 )                \
-			return &_ctx->_buffer[i];                       \
-	return 0;                                               \
-} \
-static ArgResult argGfxDealloc##_object( ArgGfxContext _ctx, _object _obj ) \
-{ \
-	memset( _obj, 0, sizeof( _ctx->_buffer[ 0 ] ) ); \
-}
 
 typedef void* ( *GLloadproc )( const char* name );
-
-struct ArgGfxProgram_t
-{
-	GLuint handle;
-	ArgGfxShaderProgramType type;
-
-	GLenum glType;
-};
-
-struct ArgGfxPipeline_t
-{
-	GLuint handle;
-	ArgGfxProgram vertexProgram;
-	ArgGfxProgram fragmentProgram;
-	ArgGfxVertexLayout* pVertexLayout;
-};
-
-struct ArgGfxBuffer_t
-{
-	GLuint handle;
-
-	ArgGfxBufferType type;
-	ArgGfxBufferUsage usage;
-
-	GLenum glType;
-	GLenum glUsage;
-
-	uint32_t count;
-	uint32_t stride;
-	int32_t  size;
-
-	ArgHandle blockIndex;
-	GLuint bindingIndex;
-};
-
-
-struct ArgGfxContext_t
-{
-	uint8_t initialized;
-	int width;
-	int height;
-
-	struct ArgGfxProgram_t programObjects[ ARG_GFX_MAX_PROGRAMS ];
-	struct ArgGfxBuffer_t bufferObjects[ ARG_GFX_MAX_GPU_BUFFERS ];
-	struct ArgGfxPipeline_t pPipelines[ ARG_GFX_MAX_PIPELINES ];
-	ArgGfxPipeline currentlyBoundPipeline;
-
-	unsigned int m_VAO;
-};
-
-struct ArgGfxContext_t g_ctxs[ 3 ];
-
-ARG_GFX_OBJECT_ALLOC_FUNC( ArgGfxProgram,  programObjects,  ARG_GFX_MAX_PROGRAMS )
-ARG_GFX_OBJECT_ALLOC_FUNC( ArgGfxPipeline, pPipelines, ARG_GFX_MAX_PIPELINES )
-ARG_GFX_OBJECT_ALLOC_FUNC( ArgGfxBuffer,   bufferObjects,   ARG_GFX_MAX_GPU_BUFFERS )
-
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -100,14 +22,14 @@ static void glMessageCallback( GLenum _source, GLenum _type, GLuint _id, GLenum 
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-static GLenum getGlBufferEnum( ArgGfxBufferType _type )
+static GLenum getGlBufferEnum( BufferType _type )
 {
 	switch ( _type )
 	{
-	case ARG_GFX_BUFFER_TYPE_VERTEX:  return GL_ARRAY_BUFFER;         break;
-	case ARG_GFX_BUFFER_TYPE_INDEX:   return GL_ELEMENT_ARRAY_BUFFER; break;
-	case ARG_GFX_BUFFER_TYPE_UNIFORM: return GL_UNIFORM_BUFFER;       break;
-	case ARG_GFX_BUFFER_TYPE_DYNAMIC: return GL_SHADER_STORAGE_BUFFER; break;
+	case kVERTEX:  return GL_ARRAY_BUFFER;         break;
+	case kINDEX:   return GL_ELEMENT_ARRAY_BUFFER; break;
+	case kUNIFORM: return GL_UNIFORM_BUFFER;       break;
+	case kDYNAMIC: return GL_SHADER_STORAGE_BUFFER; break;
 	}
 
 	return GL_NONE;
@@ -126,7 +48,7 @@ static GLenum getGlBufferUsage( ArgGfxBufferUsage _usage )
 	return GL_NONE;
 }
 
-ArgResult argGfxInit()
+Result argGfxInit()
 {
 	gladLoadGLLoader( (GLloadproc)glfwGetProcAddress );
 
@@ -142,7 +64,7 @@ ArgResult argGfxInit()
 	return ARG_SUCESS;
 }
 
-ArgResult argGfxCreateContext( ArgGfxContext* _pCtx )
+Result argGfxCreateContext( Context* _pCtx )
 {
 	struct ArgGfxContext_t* ctx = NULL;
 	for ( size_t i = 0; i < 3; i++ )
@@ -165,7 +87,7 @@ ArgResult argGfxCreateContext( ArgGfxContext* _pCtx )
 	return ARG_SUCESS;
 }
 
-ArgResult argGfxViewport( ArgGfxContext _ctx, int _x, int _y, int _width, int _height )
+Result argGfxViewport( Context _ctx, int _x, int _y, int _width, int _height )
 {
 	glViewport( _x, _y, _width, _height );
 	
@@ -174,7 +96,7 @@ ArgResult argGfxViewport( ArgGfxContext _ctx, int _x, int _y, int _width, int _h
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxSetClearColor( ArgGfxContext _ctx, float _r, float _g, float _b, float _a )
+Result argGfxSetClearColor( Context _ctx, float _r, float _g, float _b, float _a )
 {
 	glClearColor( _r, _g, _b, _a );
 
@@ -183,7 +105,7 @@ ArgResult argGfxSetClearColor( ArgGfxContext _ctx, float _r, float _g, float _b,
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxClearRenderTarget( ArgGfxContext _ctx, ArgGfxClearMask _mask )
+Result argGfxClearRenderTarget( Context _ctx, ArgGfxClearMask _mask )
 {
 	GLbitfield mask = 0;
 	if ( _mask && ARG_GFX_CLEAR_MASK_COLOR ) mask |= GL_COLOR_BUFFER_BIT;
@@ -195,7 +117,7 @@ ArgResult argGfxClearRenderTarget( ArgGfxContext _ctx, ArgGfxClearMask _mask )
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxSetFillMode( ArgGfxContext _ctx, ArgGfxFillMode _mode )
+Result argGfxSetFillMode( Context _ctx, ArgGfxFillMode _mode )
 {
 	switch ( _mode )
 	{
@@ -208,9 +130,9 @@ ArgResult argGfxSetFillMode( ArgGfxContext _ctx, ArgGfxFillMode _mode )
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxCreateProgram( ArgGfxContext _ctx, ArgGfxProgramDesc* _desc, ArgGfxProgram* _pProgram )
+Result argGfxCreateProgram( Context _ctx, ProgramDesc* _desc, ShaderModule* _pProgram )
 {
-	ArgGfxShaderProgramType type = _desc->type;
+	ShaderProgramType type = _desc->type;
 	const char* sourceStr = _desc->source;
 
 	*_pProgram = argGfxAllocArgGfxProgram( _ctx );
@@ -248,7 +170,7 @@ ArgResult argGfxCreateProgram( ArgGfxContext _ctx, ArgGfxProgramDesc* _desc, Arg
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxDestroyProgram( ArgGfxContext _ctx, ArgGfxProgram _program )
+Result argGfxDestroyProgram( Context _ctx, ShaderModule _program )
 {
 	struct ArgGfxProgram_t* pProgram = ARG_GET_OBJECT( _ctx->programObjects, _program );
 	glDeleteProgram( pProgram->handle );
@@ -259,7 +181,7 @@ ArgResult argGfxDestroyProgram( ArgGfxContext _ctx, ArgGfxProgram _program )
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxCreatePipeline( ArgGfxContext _ctx, ArgGfxPipelineDesc* _desc, ArgGfxPipeline* _pPipeline )
+Result argGfxCreatePipeline( Context _ctx, ShaderPipelineDesc* _desc, ShaderPipeline* _pPipeline )
 {
 	*_pPipeline = argGfxAllocArgGfxPipeline( _ctx );
 	if ( *_pPipeline == 0 ) // error
@@ -287,7 +209,7 @@ ArgResult argGfxCreatePipeline( ArgGfxContext _ctx, ArgGfxPipelineDesc* _desc, A
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxDestroyPipeline( ArgGfxContext _ctx, ArgGfxPipeline _pipeline )
+Result argGfxDestroyPipeline( Context _ctx, ShaderPipeline _pipeline )
 {
 	struct ArgGfxPipeline_t* pPipeline = ARG_GET_OBJECT( _ctx->pPipelines, _pipeline );
 	glDeleteProgramPipelines( 1, &pPipeline->handle );
@@ -298,7 +220,7 @@ ArgResult argGfxDestroyPipeline( ArgGfxContext _ctx, ArgGfxPipeline _pipeline )
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxBindPipeline( ArgGfxContext _ctx, ArgGfxPipeline _pipeline )
+Result argGfxBindPipeline( Context _ctx, ShaderPipeline _pipeline )
 {
 	_ctx->currentlyBoundPipeline = _pipeline;
 	struct ArgGfxPipeline_t* pPipeline = ARG_GET_OBJECT( _ctx->pPipelines, _pipeline );
@@ -309,7 +231,7 @@ ArgResult argGfxBindPipeline( ArgGfxContext _ctx, ArgGfxPipeline _pipeline )
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxDraw( ArgGfxContext _ctx, uint32_t _firstVertex, uint32_t _numVertices )
+Result argGfxDraw( Context _ctx, uint32_t _firstVertex, uint32_t _numVertices )
 {
 	glDrawArrays( GL_TRIANGLES, _firstVertex, _numVertices );
 
@@ -318,7 +240,7 @@ ArgResult argGfxDraw( ArgGfxContext _ctx, uint32_t _firstVertex, uint32_t _numVe
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxDrawIndexed( ArgGfxContext _ctx, uint32_t _numIndices )
+Result argGfxDrawIndexed( Context _ctx, uint32_t _numIndices )
 {
 	glDrawElements( GL_TRIANGLES, _numIndices, GL_UNSIGNED_INT, 0 );
 
@@ -327,7 +249,7 @@ ArgResult argGfxDrawIndexed( ArgGfxContext _ctx, uint32_t _numIndices )
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxDrawIndexedInstanced( ArgGfxContext _ctx, uint32_t _numIndices, uint32_t _numInstances, uint32_t _baseVertex )
+Result argGfxDrawIndexedInstanced( Context _ctx, uint32_t _numIndices, uint32_t _numInstances, uint32_t _baseVertex )
 {
 	glDrawElementsInstancedBaseVertex( GL_TRIANGLES, _numIndices, GL_UNSIGNED_INT, 0, _numInstances, _baseVertex );
 
@@ -336,12 +258,12 @@ ArgResult argGfxDrawIndexedInstanced( ArgGfxContext _ctx, uint32_t _numIndices, 
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxBindVertexLayout( ArgGfxContext _ctx, ArgGfxVertexLayout* _pVertexLayout )
+Result argGfxBindVertexLayout( Context _ctx, VertexLayout* _pVertexLayout )
 {
 	int pointer = 0;
 	for ( size_t i = 0; i < _pVertexLayout->numAttributes; i++ )
 	{
-		ArgGfxVertexAttrib* attrib = &_pVertexLayout->attributes[ i ];
+		VertexAttrib* attrib = &_pVertexLayout->attributes[ i ];
 
 		GLenum type = GL_NONE;
 		switch ( attrib->type )
@@ -362,7 +284,7 @@ ArgResult argGfxBindVertexLayout( ArgGfxContext _ctx, ArgGfxVertexLayout* _pVert
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxCreateBuffer( ArgGfxContext _ctx, ArgGfxBufferDesc* _desc, ArgGfxBuffer* _pBuffer )
+Result argGfxCreateBuffer( Context _ctx, ArgGfxBufferDesc* _desc, Buffer* _pBuffer )
 {
 	*_pBuffer = argGfxAllocArgGfxBuffer( _ctx );
 	if ( *_pBuffer == 0 )
@@ -384,7 +306,7 @@ ArgResult argGfxCreateBuffer( ArgGfxContext _ctx, ArgGfxBufferDesc* _desc, ArgGf
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxDestroyBuffer( ArgGfxContext _ctx, ArgGfxBuffer _buffer )
+Result argGfxDestroyBuffer( Context _ctx, Buffer _buffer )
 {
 	struct ArgGfxBuffer_t* pBuffer = ARG_GET_OBJECT( _ctx->bufferObjects, _buffer );
 	glDeleteBuffers( 1, &pBuffer->handle );
@@ -395,7 +317,7 @@ ArgResult argGfxDestroyBuffer( ArgGfxContext _ctx, ArgGfxBuffer _buffer )
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxBindBuffer( ArgGfxContext _ctx, ArgGfxBuffer _buffer )
+Result argGfxBindBuffer( Context _ctx, Buffer _buffer )
 {
 	struct ArgGfxBuffer_t* pBuffer = ARG_GET_OBJECT( _ctx->bufferObjects, _buffer );
 	GLenum target = getGlBufferEnum( pBuffer->type );
@@ -406,7 +328,7 @@ ArgResult argGfxBindBuffer( ArgGfxContext _ctx, ArgGfxBuffer _buffer )
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxBindBufferIndex( ArgGfxContext _ctx, ArgGfxBuffer _buffer, int32_t _bindingIndex )
+Result argGfxBindBufferIndex( Context _ctx, Buffer _buffer, int32_t _bindingIndex )
 {
 	struct ArgGfxBuffer_t* pBuffer = ARG_GET_OBJECT( _ctx->bufferObjects, _buffer );
 	GLenum target = getGlBufferEnum( pBuffer->type );
@@ -417,7 +339,7 @@ ArgResult argGfxBindBufferIndex( ArgGfxContext _ctx, ArgGfxBuffer _buffer, int32
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxBufferData( ArgGfxContext _ctx, ArgGfxBuffer _buffer, void* _pData, size_t _size )
+Result argGfxBufferData( Context _ctx, Buffer _buffer, void* _pData, size_t _size )
 {
 	struct ArgGfxBuffer_t* pBuffer = ARG_GET_OBJECT( _ctx->bufferObjects, _buffer );
 	GLenum usage = getGlBufferUsage( pBuffer->usage );
@@ -428,7 +350,7 @@ ArgResult argGfxBufferData( ArgGfxContext _ctx, ArgGfxBuffer _buffer, void* _pDa
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxBufferSubData( ArgGfxContext _ctx, ArgGfxBuffer _buffer, void* _pData, size_t _size, size_t _base )
+Result argGfxBufferSubData( Context _ctx, Buffer _buffer, void* _pData, size_t _size, size_t _base )
 {
 	struct ArgGfxBuffer_t* pBuffer = ARG_GET_OBJECT( _ctx->bufferObjects, _buffer );
 	glNamedBufferSubData( pBuffer->handle, _base, _size, _pData );
@@ -438,7 +360,7 @@ ArgResult argGfxBufferSubData( ArgGfxContext _ctx, ArgGfxBuffer _buffer, void* _
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxCopyBufferSubData( ArgGfxContext _ctx, ArgGfxBuffer _readBuffer, ArgGfxBuffer _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size )
+Result argGfxCopyBufferSubData( Context _ctx, Buffer _readBuffer, Buffer _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size )
 {
 	struct ArgGfxBuffer_t* pReadBuffer = ARG_GET_OBJECT( _ctx->bufferObjects, _readBuffer );
 	struct ArgGfxBuffer_t* pWriteBuffer = ARG_GET_OBJECT( _ctx->bufferObjects, _writeBuffer );
@@ -450,7 +372,7 @@ ArgResult argGfxCopyBufferSubData( ArgGfxContext _ctx, ArgGfxBuffer _readBuffer,
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-ArgResult argGfxBindVertexBuffer( ArgGfxContext _ctx, ArgGfxBuffer _vertexBuffer )
+Result argGfxBindVertexBuffer( Context _ctx, Buffer _vertexBuffer )
 {
 	struct ArgGfxBuffer_t* pBuffer = ARG_GET_OBJECT( _ctx->bufferObjects, _vertexBuffer );
 	printf( "argGfxBindVertexBuffer is not implemented\n" );
@@ -463,4 +385,6 @@ ArgResult argGfxBindVertexBuffer( ArgGfxContext _ctx, ArgGfxBuffer _vertexBuffer
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif

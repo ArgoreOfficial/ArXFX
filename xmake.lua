@@ -11,15 +11,16 @@ target "ArXFX"
     set_kind "binary"
     set_default(true)
 
-    add_files( { 
-            "src/**.cpp",
-            "libs/**.cpp",
-            "libs/**.c"
-        } )
-
-    add_headerfiles( "src/**.h" )
-    add_headerfiles( "libs/**.h" )
-    add_headerfiles( "arx/include/**.hpp" )
+    add_files( 
+        "src/**.cpp", 
+        "libs/**.cpp", 
+        "libs/**.c" )
+    add_headerfiles( 
+        "src/**.h", 
+        "src/**.hpp", 
+        "libs/**.h" )
+    
+    add_includedirs( "ArX/include" )
     
     add_packages( "glfw", "glm" )
     add_includedirs( "src/", "libs/glad/include/" )

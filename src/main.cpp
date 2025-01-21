@@ -1,8 +1,5 @@
 #include <stdio.h>
 
-#include <ARG/gfx.h>
-#include <arx/>
-
 #define GLFW_INCLUDE_NONE
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3.h>
@@ -12,8 +9,10 @@
 
 #include <math.h>
 
+#include <afx/Renderer/LowLevel/LowLevelRenderer.h>
+
 GLFWwindow* window;
-ArgGfxContext gpuCtx;
+// Context gpuCtx;
 
 const int WINDOW_WIDTH  = 640;
 const int WINDOW_HEIGHT = 480;
@@ -30,25 +29,31 @@ int main()
 	if ( !initWindow() ) return 1;
 
 	glfwSwapInterval( 1 );
+/*
 	
 	argGfxInit();
 	argGfxCreateContext( &gpuCtx );
 
 	argGfxViewport( gpuCtx, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT );
 
+*/
 	uint32_t frameNumber = 0;
+
+	afx::ILowLevelRenderer* lowLevelRenderer = afx::ILowLevelRenderer::Registry::createFromName( "OpenGL" );
 
 	while ( !glfwWindowShouldClose( window ) )
 	{
 		// update screen data buffer
 		int width, height;
 		glfwGetWindowSize( window, &width, &height );
+/*
 		argGfxViewport( gpuCtx, 0, 0, width, height );
 		
 		float flash = fabs( sin( frameNumber / 60.0f ) );
 		argGfxSetClearColor( gpuCtx, flash, 0.0f, flash, 1.0f );
 		argGfxClearRenderTarget( gpuCtx, (ArgGfxClearMask)( ARG_GFX_CLEAR_MASK_COLOR | ARG_GFX_CLEAR_MASK_DEPTH ) );
 
+*/
 		glfwSwapBuffers( window );
 		glfwPollEvents();
 
