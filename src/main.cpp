@@ -9,10 +9,9 @@
 
 #include <math.h>
 
-#include <afx/Renderer/LowLevel/LowLevelRenderer.h>
+#include <afx/Renderer/LowLevel/LowLevelGraphics.h>
 
 GLFWwindow* window;
-// Context gpuCtx;
 
 const int WINDOW_WIDTH  = 640;
 const int WINDOW_HEIGHT = 480;
@@ -30,9 +29,9 @@ int main()
 
 	glfwSwapInterval( 1 );
 	
-	afx::ILowLevelRenderer* pRenderer = afx::ILowLevelRenderer::Registry::createFromName( "OpenGL" );
-	pRenderer->init();
-	pRenderer->viewport( 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT );
+	afx::ILowLevelGraphics* g_graphics = afx::ILowLevelGraphics::Registry::createFromName( "OpenGL" );
+	g_graphics->init();
+	g_graphics->viewport( 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT );
 
 	uint32_t frameNumber = 0;
 
@@ -42,11 +41,11 @@ int main()
 		int width, height;
 		glfwGetWindowSize( window, &width, &height );
 
-		pRenderer->viewport( 0, 0, width, height );
+		g_graphics->viewport( 0, 0, width, height );
 		
 		float flash = fabs( sin( frameNumber / 60.0f ) );
-		pRenderer->setClearColor( flash, 0.0f, flash, 1.0f );
-		pRenderer->clearRenderTarget( (afx::ClearMask)( afx::ClearMask::kCOLOR | afx::ClearMask::kDEPTH ) );
+		g_graphics->setClearColor( flash, 0.0f, flash, 1.0f );
+		g_graphics->clearRenderTarget( (afx::ClearMask)( afx::ClearMask::kCOLOR | afx::ClearMask::kDEPTH ) );
 
 		glfwSwapBuffers( window );
 		glfwPollEvents();
@@ -69,7 +68,7 @@ int initWindow()
 	glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 2 );
 	glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 0 );
 	glfwWindowHint( GLFW_TRANSPARENT_FRAMEBUFFER, 1 );
-	window = glfwCreateWindow( WINDOW_WIDTH, WINDOW_HEIGHT, "argGfx", NULL, NULL );
+	window = glfwCreateWindow( WINDOW_WIDTH, WINDOW_HEIGHT, "ArX FX", NULL, NULL );
 
 	glfwMakeContextCurrent( window );
 

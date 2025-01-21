@@ -29,10 +29,10 @@ enum FillMode
 };
 
 
-class ILowLevelRenderer
+class ILowLevelGraphics
 {
 public:
-	typedef ILowLevelRenderer* ( *allocator_fptr_t )( void* _pUserData );
+	typedef ILowLevelGraphics* ( *allocator_fptr_t )( void* _pUserData );
 
 	class Registry
 	{
@@ -42,7 +42,7 @@ public:
 			return g_allocators.size();
 		}
 
-		static ILowLevelRenderer* createFromName( const std::string& _name, void* _pUserData = nullptr ) {
+		static ILowLevelGraphics* createFromName( const std::string& _name, void* _pUserData = nullptr ) {
 			return g_allocators[ _name ]( _pUserData );
 		}
 
@@ -54,7 +54,7 @@ public:
 	struct Entry
 	{
 		Entry( const std::string& _name, allocator_fptr_t _allocator ) {
-			id = ILowLevelRenderer::Registry::addEntry( _name, _allocator );
+			id = ILowLevelGraphics::Registry::addEntry( _name, _allocator );
 		}
 		int32_t id = -1;
 	};

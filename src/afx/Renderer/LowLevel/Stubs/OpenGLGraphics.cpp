@@ -1,4 +1,4 @@
-#include "OpenGLRenderer.h"
+#include "OpenGLGraphics.h"
 
 
 #include <stdio.h>
@@ -11,10 +11,10 @@ typedef void* ( *GLloadproc )( const char* name );
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-static afx::ILowLevelRenderer* openGLRendererAllocator( void* _pUserData ) {
-    return new afx::OpenGLRenderer();
+static afx::ILowLevelGraphics* openGLRendererAllocator( void* _pUserData ) {
+    return new afx::OpenGLGraphics();
 }
-afx::ILowLevelRenderer::Entry afx::OpenGLRenderer::g_register{ "OpenGL", openGLRendererAllocator };
+afx::ILowLevelGraphics::Entry afx::OpenGLGraphics::g_register{ "OpenGL", openGLRendererAllocator };
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -55,7 +55,7 @@ static GLenum getGlBufferUsage( afx::BufferUsage _usage )
 
 namespace afx {
 
-Result OpenGLRenderer::init()
+Result OpenGLGraphics::init()
 {
     gladLoadGLLoader( (GLloadproc)glfwGetProcAddress );
 
@@ -72,21 +72,21 @@ Result OpenGLRenderer::init()
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::viewport( int _x, int _y, int _width, int _height )
+Result OpenGLGraphics::viewport( int _x, int _y, int _width, int _height )
 {
     glViewport( _x, _y, _width, _height );
 
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::setClearColor( float _r, float _g, float _b, float _a )
+Result OpenGLGraphics::setClearColor( float _r, float _g, float _b, float _a )
 {
     glClearColor( _r, _g, _b, _a );
 
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::clearRenderTarget( ClearMask _mask )
+Result OpenGLGraphics::clearRenderTarget( ClearMask _mask )
 {
     GLbitfield mask = 0;
     if( _mask && ClearMask::kCOLOR ) mask |= GL_COLOR_BUFFER_BIT;
@@ -96,7 +96,7 @@ Result OpenGLRenderer::clearRenderTarget( ClearMask _mask )
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::setFillMode( FillMode _mode )
+Result OpenGLGraphics::setFillMode( FillMode _mode )
 {
     switch( _mode )
     {
@@ -107,28 +107,28 @@ Result OpenGLRenderer::setFillMode( FillMode _mode )
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::draw( uint32_t _firstVertex, uint32_t _numVertices )
+Result OpenGLGraphics::draw( uint32_t _firstVertex, uint32_t _numVertices )
 {
     glDrawArrays( GL_TRIANGLES, _firstVertex, _numVertices );
 
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::drawIndexed( uint32_t _numIndices )
+Result OpenGLGraphics::drawIndexed( uint32_t _numIndices )
 {
     glDrawElements( GL_TRIANGLES, _numIndices, GL_UNSIGNED_INT, 0 );
 
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::drawIndexedInstanced( uint32_t _numIndices, uint32_t _numInstances, uint32_t _baseVertex )
+Result OpenGLGraphics::drawIndexedInstanced( uint32_t _numIndices, uint32_t _numInstances, uint32_t _baseVertex )
 {
     glDrawElementsInstancedBaseVertex( GL_TRIANGLES, _numIndices, GL_UNSIGNED_INT, 0, _numInstances, _baseVertex );
 
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::createProgram( ShaderProgramDesc* _desc, ShaderModuleID* _pProgram )
+Result OpenGLGraphics::createProgram( ShaderProgramDesc* _desc, ShaderModuleID* _pProgram )
 {
     ShaderModuleType type = _desc->type;
     const char* sourceStr = _desc->source;
@@ -164,7 +164,7 @@ Result OpenGLRenderer::createProgram( ShaderProgramDesc* _desc, ShaderModuleID* 
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::destroyProgram( ShaderModuleID _program )
+Result OpenGLGraphics::destroyProgram( ShaderModuleID _program )
 {
     ShaderModule& program = m_shaderModules.at( _program );
     glDeleteProgram( program.handle );
@@ -173,7 +173,7 @@ Result OpenGLRenderer::destroyProgram( ShaderModuleID _program )
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::createPipeline( ShaderPipelineDesc* _desc, ShaderPipelineID* _pPipeline )
+Result OpenGLGraphics::createPipeline( ShaderPipelineDesc* _desc, ShaderPipelineID* _pPipeline )
 {
     ShaderPipeline pipeline{}; // = ARG_GET_OBJECT( _ctx->pPipelines, *_pPipeline );
     
@@ -199,7 +199,7 @@ Result OpenGLRenderer::createPipeline( ShaderPipelineDesc* _desc, ShaderPipeline
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::destroyPipeline( ShaderPipelineID _pipeline )
+Result OpenGLGraphics::destroyPipeline( ShaderPipelineID _pipeline )
 {
     ShaderPipeline& pipeline = m_shaderPipelines.at( _pipeline );
     glDeleteProgramPipelines( 1, &pipeline.handle );
@@ -208,7 +208,7 @@ Result OpenGLRenderer::destroyPipeline( ShaderPipelineID _pipeline )
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::bindPipeline( ShaderPipelineID _pipeline )
+Result OpenGLGraphics::bindPipeline( ShaderPipelineID _pipeline )
 {
     //m_currentlyBoundPipeline = _pipeline;
     ShaderPipeline& pipeline = m_shaderPipelines.at( _pipeline );
@@ -217,7 +217,7 @@ Result OpenGLRenderer::bindPipeline( ShaderPipelineID _pipeline )
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::bindVertexLayout( VertexLayout* _pVertexLayout )
+Result OpenGLGraphics::bindVertexLayout( VertexLayout* _pVertexLayout )
 {
     int pointer = 0;
     for( size_t i = 0; i < _pVertexLayout->numAttributes; i++ )
@@ -241,7 +241,7 @@ Result OpenGLRenderer::bindVertexLayout( VertexLayout* _pVertexLayout )
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::createBuffer( BufferDesc* _desc, BufferID* _pBuffer )
+Result OpenGLGraphics::createBuffer( BufferDesc* _desc, BufferID* _pBuffer )
 {
     Buffer buffer{};
     buffer.type = _desc->type;
@@ -260,7 +260,7 @@ Result OpenGLRenderer::createBuffer( BufferDesc* _desc, BufferID* _pBuffer )
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::destroyBuffer( BufferID _buffer )
+Result OpenGLGraphics::destroyBuffer( BufferID _buffer )
 {
     Buffer& buffer = m_buffers.at( _buffer );
     glDeleteBuffers( 1, &buffer.handle );
@@ -269,7 +269,7 @@ Result OpenGLRenderer::destroyBuffer( BufferID _buffer )
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::bindBuffer( BufferID _buffer )
+Result OpenGLGraphics::bindBuffer( BufferID _buffer )
 {
     Buffer& buffer = m_buffers.at( _buffer );
     GLenum target = getGlBufferEnum( buffer.type );
@@ -278,7 +278,7 @@ Result OpenGLRenderer::bindBuffer( BufferID _buffer )
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::bindBufferIndex( BufferID _buffer, int32_t _bindingIndex )
+Result OpenGLGraphics::bindBufferIndex( BufferID _buffer, int32_t _bindingIndex )
 {
     Buffer& buffer = m_buffers.at( _buffer );
     GLenum target = getGlBufferEnum( buffer.type );
@@ -287,7 +287,7 @@ Result OpenGLRenderer::bindBufferIndex( BufferID _buffer, int32_t _bindingIndex 
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::bufferData( BufferID _buffer, void* _pData, size_t _size )
+Result OpenGLGraphics::bufferData( BufferID _buffer, void* _pData, size_t _size )
 {
     Buffer& buffer = m_buffers.at( _buffer );
     GLenum usage = getGlBufferUsage( buffer.usage );
@@ -296,7 +296,7 @@ Result OpenGLRenderer::bufferData( BufferID _buffer, void* _pData, size_t _size 
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::bufferSubData( BufferID _buffer, void* _pData, size_t _size, size_t _base )
+Result OpenGLGraphics::bufferSubData( BufferID _buffer, void* _pData, size_t _size, size_t _base )
 {
     Buffer& buffer = m_buffers.at( _buffer );
     glNamedBufferSubData( buffer.handle, _base, _size, _pData );
@@ -304,7 +304,7 @@ Result OpenGLRenderer::bufferSubData( BufferID _buffer, void* _pData, size_t _si
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::copyBufferSubData( BufferID _readBuffer, BufferID _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size )
+Result OpenGLGraphics::copyBufferSubData( BufferID _readBuffer, BufferID _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size )
 {
     Buffer& readBuffer = m_buffers.at( _readBuffer );
     Buffer& writeBuffer = m_buffers.at( _writeBuffer );
@@ -314,7 +314,7 @@ Result OpenGLRenderer::copyBufferSubData( BufferID _readBuffer, BufferID _writeB
     return ARG_SUCESS;
 }
 
-Result OpenGLRenderer::bindVertexBuffer( BufferID _vertexPullBuffer )
+Result OpenGLGraphics::bindVertexBuffer( BufferID _vertexPullBuffer )
 {
     Buffer& buffer = m_buffers.at( _vertexPullBuffer );
     printf( "argGfxBindVertexBuffer is not implemented\n" );
@@ -325,59 +325,59 @@ Result OpenGLRenderer::bindVertexBuffer( BufferID _vertexPullBuffer )
     return ARG_SUCESS;
 }
 
-void OpenGLRenderer::_cmdBegin( const CmdBuffer& _cmd )
+void OpenGLGraphics::_cmdBegin( const CmdBuffer& _cmd )
 {
 }
 
-void OpenGLRenderer::_cmdEnd( const CmdBuffer& _cmd )
+void OpenGLGraphics::_cmdEnd( const CmdBuffer& _cmd )
 {
 }
 
-void OpenGLRenderer::_cmdSubmit( const CmdBuffer& _cmd )
+void OpenGLGraphics::_cmdSubmit( const CmdBuffer& _cmd )
 {
 }
 
-void OpenGLRenderer::_cmdBeginRender( const CmdBuffer& _rCmd, Image& _rImage )
+void OpenGLGraphics::_cmdBeginRender( const CmdBuffer& _rCmd, Image& _rImage )
 {
 }
 
-void OpenGLRenderer::_cmdEndRender( const CmdBuffer& _rCmd )
+void OpenGLGraphics::_cmdEndRender( const CmdBuffer& _rCmd )
 {
 }
 
-void OpenGLRenderer::_cmdImageClear( const CmdBuffer& _cmd, const Image& _rImage, float _r, float _g, float _b, float _a )
+void OpenGLGraphics::_cmdImageClear( const CmdBuffer& _cmd, const Image& _rImage, float _r, float _g, float _b, float _a )
 {
 }
 
-void OpenGLRenderer::_cmdImageBlit( const CmdBuffer& _rCmd, const Image& _rSrc, const Image& _rDst )
+void OpenGLGraphics::_cmdImageBlit( const CmdBuffer& _rCmd, const Image& _rSrc, const Image& _rDst )
 {
 }
 
-void OpenGLRenderer::_cmdBindPipeline( const CmdBuffer& _rCmd, const ShaderPipeline& _rShader )
+void OpenGLGraphics::_cmdBindPipeline( const CmdBuffer& _rCmd, const ShaderPipeline& _rShader )
 {
 }
 
-void OpenGLRenderer::_cmdDispatch( const CmdBuffer& _rCmd, uint32_t _numGroupsX, uint32_t _numGroupsY, uint32_t _numGroupsZ )
+void OpenGLGraphics::_cmdDispatch( const CmdBuffer& _rCmd, uint32_t _numGroupsX, uint32_t _numGroupsY, uint32_t _numGroupsZ )
 {
 }
 
-void OpenGLRenderer::_cmdViewport( const CmdBuffer& _rCmd, uint32_t _x, uint32_t _y, uint32_t _width, uint32_t _height )
+void OpenGLGraphics::_cmdViewport( const CmdBuffer& _rCmd, uint32_t _x, uint32_t _y, uint32_t _width, uint32_t _height )
 {
 }
 
-void OpenGLRenderer::_cmdDraw( const CmdBuffer& _rCmd, uint32_t _vertexCount, uint32_t _instanceCount, uint32_t _firstVertex, uint32_t _firstInstance )
+void OpenGLGraphics::_cmdDraw( const CmdBuffer& _rCmd, uint32_t _vertexCount, uint32_t _instanceCount, uint32_t _firstVertex, uint32_t _firstInstance )
 {
 }
 
-void OpenGLRenderer::_cmdDrawIndexed( const CmdBuffer& _rCmd, uint32_t _indexCount, uint32_t _instanceCount, uint32_t _firstIndex, int32_t _vertexOffset, uint32_t _firstInstance )
+void OpenGLGraphics::_cmdDrawIndexed( const CmdBuffer& _rCmd, uint32_t _indexCount, uint32_t _instanceCount, uint32_t _firstIndex, int32_t _vertexOffset, uint32_t _firstInstance )
 {
 }
 
-void OpenGLRenderer::_cmdCopyBuffer( const CmdBuffer& _rCmd, const Buffer& _rSrc, const Buffer& _rDst, size_t _srcOffset, size_t _dstOffset, size_t _size )
+void OpenGLGraphics::_cmdCopyBuffer( const CmdBuffer& _rCmd, const Buffer& _rSrc, const Buffer& _rDst, size_t _srcOffset, size_t _dstOffset, size_t _size )
 {
 }
 
-void OpenGLRenderer::_cmdBindIndexBuffer( const CmdBuffer& _rCmd, const Buffer& _rIndexBuffer, size_t _offset, Type _type )
+void OpenGLGraphics::_cmdBindIndexBuffer( const CmdBuffer& _rCmd, const Buffer& _rIndexBuffer, size_t _offset, Type _type )
 {
 }
 

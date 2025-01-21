@@ -1,10 +1,10 @@
 #pragma once
 
-#include <afx/Renderer/LowLevel/LowLevelRenderer.h>
+#include <afx/Renderer/LowLevel/LowLevelGraphics.h>
 
 namespace afx { 
 
-class OpenGLRenderer : public ILowLevelRenderer
+class OpenGLGraphics : public ILowLevelGraphics
 {
 public:
 	// Inherited via ILowLevelRenderer
@@ -47,7 +47,7 @@ private:
 	void _cmdCopyBuffer( const CmdBuffer& _rCmd, const Buffer& _rSrc, const Buffer& _rDst, size_t _srcOffset, size_t _dstOffset, size_t _size ) override;
 	void _cmdBindIndexBuffer( const CmdBuffer& _rCmd, const Buffer& _rIndexBuffer, size_t _offset, Type _type ) override;
 
-	static ILowLevelRenderer::Entry g_register;
+	static ILowLevelGraphics::Entry g_register;
 };
 
 }
