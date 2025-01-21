@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef AFX_SUPPORT_OPENGL
+
 #include <afx/Renderer/LowLevel/LowLevelGraphics.h>
 
 namespace afx { 
@@ -52,3 +54,5 @@ private:
 };
 
 }
+
+#endif

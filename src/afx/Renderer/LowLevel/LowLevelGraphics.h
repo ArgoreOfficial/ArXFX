@@ -11,6 +11,7 @@
 #include <afx/Renderer/ShaderPipeline.h>
 
 #include <unordered_map>
+#include <string>
 
 namespace afx
 {

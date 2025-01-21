@@ -1,5 +1,6 @@
 #include "OpenGLGraphics.h"
 
+#ifdef AFX_SUPPORT_OPENGL
 
 #include <stdio.h>
 #include <string.h>
@@ -333,3 +334,5 @@ void OpenGLGraphics::_cmdBindIndexBuffer( const CmdBuffer& _rCmd, const Buffer& 
 }
 
 }
+
+#endif

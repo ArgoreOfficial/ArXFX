@@ -3,3 +3,6 @@ build
 bin/*.exe
 *.ilk
 *.pdb
+.vscode
+bin/*/Debug
+bin/*/Release

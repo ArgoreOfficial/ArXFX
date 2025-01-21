@@ -1,27 +1,23 @@
-set_languages( "cxx20" )
-set_symbols( "debug" );
 
-add_requires( "glfw", "glm" )
-add_rules("plugin.vsxmake.autoupdate")
+PROJECT_NAME = "Sandbox"
 
-set_targetdir "bin"
-set_objectdir "build/obj"
+set_project( PROJECT_NAME )
+set_version( "0.0.1" )
 
-target "ArXFX"
-    set_kind "binary"
-    set_default(true)
+set_symbols "debug"
+set_optimize "none"
 
-    add_files( 
-        "src/**.cpp", 
-        "libs/**.cpp", 
-        "libs/**.c" )
-    add_headerfiles( 
-        "src/**.h", 
-        "src/**.hpp", 
-        "libs/**.h" )
-    
-    add_includedirs( "ArX/include" )
-    
-    add_packages( "glfw", "glm" )
-    add_includedirs( "src/", "libs/glad/include/" )
-target_end()
+-- add_rules("plugin.vsxmake.autoupdate")
+
+if is_mode( "Package" ) then
+    set_runtimes "MT"
+else
+    set_runtimes "MTd"
+end
+
+set_allowedarchs( "x64", "x86", "x86_64", "psvita", "citra" )
+
+includes( "platform/platforms.lua" )
+load_platform()
+
+includes( "src/xmake.lua" )
