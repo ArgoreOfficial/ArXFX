@@ -2,9 +2,21 @@
 
 namespace afx {
 
+struct CmdBufferData;
+
+enum class CmdBufferState
+{
+	kINITIAL,
+	kRECORDING,
+	kEXECUTABLE,
+	kPENDING,
+	kINVALID
+};
+
 struct CmdBuffer
 {
-	int id;
+	CmdBufferState state = CmdBufferState::kINVALID;
+	CmdBufferData* pData;
 };
 
 }

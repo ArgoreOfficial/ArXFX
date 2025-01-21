@@ -49,6 +49,49 @@ static GLenum getGlBufferUsage( afx::BufferUsage _usage )
 
 namespace afx {
 
+struct BufferData
+{
+	GLuint handle;
+	GLenum glType;
+	GLenum glUsage;
+	GLuint glBlockIndex;
+	GLuint glBindingIndex;
+};
+
+enum class CmdType
+{
+	kBeginRender,
+	kEndRender,
+	kImageClear,
+	kImageBlit,
+	kBindPipeline,
+	kDispatch,
+	kViewport,
+	kDraw,
+	kDrawIndexed,
+	kCopyBuffer,
+	kBindIndexBuffer
+};
+
+struct CmdData
+{
+	CmdType cmd;
+	uint8_t data[ 16 ];
+
+	template<typename _Ty>
+	void set( const _Ty& _d )
+	{
+		static_assert( sizeof( _Ty ) <= sizeof( data ), "sizeof( _Ty ) > sizeof( _d )" );
+		*(_Ty*)( data ) = _d;
+	}
+};
+
+struct CmdBufferData
+{
+	CmdData cmds[ 128 ];
+	uint32_t n;
+};
+
 Result OpenGLGraphics::init()
 {
     gladLoadGLLoader( (GLloadproc)glfwGetProcAddress );
@@ -215,11 +258,12 @@ void OpenGLGraphics::createBuffer( BufferDesc* _desc, BufferID* _pBuffer )
     buffer.type = _desc->type;
     buffer.usage = _desc->usage;
     buffer.size = _desc->size;
+	buffer.pData = new BufferData();
 
     GLenum usage = getGlBufferUsage( buffer.usage );
 
-    glCreateBuffers( 1, &buffer.handle );
-    glNamedBufferData( buffer.handle, _desc->size, 0, usage );
+    glCreateBuffers( 1, &buffer.pData->handle );
+    glNamedBufferData( buffer.pData->handle, _desc->size, 0, usage );
 
     *_pBuffer = m_buffers.emplace( buffer );
     //if( *_pBuffer == 0 )
@@ -229,7 +273,9 @@ void OpenGLGraphics::createBuffer( BufferDesc* _desc, BufferID* _pBuffer )
 void OpenGLGraphics::destroyBuffer( BufferID _buffer )
 {
     Buffer& buffer = m_buffers.at( _buffer );
-    glDeleteBuffers( 1, &buffer.handle );
+    glDeleteBuffers( 1, &buffer.pData->handle );
+
+	delete buffer.pData;
     m_buffers.erase( _buffer );
 }
 
@@ -237,27 +283,27 @@ void OpenGLGraphics::bindBuffer( BufferID _buffer )
 {
     Buffer& buffer = m_buffers.at( _buffer );
     GLenum target = getGlBufferEnum( buffer.type );
-    glBindBuffer( target, buffer.handle );
+    glBindBuffer( target, buffer.pData->handle );
 }
 
 void OpenGLGraphics::bindBufferIndex( BufferID _buffer, int32_t _bindingIndex )
 {
     Buffer& buffer = m_buffers.at( _buffer );
     GLenum target = getGlBufferEnum( buffer.type );
-    glBindBufferBase( target, _bindingIndex, buffer.handle );
+    glBindBufferBase( target, _bindingIndex, buffer.pData->handle );
 }
 
 void OpenGLGraphics::bufferData( BufferID _buffer, void* _pData, size_t _size )
 {
     Buffer& buffer = m_buffers.at( _buffer );
     GLenum usage = getGlBufferUsage( buffer.usage );
-    glNamedBufferData( buffer.handle, _size, _pData, usage );
+    glNamedBufferData( buffer.pData->handle, _size, _pData, usage );
 }
 
 void OpenGLGraphics::bufferSubData( BufferID _buffer, void* _pData, size_t _size, size_t _base )
 {
     Buffer& buffer = m_buffers.at( _buffer );
-    glNamedBufferSubData( buffer.handle, _base, _size, _pData );
+    glNamedBufferSubData( buffer.pData->handle, _base, _size, _pData );
 }
 
 void OpenGLGraphics::copyBufferSubData( BufferID _readBuffer, BufferID _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size )
@@ -265,7 +311,7 @@ void OpenGLGraphics::copyBufferSubData( BufferID _readBuffer, BufferID _writeBuf
     Buffer& readBuffer = m_buffers.at( _readBuffer );
     Buffer& writeBuffer = m_buffers.at( _writeBuffer );
     
-    glCopyNamedBufferSubData( readBuffer.handle, writeBuffer.handle, _readOffset, _writeOffset, _size );
+    glCopyNamedBufferSubData( readBuffer.pData->handle, writeBuffer.pData->handle, _readOffset, _writeOffset, _size );
 }
 
 void OpenGLGraphics::bindVertexBuffer( BufferID _vertexPullBuffer )
@@ -277,59 +323,109 @@ void OpenGLGraphics::bindVertexBuffer( BufferID _vertexPullBuffer )
     // bindBuffer( m_indexBuffer );
 }
 
-void OpenGLGraphics::_cmdBegin( const CmdBuffer& _cmd )
+CmdBuffer* OpenGLGraphics::createCmdBuffer()
+{
+	CmdBuffer* cmdBuffer = new CmdBuffer();
+	cmdBuffer->pData = new CmdBufferData();
+
+	cmdBuffer->state = CmdBufferState::kINITIAL;
+
+	return cmdBuffer;
+}
+
+void OpenGLGraphics::_cmdBegin( CmdBuffer& _cmd )
+{
+	if ( _cmd.state != CmdBufferState::kINITIAL )
+		return;
+
+	_cmd.state = CmdBufferState::kRECORDING;
+	_cmd.pData->n = 0;
+}
+
+void OpenGLGraphics::_cmdEnd( CmdBuffer& _cmd )
+{
+	if ( _cmd.state != CmdBufferState::kRECORDING )
+		return;
+
+	_cmd.state = CmdBufferState::kEXECUTABLE;
+}
+
+void OpenGLGraphics::_cmdSubmit( CmdBuffer& _cmd )
+{
+	if ( _cmd.state != CmdBufferState::kEXECUTABLE )
+		return;
+
+	_cmd.state = CmdBufferState::kPENDING;
+
+	CmdBufferData data = *_cmd.pData;
+	// data.cmds = count 128
+	for ( size_t i = 0; i < _cmd.pData->n; i++ )
+	{
+		CmdData cmd = data.cmds[ i ];
+
+		switch ( cmd.cmd )
+		{
+		case CmdType::kImageClear:
+		{
+			struct col
+			{
+				float r, g, b, a;
+			} c = *(col*)cmd.data;
+			glClearColor( c.r, c.g, c.b, c.a );
+			glClear( GL_COLOR_BUFFER_BIT );
+		} break;
+		}
+	}
+
+	_cmd.state = CmdBufferState::kINITIAL;
+	_cmd.pData->n = 0;
+}
+
+void OpenGLGraphics::_cmdBeginRender( CmdBuffer& _rCmd, Image& _rImage )
 {
 }
 
-void OpenGLGraphics::_cmdEnd( const CmdBuffer& _cmd )
+void OpenGLGraphics::_cmdEndRender( CmdBuffer& _rCmd )
 {
 }
 
-void OpenGLGraphics::_cmdSubmit( const CmdBuffer& _cmd )
+void OpenGLGraphics::_cmdImageClear( CmdBuffer& _cmd, Image& _rImage, float _r, float _g, float _b, float _a )
+{
+	CmdData& cmd = _cmd.pData->cmds[ _cmd.pData->n ];
+	cmd.cmd = CmdType::kImageClear;
+	cmd.set<col>( { _r, _g, _b, _a } );
+	_cmd.pData->n++;
+}
+
+void OpenGLGraphics::_cmdImageBlit( CmdBuffer& _rCmd, Image& _rSrc, Image& _rDst )
 {
 }
 
-void OpenGLGraphics::_cmdBeginRender( const CmdBuffer& _rCmd, Image& _rImage )
+void OpenGLGraphics::_cmdBindPipeline( CmdBuffer& _rCmd, ShaderPipeline& _rShader )
 {
 }
 
-void OpenGLGraphics::_cmdEndRender( const CmdBuffer& _rCmd )
+void OpenGLGraphics::_cmdDispatch( CmdBuffer& _rCmd, uint32_t _numGroupsX, uint32_t _numGroupsY, uint32_t _numGroupsZ )
 {
 }
 
-void OpenGLGraphics::_cmdImageClear( const CmdBuffer& _cmd, const Image& _rImage, float _r, float _g, float _b, float _a )
+void OpenGLGraphics::_cmdViewport( CmdBuffer& _rCmd, uint32_t _x, uint32_t _y, uint32_t _width, uint32_t _height )
 {
 }
 
-void OpenGLGraphics::_cmdImageBlit( const CmdBuffer& _rCmd, const Image& _rSrc, const Image& _rDst )
+void OpenGLGraphics::_cmdDraw( CmdBuffer& _rCmd, uint32_t _vertexCount, uint32_t _instanceCount, uint32_t _firstVertex, uint32_t _firstInstance )
 {
 }
 
-void OpenGLGraphics::_cmdBindPipeline( const CmdBuffer& _rCmd, const ShaderPipeline& _rShader )
+void OpenGLGraphics::_cmdDrawIndexed( CmdBuffer& _rCmd, uint32_t _indexCount, uint32_t _instanceCount, uint32_t _firstIndex, int32_t _vertexOffset, uint32_t _firstInstance )
 {
 }
 
-void OpenGLGraphics::_cmdDispatch( const CmdBuffer& _rCmd, uint32_t _numGroupsX, uint32_t _numGroupsY, uint32_t _numGroupsZ )
+void OpenGLGraphics::_cmdCopyBuffer( CmdBuffer& _rCmd, Buffer& _rSrc, Buffer& _rDst, size_t _srcOffset, size_t _dstOffset, size_t _size )
 {
 }
 
-void OpenGLGraphics::_cmdViewport( const CmdBuffer& _rCmd, uint32_t _x, uint32_t _y, uint32_t _width, uint32_t _height )
-{
-}
-
-void OpenGLGraphics::_cmdDraw( const CmdBuffer& _rCmd, uint32_t _vertexCount, uint32_t _instanceCount, uint32_t _firstVertex, uint32_t _firstInstance )
-{
-}
-
-void OpenGLGraphics::_cmdDrawIndexed( const CmdBuffer& _rCmd, uint32_t _indexCount, uint32_t _instanceCount, uint32_t _firstIndex, int32_t _vertexOffset, uint32_t _firstInstance )
-{
-}
-
-void OpenGLGraphics::_cmdCopyBuffer( const CmdBuffer& _rCmd, const Buffer& _rSrc, const Buffer& _rDst, size_t _srcOffset, size_t _dstOffset, size_t _size )
-{
-}
-
-void OpenGLGraphics::_cmdBindIndexBuffer( const CmdBuffer& _rCmd, const Buffer& _rIndexBuffer, size_t _offset, Type _type )
+void OpenGLGraphics::_cmdBindIndexBuffer( CmdBuffer& _rCmd, Buffer& _rIndexBuffer, size_t _offset, Type _type )
 {
 }
 

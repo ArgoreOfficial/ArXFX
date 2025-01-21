@@ -6,6 +6,12 @@
 
 namespace afx { 
 
+// TODO: move
+struct col
+{
+	float r, g, b, a;
+};
+
 class OpenGLGraphics : public Registar<OpenGLGraphics, ILowLevelGraphics>
 {
 public:
@@ -36,21 +42,22 @@ public:
 	void copyBufferSubData( BufferID _readBuffer, BufferID _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size ) override;
 	void bindVertexBuffer( BufferID _vertexPullBuffer ) override;
 
-private:
-	void _cmdBegin( const CmdBuffer& _cmd ) override;
-	void _cmdEnd( const CmdBuffer& _cmd ) override;
-	void _cmdSubmit( const CmdBuffer& _cmd ) override;
-	void _cmdBeginRender( const CmdBuffer& _rCmd, Image& _rImage ) override;
-	void _cmdEndRender( const CmdBuffer& _rCmd ) override;
-	void _cmdImageClear( const CmdBuffer& _cmd, const Image& _rImage, float _r, float _g, float _b, float _a ) override;
-	void _cmdImageBlit( const CmdBuffer& _rCmd, const Image& _rSrc, const Image& _rDst ) override;
-	void _cmdBindPipeline( const CmdBuffer& _rCmd, const ShaderPipeline& _rShader ) override;
-	void _cmdDispatch( const CmdBuffer& _rCmd, uint32_t _numGroupsX, uint32_t _numGroupsY, uint32_t _numGroupsZ ) override;
-	void _cmdViewport( const CmdBuffer& _rCmd, uint32_t _x, uint32_t _y, uint32_t _width, uint32_t _height ) override;
-	void _cmdDraw( const CmdBuffer& _rCmd, uint32_t _vertexCount, uint32_t _instanceCount, uint32_t _firstVertex, uint32_t _firstInstance ) override;
-	void _cmdDrawIndexed( const CmdBuffer& _rCmd, uint32_t _indexCount, uint32_t _instanceCount, uint32_t _firstIndex, int32_t _vertexOffset, uint32_t _firstInstance ) override;
-	void _cmdCopyBuffer( const CmdBuffer& _rCmd, const Buffer& _rSrc, const Buffer& _rDst, size_t _srcOffset, size_t _dstOffset, size_t _size ) override;
-	void _cmdBindIndexBuffer( const CmdBuffer& _rCmd, const Buffer& _rIndexBuffer, size_t _offset, Type _type ) override;
+	CmdBuffer* createCmdBuffer() override;
+
+	void _cmdBegin( CmdBuffer& _cmd ) override;
+	void _cmdEnd( CmdBuffer& _cmd ) override;
+	void _cmdSubmit( CmdBuffer& _cmd ) override;
+	void _cmdBeginRender( CmdBuffer& _rCmd, Image& _rImage ) override;
+	void _cmdEndRender( CmdBuffer& _rCmd ) override;
+	void _cmdImageClear( CmdBuffer& _cmd, Image& _rImage, float _r, float _g, float _b, float _a ) override;
+	void _cmdImageBlit( CmdBuffer& _rCmd, Image& _rSrc, Image& _rDst ) override;
+	void _cmdBindPipeline( CmdBuffer& _rCmd, ShaderPipeline& _rShader ) override;
+	void _cmdDispatch( CmdBuffer& _rCmd, uint32_t _numGroupsX, uint32_t _numGroupsY, uint32_t _numGroupsZ ) override;
+	void _cmdViewport( CmdBuffer& _rCmd, uint32_t _x, uint32_t _y, uint32_t _width, uint32_t _height ) override;
+	void _cmdDraw( CmdBuffer& _rCmd, uint32_t _vertexCount, uint32_t _instanceCount, uint32_t _firstVertex, uint32_t _firstInstance ) override;
+	void _cmdDrawIndexed( CmdBuffer& _rCmd, uint32_t _indexCount, uint32_t _instanceCount, uint32_t _firstIndex, int32_t _vertexOffset, uint32_t _firstInstance ) override;
+	void _cmdCopyBuffer( CmdBuffer& _rCmd, Buffer& _rSrc, Buffer& _rDst, size_t _srcOffset, size_t _dstOffset, size_t _size ) override;
+	void _cmdBindIndexBuffer( CmdBuffer& _rCmd, Buffer& _rIndexBuffer, size_t _offset, Type _type ) override;
 };
 
 }

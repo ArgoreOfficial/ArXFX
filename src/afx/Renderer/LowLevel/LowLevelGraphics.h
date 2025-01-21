@@ -61,6 +61,8 @@ public:
 	virtual void copyBufferSubData( BufferID _readBuffer, BufferID _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size ) = 0;
 	virtual void bindVertexBuffer( BufferID _vertexPullBuffer ) = 0;
 
+	virtual CmdBuffer* createCmdBuffer() = 0;
+
 	inline void cmdBegin( CmdBufferID _cmdID ) {
 		_cmdBegin( m_cmdBuffers.at( _cmdID ) );
 	}
@@ -121,63 +123,63 @@ public:
 		_cmdBindIndexBuffer( m_cmdBuffers[ _cmdID ], m_buffers[ _indexBufferID ], _offset, _type );
 	}
 
-protected:
+public:
 
 	virtual void _cmdBegin( 
-		const CmdBuffer& _cmd ) = 0;
+		CmdBuffer& _cmd ) = 0;
 	
 	virtual void _cmdEnd( 
-		const CmdBuffer& _cmd ) = 0;
+		CmdBuffer& _cmd ) = 0;
 	
 	virtual void _cmdSubmit( 
-		const CmdBuffer& _cmd ) = 0;
+		CmdBuffer& _cmd ) = 0;
 	
 	virtual void _cmdBeginRender( 
-		const CmdBuffer& _rCmd, 
+		CmdBuffer& _rCmd, 
 		Image& _rImage ) = 0;
 	
 	virtual void _cmdEndRender( 
-		const CmdBuffer& _rCmd ) = 0;
+		CmdBuffer& _rCmd ) = 0;
 	
 	virtual void _cmdImageClear( 
-		const CmdBuffer& _cmd, 
-		const Image& _rImage, 
+		CmdBuffer& _cmd, 
+		Image& _rImage, 
 		float _r, 
 		float _g, 
 		float _b, 
 		float _a ) = 0;
 	
 	virtual void _cmdImageBlit( 
-		const CmdBuffer& _rCmd, 
-		const Image& _rSrc, 
-		const Image& _rDst ) = 0;
+		CmdBuffer& _rCmd, 
+		Image& _rSrc, 
+		Image& _rDst ) = 0;
 	
 	virtual void _cmdBindPipeline( 
-		const CmdBuffer& _rCmd, 
-		const ShaderPipeline& _rShader ) = 0;
+		CmdBuffer& _rCmd, 
+		ShaderPipeline& _rShader ) = 0;
 	
 	virtual void _cmdDispatch( 
-		const CmdBuffer& _rCmd, 
+		CmdBuffer& _rCmd, 
 		uint32_t _numGroupsX, 
 		uint32_t _numGroupsY, 
 		uint32_t _numGroupsZ ) = 0;
 	
 	virtual void _cmdViewport( 
-		const CmdBuffer& _rCmd, 
+		CmdBuffer& _rCmd, 
 		uint32_t _x, 
 		uint32_t _y, 
 		uint32_t _width, 
 		uint32_t _height ) = 0;
 	
 	virtual void _cmdDraw( 
-		const CmdBuffer& _rCmd, 
+		CmdBuffer& _rCmd, 
 		uint32_t _vertexCount, 
 		uint32_t _instanceCount, 
 		uint32_t _firstVertex, 
 		uint32_t _firstInstance ) = 0;
 	
 	virtual void _cmdDrawIndexed( 
-		const CmdBuffer& _rCmd, 
+		CmdBuffer& _rCmd, 
 		uint32_t _indexCount, 
 		uint32_t _instanceCount, 
 		uint32_t _firstIndex, 
@@ -185,19 +187,20 @@ protected:
 		uint32_t _firstInstance ) = 0;
 	
 	virtual void _cmdCopyBuffer( 
-		const CmdBuffer& _rCmd, 
-		const Buffer& _rSrc, 
-		const Buffer& _rDst, 
+		CmdBuffer& _rCmd, 
+		Buffer& _rSrc, 
+		Buffer& _rDst, 
 		size_t _srcOffset, 
 		size_t _dstOffset, 
 		size_t _size ) = 0;
 
 	virtual void _cmdBindIndexBuffer( 
-		const CmdBuffer& _rCmd, 
-		const Buffer& _rIndexBuffer, 
+		CmdBuffer& _rCmd, 
+		Buffer& _rIndexBuffer, 
 		size_t _offset, 
 		Type _type ) = 0;
 
+protected:
 	bool m_shouldRender{ true };
 
 	arx::unordered_array<CmdBufferID,      CmdBuffer>        m_cmdBuffers;

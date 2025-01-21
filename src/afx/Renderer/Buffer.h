@@ -27,23 +27,18 @@ struct BufferDesc
 	int32_t size;
 };
 
+struct BufferData;
 
 struct Buffer
 {
-	/*GLuint*/ uint32_t handle;
-
 	BufferType type;
 	BufferUsage usage;
-
-	/*GLenum*/ uint32_t glType;
-	/*GLenum*/ uint32_t glUsage;
 
 	uint32_t count;
 	uint32_t stride;
 	int32_t  size;
 
-	/*ArgHandle*/ uint32_t blockIndex;
-	/*GLuint*/ uint32_t bindingIndex;
+	BufferData* pData;
 };
 
 
