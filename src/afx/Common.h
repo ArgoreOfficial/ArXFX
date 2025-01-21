@@ -2,6 +2,8 @@
 
 #include <stdint.h>
 
+#include <arx/strong_type.hpp>
+
 namespace afx {
 
 enum Type
@@ -23,6 +25,12 @@ enum Result
 	ARG_ERROR_UNKNOWN
 };
 
+
+typedef arx::strong_type<uint16_t, struct _BufferID>         BufferID;
+typedef arx::strong_type<uint16_t, struct _ImageID>          ImageID;
+typedef arx::strong_type<uint16_t, struct _CmdBufferID>      CmdBufferID;
+typedef arx::strong_type<uint16_t, struct _ShaderProgramID>  ShaderModuleID;
+typedef arx::strong_type<uint16_t, struct _ShaderPipelineID> ShaderPipelineID;
 
 
 }

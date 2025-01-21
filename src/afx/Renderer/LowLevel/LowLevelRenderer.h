@@ -12,12 +12,6 @@
 
 #include <unordered_map>
 
-typedef arx::strong_type<uint16_t, struct _BufferID>         BufferID;
-typedef arx::strong_type<uint16_t, struct _ImageID>          ImageID;
-typedef arx::strong_type<uint16_t, struct _CmdBufferID>      CmdBufferID;
-typedef arx::strong_type<uint16_t, struct _ShaderProgramID>  ShaderModuleID;
-typedef arx::strong_type<uint16_t, struct _ShaderPipelineID> ShaderPipelineID;
-
 namespace afx
 {
 
@@ -212,7 +206,7 @@ public:
 		_cmdBindIndexBuffer( m_cmdBuffers[ _cmdID ], m_buffers[ _indexBufferID ], _offset, _type );
 	}
 
-private:
+protected:
 
 	virtual void _cmdBegin( 
 		const CmdBuffer& _cmd ) = 0;
@@ -277,15 +271,15 @@ private:
 	
 	virtual void _cmdCopyBuffer( 
 		const CmdBuffer& _rCmd, 
-		const BufferID& _rSrc, 
-		const BufferID& _rDst, 
+		const Buffer& _rSrc, 
+		const Buffer& _rDst, 
 		size_t _srcOffset, 
 		size_t _dstOffset, 
 		size_t _size ) = 0;
 
 	virtual void _cmdBindIndexBuffer( 
 		const CmdBuffer& _rCmd, 
-		const BufferID& _rIndexBuffer, 
+		const Buffer& _rIndexBuffer, 
 		size_t _offset, 
 		Type _type ) = 0;
 
@@ -295,7 +289,7 @@ private:
 	arx::unordered_array<ImageID,          Image>            m_images;
 	arx::unordered_array<ShaderModuleID,   ShaderModule>     m_shaderModules;
 	arx::unordered_array<ShaderPipelineID, ShaderPipeline>   m_shaderPipelines;
-	arx::unordered_array<BufferID,         BufferID>         m_buffers;
+	arx::unordered_array<BufferID,         Buffer>           m_buffers;
 	
 	CmdBufferID m_currentCmdBuffer{};
 };

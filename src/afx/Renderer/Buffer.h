@@ -28,7 +28,7 @@ struct BufferDesc
 };
 
 
-struct ArgGfxBuffer
+struct Buffer
 {
 	/*GLuint*/ uint32_t handle;
 

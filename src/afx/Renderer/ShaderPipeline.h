@@ -4,9 +4,9 @@
 
 namespace afx {
 
-enum ShaderModuleType
+enum class ShaderModuleType
 {
-	kShaderModuleType_VERTEX = 0,
+	kVERTEX = 0,
 	kFRAGMENT
 };
 
@@ -43,8 +43,8 @@ struct ShaderModule
 
 struct ShaderPipeline
 {
-	ShaderModule vertexProgram;
-	ShaderModule fragmentProgram;
+	ShaderModuleID vertexProgram;
+	ShaderModuleID fragmentProgram;
 	VertexLayout* pVertexLayout;
 
 	/* GLuint */ uint32_t handle;
@@ -52,8 +52,8 @@ struct ShaderPipeline
 
 struct ShaderPipelineDesc
 {
-	ShaderModule vertexProgram;
-	ShaderModule fragmentProgram;
+	ShaderModuleID vertexProgram;
+	ShaderModuleID fragmentProgram;
 	VertexLayout* pVertexLayout;
 };
 

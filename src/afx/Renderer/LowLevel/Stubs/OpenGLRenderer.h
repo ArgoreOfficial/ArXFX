@@ -44,8 +44,8 @@ private:
 	void _cmdViewport( const CmdBuffer& _rCmd, uint32_t _x, uint32_t _y, uint32_t _width, uint32_t _height ) override;
 	void _cmdDraw( const CmdBuffer& _rCmd, uint32_t _vertexCount, uint32_t _instanceCount, uint32_t _firstVertex, uint32_t _firstInstance ) override;
 	void _cmdDrawIndexed( const CmdBuffer& _rCmd, uint32_t _indexCount, uint32_t _instanceCount, uint32_t _firstIndex, int32_t _vertexOffset, uint32_t _firstInstance ) override;
-	void _cmdCopyBuffer( const CmdBuffer& _rCmd, const BufferID& _rSrc, const BufferID& _rDst, size_t _srcOffset, size_t _dstOffset, size_t _size ) override;
-	void _cmdBindIndexBuffer( const CmdBuffer& _rCmd, const BufferID& _rIndexBuffer, size_t _offset, Type _type ) override;
+	void _cmdCopyBuffer( const CmdBuffer& _rCmd, const Buffer& _rSrc, const Buffer& _rDst, size_t _srcOffset, size_t _dstOffset, size_t _size ) override;
+	void _cmdBindIndexBuffer( const CmdBuffer& _rCmd, const Buffer& _rIndexBuffer, size_t _offset, Type _type ) override;
 
 	static ILowLevelRenderer::Entry g_register;
 };
