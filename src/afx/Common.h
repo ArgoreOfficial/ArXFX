@@ -6,7 +6,7 @@
 
 namespace afx {
 
-enum Type
+enum class Type
 {
 	kINT,
 	kUNSIGNED_INT,
@@ -18,11 +18,13 @@ enum Type
 	kDOUBLE
 };
 
-enum Result
+enum class Result
 {
-	ARG_SUCESS = 0,
-	ARG_ERROR_OUT_OF_MEMORY,
-	ARG_ERROR_UNKNOWN
+	kERROR_UNKNOWN = 0,
+	
+	kSUCESS = 1,
+
+	kERROR_OUT_OF_MEMORY,
 };
 
 

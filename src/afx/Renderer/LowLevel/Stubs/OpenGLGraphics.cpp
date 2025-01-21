@@ -69,14 +69,12 @@ Result OpenGLGraphics::init()
 
     // glCreateVertexArrays( 1, &m_VAO );
 
-    return ARG_SUCESS;
+    return Result::kSUCESS;
 }
 
-Result OpenGLGraphics::viewport( int _x, int _y, int _width, int _height )
+void OpenGLGraphics::viewport( int _x, int _y, int _width, int _height )
 {
     glViewport( _x, _y, _width, _height );
-
-    return ARG_SUCESS;
 }
 
 void OpenGLGraphics::clearColor( float _r, float _g, float _b, float _a )
@@ -91,7 +89,7 @@ void OpenGLGraphics::clearDepth( float _r, float _g, float _b, float _a )
     glClear( GL_DEPTH_BUFFER_BIT );
 }
 
-Result OpenGLGraphics::setFillMode( FillMode _mode )
+void OpenGLGraphics::setFillMode( FillMode _mode )
 {
     switch( _mode )
     {
@@ -99,31 +97,24 @@ Result OpenGLGraphics::setFillMode( FillMode _mode )
     case FillMode::kWIREFRAME: glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );  break;
     case FillMode::kPOINTS:    glPolygonMode( GL_FRONT_AND_BACK, GL_POINT ); break;
     }
-    return ARG_SUCESS;
 }
 
-Result OpenGLGraphics::draw( uint32_t _firstVertex, uint32_t _numVertices )
+void OpenGLGraphics::draw( uint32_t _firstVertex, uint32_t _numVertices )
 {
     glDrawArrays( GL_TRIANGLES, _firstVertex, _numVertices );
-
-    return ARG_SUCESS;
 }
 
-Result OpenGLGraphics::drawIndexed( uint32_t _numIndices )
+void OpenGLGraphics::drawIndexed( uint32_t _numIndices )
 {
     glDrawElements( GL_TRIANGLES, _numIndices, GL_UNSIGNED_INT, 0 );
-
-    return ARG_SUCESS;
 }
 
-Result OpenGLGraphics::drawIndexedInstanced( uint32_t _numIndices, uint32_t _numInstances, uint32_t _baseVertex )
+void OpenGLGraphics::drawIndexedInstanced( uint32_t _numIndices, uint32_t _numInstances, uint32_t _baseVertex )
 {
     glDrawElementsInstancedBaseVertex( GL_TRIANGLES, _numIndices, GL_UNSIGNED_INT, 0, _numInstances, _baseVertex );
-
-    return ARG_SUCESS;
 }
 
-Result OpenGLGraphics::createProgram( ShaderProgramDesc* _desc, ShaderModuleID* _pProgram )
+void OpenGLGraphics::createProgram( ShaderProgramDesc* _desc, ShaderModuleID* _pProgram )
 {
     ShaderModuleType type = _desc->type;
     const char* sourceStr = _desc->source;
@@ -153,22 +144,18 @@ Result OpenGLGraphics::createProgram( ShaderProgramDesc* _desc, ShaderModuleID* 
     }
 
     *_pProgram = m_shaderModules.emplace( program );
-    if( *_pProgram == 0 ) // error
-        return ARG_ERROR_OUT_OF_MEMORY;
-
-    return ARG_SUCESS;
+    //if( *_pProgram == 0 ) // error
+    //    return ARG_ERROR_OUT_OF_MEMORY;
 }
 
-Result OpenGLGraphics::destroyProgram( ShaderModuleID _program )
+void OpenGLGraphics::destroyProgram( ShaderModuleID _program )
 {
     ShaderModule& program = m_shaderModules.at( _program );
     glDeleteProgram( program.handle );
     m_shaderModules.erase( _program );
-
-    return ARG_SUCESS;
 }
 
-Result OpenGLGraphics::createPipeline( ShaderPipelineDesc* _desc, ShaderPipelineID* _pPipeline )
+void OpenGLGraphics::createPipeline( ShaderPipelineDesc* _desc, ShaderPipelineID* _pPipeline )
 {
     ShaderPipeline pipeline{}; // = ARG_GET_OBJECT( _ctx->pPipelines, *_pPipeline );
     
@@ -178,8 +165,8 @@ Result OpenGLGraphics::createPipeline( ShaderPipelineDesc* _desc, ShaderPipeline
 
     glCreateProgramPipelines( 1, &pipeline.handle );
 
-    if( pipeline.handle == 0 )
-        return ARG_ERROR_UNKNOWN;
+    //if( pipeline.handle == 0 )
+    //    return ARG_ERROR_UNKNOWN;
 
     ShaderModule& vs = m_shaderModules.at( _desc->vertexProgram );
     ShaderModule& fs = m_shaderModules.at( _desc->fragmentProgram );
@@ -188,31 +175,25 @@ Result OpenGLGraphics::createPipeline( ShaderPipelineDesc* _desc, ShaderPipeline
     glUseProgramStages( pipeline.handle, GL_FRAGMENT_SHADER_BIT, fs.handle );
 
     *_pPipeline = m_shaderPipelines.emplace( pipeline );
-    if( *_pPipeline == 0 )
-        return ARG_ERROR_OUT_OF_MEMORY;
-
-    return ARG_SUCESS;
+    //if( *_pPipeline == 0 )
+    //    return ARG_ERROR_OUT_OF_MEMORY;
 }
 
-Result OpenGLGraphics::destroyPipeline( ShaderPipelineID _pipeline )
+void OpenGLGraphics::destroyPipeline( ShaderPipelineID _pipeline )
 {
     ShaderPipeline& pipeline = m_shaderPipelines.at( _pipeline );
     glDeleteProgramPipelines( 1, &pipeline.handle );
     m_shaderPipelines.erase( _pipeline );
-
-    return ARG_SUCESS;
 }
 
-Result OpenGLGraphics::bindPipeline( ShaderPipelineID _pipeline )
+void OpenGLGraphics::bindPipeline( ShaderPipelineID _pipeline )
 {
     //m_currentlyBoundPipeline = _pipeline;
     ShaderPipeline& pipeline = m_shaderPipelines.at( _pipeline );
     glBindProgramPipeline( pipeline.handle );
-
-    return ARG_SUCESS;
 }
 
-Result OpenGLGraphics::bindVertexLayout( VertexLayout* _pVertexLayout )
+void OpenGLGraphics::bindVertexLayout( VertexLayout* _pVertexLayout )
 {
     int pointer = 0;
     for( size_t i = 0; i < _pVertexLayout->numAttributes; i++ )
@@ -232,11 +213,9 @@ Result OpenGLGraphics::bindVertexLayout( VertexLayout* _pVertexLayout )
 
         pointer += attrib->size;
     }
-
-    return ARG_SUCESS;
 }
 
-Result OpenGLGraphics::createBuffer( BufferDesc* _desc, BufferID* _pBuffer )
+void OpenGLGraphics::createBuffer( BufferDesc* _desc, BufferID* _pBuffer )
 {
     Buffer buffer{};
     buffer.type = _desc->type;
@@ -249,75 +228,59 @@ Result OpenGLGraphics::createBuffer( BufferDesc* _desc, BufferID* _pBuffer )
     glNamedBufferData( buffer.handle, _desc->size, 0, usage );
 
     *_pBuffer = m_buffers.emplace( buffer );
-    if( *_pBuffer == 0 )
-        return ARG_ERROR_OUT_OF_MEMORY;
-
-    return ARG_SUCESS;
+    //if( *_pBuffer == 0 )
+    //    return ARG_ERROR_OUT_OF_MEMORY;
 }
 
-Result OpenGLGraphics::destroyBuffer( BufferID _buffer )
+void OpenGLGraphics::destroyBuffer( BufferID _buffer )
 {
     Buffer& buffer = m_buffers.at( _buffer );
     glDeleteBuffers( 1, &buffer.handle );
     m_buffers.erase( _buffer );
-
-    return ARG_SUCESS;
 }
 
-Result OpenGLGraphics::bindBuffer( BufferID _buffer )
+void OpenGLGraphics::bindBuffer( BufferID _buffer )
 {
     Buffer& buffer = m_buffers.at( _buffer );
     GLenum target = getGlBufferEnum( buffer.type );
     glBindBuffer( target, buffer.handle );
-
-    return ARG_SUCESS;
 }
 
-Result OpenGLGraphics::bindBufferIndex( BufferID _buffer, int32_t _bindingIndex )
+void OpenGLGraphics::bindBufferIndex( BufferID _buffer, int32_t _bindingIndex )
 {
     Buffer& buffer = m_buffers.at( _buffer );
     GLenum target = getGlBufferEnum( buffer.type );
     glBindBufferBase( target, _bindingIndex, buffer.handle );
-
-    return ARG_SUCESS;
 }
 
-Result OpenGLGraphics::bufferData( BufferID _buffer, void* _pData, size_t _size )
+void OpenGLGraphics::bufferData( BufferID _buffer, void* _pData, size_t _size )
 {
     Buffer& buffer = m_buffers.at( _buffer );
     GLenum usage = getGlBufferUsage( buffer.usage );
     glNamedBufferData( buffer.handle, _size, _pData, usage );
-
-    return ARG_SUCESS;
 }
 
-Result OpenGLGraphics::bufferSubData( BufferID _buffer, void* _pData, size_t _size, size_t _base )
+void OpenGLGraphics::bufferSubData( BufferID _buffer, void* _pData, size_t _size, size_t _base )
 {
     Buffer& buffer = m_buffers.at( _buffer );
     glNamedBufferSubData( buffer.handle, _base, _size, _pData );
-
-    return ARG_SUCESS;
 }
 
-Result OpenGLGraphics::copyBufferSubData( BufferID _readBuffer, BufferID _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size )
+void OpenGLGraphics::copyBufferSubData( BufferID _readBuffer, BufferID _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size )
 {
     Buffer& readBuffer = m_buffers.at( _readBuffer );
     Buffer& writeBuffer = m_buffers.at( _writeBuffer );
     
     glCopyNamedBufferSubData( readBuffer.handle, writeBuffer.handle, _readOffset, _writeOffset, _size );
-
-    return ARG_SUCESS;
 }
 
-Result OpenGLGraphics::bindVertexBuffer( BufferID _vertexPullBuffer )
+void OpenGLGraphics::bindVertexBuffer( BufferID _vertexPullBuffer )
 {
     Buffer& buffer = m_buffers.at( _vertexPullBuffer );
     printf( "argGfxBindVertexBuffer is not implemented\n" );
 
     // bindBufferIndex( m_vertexBuffer, SbVertices.bindingIndex.value );
     // bindBuffer( m_indexBuffer );
-
-    return ARG_SUCESS;
 }
 
 void OpenGLGraphics::_cmdBegin( const CmdBuffer& _cmd )

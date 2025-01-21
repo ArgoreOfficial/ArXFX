@@ -9,27 +9,27 @@ class OpenGLGraphics : public ILowLevelGraphics
 public:
 	// Inherited via ILowLevelRenderer
 	Result init() override;
-	Result viewport( int _x, int _y, int _width, int _height ) override;
+	void viewport( int _x, int _y, int _width, int _height ) override;
 	void clearColor( float _r, float _g, float _b, float _a ) override;
 	void clearDepth( float _r, float _g, float _b, float _a ) override;
-	Result setFillMode( FillMode _mode ) override;
-	Result draw( uint32_t _firstVertex, uint32_t _numVertices ) override;
-	Result drawIndexed( uint32_t _numIndices ) override;
-	Result drawIndexedInstanced( uint32_t _numIndices, uint32_t _numInstances, uint32_t _baseVertex ) override;
-	Result createProgram( ShaderProgramDesc* _desc, ShaderModuleID* _pProgram ) override;
-	Result destroyProgram( ShaderModuleID _program ) override;
-	Result createPipeline( ShaderPipelineDesc* _desc, ShaderPipelineID* _pPipeline ) override;
-	Result destroyPipeline( ShaderPipelineID _pipeline ) override;
-	Result bindPipeline( ShaderPipelineID _pipeline ) override;
-	Result bindVertexLayout( VertexLayout* _pVertexLayout ) override;
-	Result createBuffer( BufferDesc* _desc, BufferID* _pBuffer ) override;
-	Result destroyBuffer( BufferID _buffer ) override;
-	Result bindBuffer( BufferID _buffer ) override;
-	Result bindBufferIndex( BufferID _buffer, int32_t _bindingIndex ) override;
-	Result bufferData( BufferID _buffer, void* _pData, size_t _size ) override;
-	Result bufferSubData( BufferID _buffer, void* _pData, size_t _size, size_t _base ) override;
-	Result copyBufferSubData( BufferID _readBuffer, BufferID _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size ) override;
-	Result bindVertexBuffer( BufferID _vertexPullBuffer ) override;
+	void setFillMode( FillMode _mode ) override;
+	void draw( uint32_t _firstVertex, uint32_t _numVertices ) override;
+	void drawIndexed( uint32_t _numIndices ) override;
+	void drawIndexedInstanced( uint32_t _numIndices, uint32_t _numInstances, uint32_t _baseVertex ) override;
+	void createProgram( ShaderProgramDesc* _desc, ShaderModuleID* _pProgram ) override;
+	void destroyProgram( ShaderModuleID _program ) override;
+	void createPipeline( ShaderPipelineDesc* _desc, ShaderPipelineID* _pPipeline ) override;
+	void destroyPipeline( ShaderPipelineID _pipeline ) override;
+	void bindPipeline( ShaderPipelineID _pipeline ) override;
+	void bindVertexLayout( VertexLayout* _pVertexLayout ) override;
+	void createBuffer( BufferDesc* _desc, BufferID* _pBuffer ) override;
+	void destroyBuffer( BufferID _buffer ) override;
+	void bindBuffer( BufferID _buffer ) override;
+	void bindBufferIndex( BufferID _buffer, int32_t _bindingIndex ) override;
+	void bufferData( BufferID _buffer, void* _pData, size_t _size ) override;
+	void bufferSubData( BufferID _buffer, void* _pData, size_t _size, size_t _base ) override;
+	void copyBufferSubData( BufferID _readBuffer, BufferID _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size ) override;
+	void bindVertexBuffer( BufferID _vertexPullBuffer ) override;
 
 private:
 	void _cmdBegin( const CmdBuffer& _cmd ) override;

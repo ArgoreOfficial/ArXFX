@@ -46,96 +46,27 @@ public:
 	};
 
 	virtual Result init() = 0;
-
-	virtual Result viewport(
-		int _x,
-		int _y,
-		int _width,
-		int _height ) = 0;
-
-	virtual void clearColor(
-		float _r,
-		float _g,
-		float _b,
-		float _a
-	) = 0;
-
-	virtual void clearDepth(
-		float _r,
-		float _g,
-		float _b,
-		float _a
-	) = 0;
-
-	virtual Result setFillMode(
-		FillMode _mode ) = 0;
-
-	virtual Result draw(
-		uint32_t _firstVertex,
-		uint32_t _numVertices ) = 0;
-
-	virtual Result drawIndexed(
-		uint32_t _numIndices ) = 0;
-
-	virtual Result drawIndexedInstanced(
-		uint32_t _numIndices,
-		uint32_t _numInstances,
-		uint32_t _baseVertex ) = 0;
-
-	virtual Result createProgram(
-		ShaderProgramDesc* _desc,
-		ShaderModuleID* _pProgram ) = 0;
-
-	virtual Result destroyProgram(
-		ShaderModuleID _program ) = 0;
-
-	virtual Result createPipeline(
-		ShaderPipelineDesc* _desc,
-		ShaderPipelineID* _pPipeline ) = 0;
-
-	virtual Result destroyPipeline(
-		ShaderPipelineID _pipeline ) = 0;
-
-	virtual Result bindPipeline(
-		ShaderPipelineID _pipeline ) = 0;
-
-	virtual Result bindVertexLayout(
-		VertexLayout* _pVertexLayout ) = 0;
-
-	virtual Result createBuffer(
-		BufferDesc* _desc,
-		BufferID* _pBuffer ) = 0;
-
-	virtual Result destroyBuffer(
-		BufferID _buffer ) = 0;
-
-	virtual Result bindBuffer(
-		BufferID _buffer ) = 0;
-
-	virtual Result bindBufferIndex(
-		BufferID _buffer,
-		int32_t _bindingIndex ) = 0;
-
-	virtual Result bufferData(
-		BufferID _buffer,
-		void* _pData,
-		size_t _size ) = 0;
-
-	virtual Result bufferSubData(
-		BufferID _buffer,
-		void* _pData,
-		size_t _size,
-		size_t _base ) = 0;
-
-	virtual Result copyBufferSubData(
-		BufferID _readBuffer,
-		BufferID _writeBuffer,
-		size_t _readOffset,
-		size_t _writeOffset,
-		size_t _size ) = 0;
-
-	virtual Result bindVertexBuffer(
-		BufferID _vertexPullBuffer ) = 0;
+	virtual void viewport( int _x, int _y, int _width, int _height ) = 0;
+	virtual void clearColor( float _r, float _g, float _b, float _a ) = 0;
+	virtual void clearDepth( float _r, float _g, float _b, float _a ) = 0;
+	virtual void setFillMode( FillMode _mode ) = 0;
+	virtual void draw( uint32_t _firstVertex, uint32_t _numVertices ) = 0;
+	virtual void drawIndexed( uint32_t _numIndices ) = 0;
+	virtual void drawIndexedInstanced( uint32_t _numIndices, uint32_t _numInstances, uint32_t _baseVertex ) = 0;
+	virtual void createProgram( ShaderProgramDesc* _desc, ShaderModuleID* _pProgram ) = 0;
+	virtual void destroyProgram( ShaderModuleID _program ) = 0;
+	virtual void createPipeline( ShaderPipelineDesc* _desc, ShaderPipelineID* _pPipeline ) = 0;
+	virtual void destroyPipeline( ShaderPipelineID _pipeline ) = 0;
+	virtual void bindPipeline( ShaderPipelineID _pipeline ) = 0;
+	virtual void bindVertexLayout( VertexLayout* _pVertexLayout ) = 0;
+	virtual void createBuffer( BufferDesc* _desc, BufferID* _pBuffer ) = 0;
+	virtual void destroyBuffer( BufferID _buffer ) = 0;
+	virtual void bindBuffer( BufferID _buffer ) = 0;
+	virtual void bindBufferIndex( BufferID _buffer, int32_t _bindingIndex ) = 0;
+	virtual void bufferData( BufferID _buffer, void* _pData, size_t _size ) = 0;
+	virtual void bufferSubData( BufferID _buffer, void* _pData, size_t _size, size_t _base ) = 0;
+	virtual void copyBufferSubData( BufferID _readBuffer, BufferID _writeBuffer, size_t _readOffset, size_t _writeOffset, size_t _size ) = 0;
+	virtual void bindVertexBuffer( BufferID _vertexPullBuffer ) = 0;
 
 	inline void cmdBegin( CmdBufferID _cmdID ) {
 		_cmdBegin( m_cmdBuffers.at( _cmdID ) );
