@@ -12,6 +12,7 @@ struct Bounds2D
 };
 
 typedef Bounds2D<float> Bounds2Df;
-typedef Bounds2D<int>   Bounds2Di;
+typedef Bounds2D<int32_t>   Bounds2Di;
+typedef Bounds2D<uint32_t>   Bounds2Du32;
 
 }

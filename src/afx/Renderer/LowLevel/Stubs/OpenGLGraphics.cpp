@@ -84,6 +84,13 @@ struct CmdData
 		static_assert( sizeof( _Ty ) <= sizeof( data ), "sizeof( _Ty ) > sizeof( _d )" );
 		*(_Ty*)( data ) = _d;
 	}
+
+	template<typename _Ty>
+	_Ty get()
+	{
+		static_assert( sizeof( _Ty ) <= sizeof( data ), "sizeof( _Ty ) > sizeof( _d )" );
+		return *(_Ty*)data;
+	}
 };
 
 struct CmdBufferData
@@ -111,13 +118,12 @@ Result OpenGLGraphics::init()
 
 void OpenGLGraphics::viewport( int _x, int _y, int _width, int _height )
 {
-    glViewport( _x, _y, _width, _height );
+	throw 123;
 }
 
 void OpenGLGraphics::clearColor( float _r, float _g, float _b, float _a )
 {
-    glClearColor( _r, _g, _b, _a );
-    glClear( GL_COLOR_BUFFER_BIT );
+	throw 123;
 }
 
 void OpenGLGraphics::clearDepth( float _r, float _g, float _b, float _a )
@@ -367,12 +373,15 @@ void OpenGLGraphics::_cmdSubmit( CmdBuffer& _cmd )
 		{
 		case CmdType::kImageClear:
 		{
-			struct col
-			{
-				float r, g, b, a;
-			} c = *(col*)cmd.data;
+			col c = cmd.get<col>();
 			glClearColor( c.r, c.g, c.b, c.a );
 			glClear( GL_COLOR_BUFFER_BIT );
+		} break;
+
+		case CmdType::kViewport:
+		{
+			Bounds2Du32 b = cmd.get<Bounds2Du32>();
+			glViewport( b.x, b.y, b.width, b.height );
 		} break;
 		}
 	}
@@ -389,12 +398,12 @@ void OpenGLGraphics::_cmdEndRender( CmdBuffer& _rCmd )
 {
 }
 
-void OpenGLGraphics::_cmdImageClear( CmdBuffer& _cmd, Image& _rImage, float _r, float _g, float _b, float _a )
+void OpenGLGraphics::_cmdImageClear( CmdBuffer& _rCmd, Image& _rImage, float _r, float _g, float _b, float _a )
 {
-	CmdData& cmd = _cmd.pData->cmds[ _cmd.pData->n ];
+	CmdData& cmd = _rCmd.pData->cmds[ _rCmd.pData->n ];
 	cmd.cmd = CmdType::kImageClear;
 	cmd.set<col>( { _r, _g, _b, _a } );
-	_cmd.pData->n++;
+	_rCmd.pData->n++;
 }
 
 void OpenGLGraphics::_cmdImageBlit( CmdBuffer& _rCmd, Image& _rSrc, Image& _rDst )
@@ -411,6 +420,10 @@ void OpenGLGraphics::_cmdDispatch( CmdBuffer& _rCmd, uint32_t _numGroupsX, uint3
 
 void OpenGLGraphics::_cmdViewport( CmdBuffer& _rCmd, uint32_t _x, uint32_t _y, uint32_t _width, uint32_t _height )
 {
+	CmdData& cmd = _rCmd.pData->cmds[ _rCmd.pData->n ];
+	cmd.cmd = CmdType::kViewport;
+	cmd.set<Bounds2Du32>( Bounds2Du32{ _x, _y, _width, _height } );
+	_rCmd.pData->n++;
 }
 
 void OpenGLGraphics::_cmdDraw( CmdBuffer& _rCmd, uint32_t _vertexCount, uint32_t _instanceCount, uint32_t _firstVertex, uint32_t _firstInstance )

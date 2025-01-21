@@ -87,8 +87,7 @@ int main()
 	afx::ILowLevelGraphics* g_graphics = afx::ILowLevelGraphics::Registry::createFromName( "Citra" );
 #endif
 	g_graphics->init();
-	g_graphics->viewport( 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT );
-
+	
 	afx::CmdBuffer* cmdBuffer = g_graphics->createCmdBuffer();
 
 #ifdef AFX_SUPPORT_GLFW
@@ -98,17 +97,16 @@ int main()
 		int width, height;
 		glfwGetWindowSize( window, &width, &height );
 
-		g_graphics->viewport( 0, 0, width, height );
-
-		float flash = fabs( sin( frameNumber / 60.0f ) );
-		
 		afx::Image m{};
 		g_graphics->_cmdBegin( *cmdBuffer );
+		
+		g_graphics->_cmdViewport( *cmdBuffer, 0, 0, width, height );
+		
+		float flash = fabs( sin( frameNumber / 60.0f ) );
 		g_graphics->_cmdImageClear( *cmdBuffer, m, flash, 0.0f, flash, 1.0f );
+		
 		g_graphics->_cmdEnd( *cmdBuffer );
 		g_graphics->_cmdSubmit( *cmdBuffer );
-
-		// g_graphics->clearColor( flash, 0.0f, flash, 1.0f );
 
 		glfwSwapBuffers( window );
 		glfwPollEvents();
