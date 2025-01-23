@@ -17,11 +17,15 @@ struct iAsset
 class ResourceManager
 {
 public:
+	ResourceManager() {
+		m_searchPaths.push_back( "./" );
+	}
+
 	template<typename _Ty, typename... _Args>
 	_Ty* load( const std::string& _path, _Args... _args ) {
 		static_assert( std::is_base_of<iAsset2, _Ty>::value, "Object '_Ty' must inherit from iAsset2" );
 		
-		std::unique_lock lock{ m_mutex };
+		std::lock_guard lock{ m_mutex };
 
 		_Ty* asset = _loadImpl<_Ty, _Args...>( _path, _args... );
 		if( asset == nullptr ) // error
@@ -40,7 +44,7 @@ public:
 		if( _pAsset == nullptr || *_pAsset == nullptr )
 			return; // cannot unload nullptr
 
-		std::unique_lock lock{ m_mutex };
+		std::lock_guard lock{ m_mutex };
 
 		for( auto it = m_loadedAssets.begin(); it != m_loadedAssets.end(); ++it )
 		{
@@ -68,8 +72,10 @@ public:
 	void _unloadImpl( _Ty* );
 
 private:
-	std::vector<std::pair<std::string, iAsset2*>> m_loadedAssets;
-	std::mutex m_mutex;
+	std::vector<std::string> m_searchPaths{};
+	std::vector<std::pair<std::string, iAsset*>> m_loadedAssets{};
+	
+	std::mutex m_mutex{};
 };
 
 }

@@ -3,6 +3,7 @@
 #ifdef AFX_SUPPORT_OPENGL
 
 #include <afx/Renderer/LowLevel/LowLevelGraphics.h>
+#include <arx/registry.hpp>
 
 namespace afx { 
 
@@ -12,11 +13,11 @@ struct col
 	float r, g, b, a;
 };
 
-class OpenGLGraphics : public Registar<OpenGLGraphics, ILowLevelGraphics>
+class OpenGLGraphics : public arx::registar<OpenGLGraphics, ILowLevelGraphics>
 {
 public:
-	static std::string getName() { return "OpenGL"; }
-	static ILowLevelGraphics* allocate( void* _pUserData ) { return new OpenGLGraphics(); }
+	static std::string get_name() { return "OpenGL"; }
+	static ILowLevelGraphics* alloc( void* _pUserData ) { return new OpenGLGraphics(); }
 
 	// Inherited via ILowLevelRenderer
 	Result init() override;

@@ -1,7 +1,8 @@
 #pragma once
 
-#include <arx/unordered_array.hpp>
+#include <arx/registry.hpp>
 #include <arx/strong_type.hpp>
+#include <arx/unordered_array.hpp>
 
 #include <afx/Math/Bounds2D.h>
 
@@ -16,28 +17,9 @@
 namespace afx
 {
 
-class ILowLevelGraphics
+class ILowLevelGraphics : public arx::registry<ILowLevelGraphics>
 {
 public:
-	typedef ILowLevelGraphics* ( *allocator_fptr_t )( void* _pUserData );
-
-	class Registry
-	{
-	public:
-		static int32_t addEntry( const std::string& _name, allocator_fptr_t _pAllocator ) {
-			g_allocators[ _name ] = _pAllocator;
-			return g_allocators.size();
-		}
-
-		static ILowLevelGraphics* createFromName( const std::string& _name, void* _pUserData = nullptr ) {
-			return g_allocators[ _name ]( _pUserData );
-		}
-
-	private:
-		static inline std::unordered_map<std::string, allocator_fptr_t> g_allocators{};
-
-	};
-
 	virtual Result init() = 0;
 	virtual void viewport( int _x, int _y, int _width, int _height ) = 0;
 	virtual void clearColor( float _r, float _g, float _b, float _a ) = 0;
@@ -212,22 +194,6 @@ protected:
 	CmdBufferID m_currentCmdBuffer{};
 
 
-};
-
-template<typename _Ty, typename _Pty>
-class Registar : public _Pty
-{
-public:
-	struct Entry
-	{
-		Entry() {
-			id = _Pty::Registry::addEntry( _Ty::getName(), _Ty::allocate );
-		}
-		int32_t id = -1;
-	};
-
-private:
-	static inline Entry g_entry{};
 };
 
 }

@@ -82,9 +82,9 @@ int main()
 
 	uint32_t frameNumber = 0;
 #ifdef AFX_ARCH_X64
-	afx::ILowLevelGraphics* g_graphics = afx::ILowLevelGraphics::Registry::createFromName( "OpenGL" );
+	afx::ILowLevelGraphics* g_graphics = afx::ILowLevelGraphics::alloc( "OpenGL" );
 #elif defined( AFX_ARCH_CITRA )
-	afx::ILowLevelGraphics* g_graphics = afx::ILowLevelGraphics::Registry::createFromName( "Citra" );
+	afx::ILowLevelGraphics* g_graphics = afx::ILowLevelGraphics::alloc( "Citra" );
 #endif
 	g_graphics->init();
 	
