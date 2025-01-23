@@ -10,6 +10,15 @@
 
 typedef void* ( *GLloadproc )( const char* name );
 
+
+struct DrawArraysIndirectCommand
+{
+	unsigned int count;
+	unsigned int instanceCount;
+	unsigned int firstVertex;
+	unsigned int baseInstance;
+};
+
 ///////////////////////////////////////////////////////////////////////////////////////
 
 static void glMessageCallback( GLenum _source, GLenum _type, GLuint _id, GLenum _severity, GLsizei _length, GLchar const* _message, void const* _userData )
@@ -97,6 +106,15 @@ struct CmdBufferData
 {
 	CmdData cmds[ 128 ];
 	uint32_t n;
+
+	template<typename _Ty>
+	void push( const CmdType _type, const _Ty& _data )
+	{
+		CmdData& cmd = cmds[ n ];
+		cmd.cmd = _type;
+		cmd.set<_Ty>( _data );
+		n++;
+	}
 };
 
 Result OpenGLGraphics::init()
@@ -111,7 +129,8 @@ Result OpenGLGraphics::init()
     // glEnable( GL_DEPTH_TEST );
     // glDepthFunc( GL_LESS );
 
-    // glCreateVertexArrays( 1, &m_VAO );
+    glGenVertexArrays( 1, &m_VAO );
+	glBindVertexArray( m_VAO );
 
     return Result::kSUCESS;
 }
@@ -258,20 +277,23 @@ void OpenGLGraphics::bindVertexLayout( VertexLayout* _pVertexLayout )
     }
 }
 
-void OpenGLGraphics::createBuffer( BufferDesc* _desc, BufferID* _pBuffer )
+BufferID OpenGLGraphics::createBuffer( BufferType _type, BufferUsage _usage, int32_t _size )
 {
     Buffer buffer{};
-    buffer.type = _desc->type;
-    buffer.usage = _desc->usage;
-    buffer.size = _desc->size;
+    buffer.type = _type;
+    buffer.usage = _usage;
+    buffer.size = _size;
 	buffer.pData = new BufferData();
 
     GLenum usage = getGlBufferUsage( buffer.usage );
 
     glCreateBuffers( 1, &buffer.pData->handle );
-    glNamedBufferData( buffer.pData->handle, _desc->size, 0, usage );
+    glNamedBufferData( buffer.pData->handle, _size, 0, usage );
 
-    *_pBuffer = m_buffers.emplace( buffer );
+	BufferID bufferID = m_buffers.emplace( buffer );
+
+	return bufferID;
+
     //if( *_pBuffer == 0 )
     //    return ARG_ERROR_OUT_OF_MEMORY;
 }
@@ -398,48 +420,50 @@ void OpenGLGraphics::_cmdEndRender( CmdBuffer& _rCmd )
 {
 }
 
-void OpenGLGraphics::_cmdImageClear( CmdBuffer& _rCmd, Image& _rImage, float _r, float _g, float _b, float _a )
-{
-	CmdData& cmd = _rCmd.pData->cmds[ _rCmd.pData->n ];
-	cmd.cmd = CmdType::kImageClear;
-	cmd.set<col>( { _r, _g, _b, _a } );
-	_rCmd.pData->n++;
+void OpenGLGraphics::_cmdImageClear( CmdBuffer& _rCmd, Image& _rImage, float _r, float _g, float _b, float _a ) {
+	_rCmd.pData->push<col>( CmdType::kImageClear, { _r, _g, _b, _a } );
 }
 
 void OpenGLGraphics::_cmdImageBlit( CmdBuffer& _rCmd, Image& _rSrc, Image& _rDst )
 {
 }
 
-void OpenGLGraphics::_cmdBindPipeline( CmdBuffer& _rCmd, ShaderPipeline& _rShader )
-{
+void OpenGLGraphics::_cmdBindPipeline( CmdBuffer& _rCmd, ShaderPipeline& _rShader ) {
+	_rCmd.pData->push<GLuint>( CmdType::kBindPipeline, _rShader.handle );
 }
 
 void OpenGLGraphics::_cmdDispatch( CmdBuffer& _rCmd, uint32_t _numGroupsX, uint32_t _numGroupsY, uint32_t _numGroupsZ )
 {
 }
 
-void OpenGLGraphics::_cmdViewport( CmdBuffer& _rCmd, uint32_t _x, uint32_t _y, uint32_t _width, uint32_t _height )
-{
-	CmdData& cmd = _rCmd.pData->cmds[ _rCmd.pData->n ];
-	cmd.cmd = CmdType::kViewport;
-	cmd.set<Bounds2Du32>( Bounds2Du32{ _x, _y, _width, _height } );
-	_rCmd.pData->n++;
+void OpenGLGraphics::_cmdViewport( CmdBuffer& _rCmd, uint32_t _x, uint32_t _y, uint32_t _width, uint32_t _height ) {
+	_rCmd.pData->push<Bounds2Du32>( CmdType::kViewport, { _x, _y, _width, _height } );
 }
 
 void OpenGLGraphics::_cmdDraw( CmdBuffer& _rCmd, uint32_t _vertexCount, uint32_t _instanceCount, uint32_t _firstVertex, uint32_t _firstInstance )
 {
+	DrawArraysIndirectCommand cmd;
+	cmd.count = _vertexCount;
+	cmd.instanceCount = _instanceCount;
+	cmd.firstVertex = _firstVertex;
+	cmd.baseInstance = _firstInstance;
+
+	throw 123;
 }
 
 void OpenGLGraphics::_cmdDrawIndexed( CmdBuffer& _rCmd, uint32_t _indexCount, uint32_t _instanceCount, uint32_t _firstIndex, int32_t _vertexOffset, uint32_t _firstInstance )
 {
+	throw 123;
 }
 
 void OpenGLGraphics::_cmdCopyBuffer( CmdBuffer& _rCmd, Buffer& _rSrc, Buffer& _rDst, size_t _srcOffset, size_t _dstOffset, size_t _size )
 {
+	throw 123;
 }
 
 void OpenGLGraphics::_cmdBindIndexBuffer( CmdBuffer& _rCmd, Buffer& _rIndexBuffer, size_t _offset, Type _type )
 {
+	throw 123;
 }
 
 }

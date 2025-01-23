@@ -11,6 +11,28 @@
 #endif
 
 #include <afx/Renderer/LowLevel/LowLevelGraphics.h>
+#include <afx/Managers/ResourceManager.h>
+
+
+
+struct Vertex
+{
+	float posX;
+	float posY;
+	float posZ;
+	float pad0;
+
+	float colorR;
+	float colorG;
+	float colorB;
+	float pad1;
+};
+
+struct ScreenData
+{
+	int width;
+	int height;
+};
 
 #ifdef AFX_SUPPORT_GLFW
 GLFWwindow* window;
@@ -18,6 +40,14 @@ GLFWwindow* window;
 
 const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
+afx::ILowLevelGraphics* g_graphics;
+
+afx::ShaderPipelineID pipelineID;
+
+afx::BufferID vb;
+afx::BufferID screenDataBuffer;
+
+ScreenData screenData;
 
 // function definitions ///////////////////////////////////////////////////////////////
 
@@ -25,6 +55,53 @@ int initWindow();
 void deinitWindow();
 
 ///////////////////////////////////////////////////////////////////////////////////////
+
+#include <sstream>
+#include <fstream>
+
+struct ShaderAsset : public afx::iAsset
+{
+public:
+	afx::ShaderModuleID moduleID;
+};
+
+template<>
+ShaderAsset* afx::ResourceManager::_loadImpl<ShaderAsset, afx::ShaderModuleType>( const std::string& _path, afx::ShaderModuleType _type )
+{
+	std::ifstream file{ _path };
+
+	if ( !file.is_open() )
+		return nullptr;
+
+	std::stringstream buffer;
+	buffer << file.rdbuf();
+	std::string str = buffer.str();
+
+	afx::ShaderProgramDesc desc{};
+	desc.type = _type;
+	desc.source = str.c_str();
+	
+	ShaderAsset* asset = new ShaderAsset();
+	g_graphics->createProgram( &desc, &asset->moduleID );
+
+	return asset;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+void initBuffers()
+{
+	Vertex vertices[ 3 ] = {
+		{ -0.5f, -0.5f, 0.0f, 0.0f,    1.0f, 0.0f, 0.0f, 1.0f },
+		{  0.5f, -0.5f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f, 1.0f },
+		{  0.0f,  0.5f, 0.0f, 0.0f,    0.0f, 0.0f, 1.0f, 1.0f }
+	};
+
+	vb = g_graphics->createBuffer( afx::BufferType::kDYNAMIC, afx::BufferUsage::kDYNAMIC_DRAW, sizeof( vertices ) );
+	g_graphics->bufferSubData( vb, vertices, sizeof( vertices ), 0 );
+
+	screenDataBuffer = g_graphics->createBuffer( afx::BufferType::kDYNAMIC, afx::BufferUsage::kDYNAMIC_DRAW, sizeof( ScreenData ) );
+}
 
 template <typename T>
 T swap_endian( T u )
@@ -82,31 +159,65 @@ int main()
 
 	uint32_t frameNumber = 0;
 #ifdef AFX_ARCH_X64
-	afx::ILowLevelGraphics* g_graphics = afx::ILowLevelGraphics::alloc( "OpenGL" );
+	g_graphics = afx::ILowLevelGraphics::alloc( "OpenGL" );
 #elif defined( AFX_ARCH_CITRA )
-	afx::ILowLevelGraphics* g_graphics = afx::ILowLevelGraphics::alloc( "Citra" );
+	g_graphics = afx::ILowLevelGraphics::alloc( "Citra" );
 #endif
 	g_graphics->init();
 	
 	afx::CmdBuffer* cmdBuffer = g_graphics->createCmdBuffer();
 
+
+	afx::ResourceManager resourceManager{};
+	
+	
+	ShaderAsset* vertShader = resourceManager.load<ShaderAsset>( "../../test_vert.glsl", afx::ShaderModuleType::kVERTEX );
+	ShaderAsset* fragShader = resourceManager.load<ShaderAsset>( "../../test_frag.glsl", afx::ShaderModuleType::kFRAGMENT );
+
+	//afx::VertexAttrib attribs[] = {
+	//	{ "aPosition", 3, afx::Type::kFLOAT, false, sizeof( float ) * 3 },
+	//	{ "aColor",    3, afx::Type::kFLOAT, false, sizeof( float ) * 3 }
+	//};
+
+	//afx::VertexLayout layout;
+	//layout.attributes = attribs;
+	//layout.numAttributes = 2;
+	//layout.stride = sizeof( attribs );
+
+	afx::ShaderPipelineDesc desc;
+	desc.vertexProgram   = vertShader->moduleID;
+	desc.fragmentProgram = fragShader->moduleID;
+	desc.pVertexLayout = nullptr; // &layout;
+
+	g_graphics->createPipeline( &desc, &pipelineID );
+
+	initBuffers();
+
+	g_graphics->bindPipeline( pipelineID );
+	g_graphics->bindBufferIndex( vb, 0 );
+	g_graphics->bindBufferIndex( screenDataBuffer, 1 );
+
 #ifdef AFX_SUPPORT_GLFW
 	while ( !glfwWindowShouldClose( window ) )
 	{
 		// update screen data buffer
-		int width, height;
-		glfwGetWindowSize( window, &width, &height );
+		glfwGetWindowSize( window, &screenData.width, &screenData.height );
+
+		g_graphics->bufferSubData( screenDataBuffer, &screenData, sizeof( ScreenData ), 0 );
 
 		afx::Image m{};
 		g_graphics->_cmdBegin( *cmdBuffer );
 		
-		g_graphics->_cmdViewport( *cmdBuffer, 0, 0, width, height );
-		
+		g_graphics->_cmdViewport( *cmdBuffer, 0, 0, screenData.width, screenData.height );
+
 		float flash = fabs( sin( frameNumber / 60.0f ) );
 		g_graphics->_cmdImageClear( *cmdBuffer, m, flash, 0.0f, flash, 1.0f );
-		
+
 		g_graphics->_cmdEnd( *cmdBuffer );
 		g_graphics->_cmdSubmit( *cmdBuffer );
+		g_graphics->clearDepth( 0.0f, 0.0f, 0.0f, 1.0f );
+		
+		g_graphics->draw( 0, 3 );
 
 		glfwSwapBuffers( window );
 		glfwPollEvents();

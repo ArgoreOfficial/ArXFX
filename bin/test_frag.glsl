@@ -1,10 +1,10 @@
 #version 430 core
 
-in vec3 Color;
+in vec4 Color;
 
 out vec4 o_Albedo;
 
 void main()
 {
-    o_Albedo = vec4( Color, 1.0 );
+    o_Albedo = Color;
 }

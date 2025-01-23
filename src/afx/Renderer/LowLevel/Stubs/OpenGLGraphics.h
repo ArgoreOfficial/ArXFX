@@ -34,7 +34,7 @@ public:
 	void destroyPipeline( ShaderPipelineID _pipeline ) override;
 	void bindPipeline( ShaderPipelineID _pipeline ) override;
 	void bindVertexLayout( VertexLayout* _pVertexLayout ) override;
-	void createBuffer( BufferDesc* _desc, BufferID* _pBuffer ) override;
+	BufferID createBuffer( BufferType _type, BufferUsage _usage, int32_t _size ) override;
 	void destroyBuffer( BufferID _buffer ) override;
 	void bindBuffer( BufferID _buffer ) override;
 	void bindBufferIndex( BufferID _buffer, int32_t _bindingIndex ) override;
@@ -59,6 +59,10 @@ public:
 	void _cmdDrawIndexed( CmdBuffer& _rCmd, uint32_t _indexCount, uint32_t _instanceCount, uint32_t _firstIndex, int32_t _vertexOffset, uint32_t _firstInstance ) override;
 	void _cmdCopyBuffer( CmdBuffer& _rCmd, Buffer& _rSrc, Buffer& _rDst, size_t _srcOffset, size_t _dstOffset, size_t _size ) override;
 	void _cmdBindIndexBuffer( CmdBuffer& _rCmd, Buffer& _rIndexBuffer, size_t _offset, Type _type ) override;
+
+private:
+	unsigned int m_VAO{ 0 }; // opengl workaround
+
 };
 
 }
