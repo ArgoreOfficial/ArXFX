@@ -1,8 +1,11 @@
-$platforms = "x64,citra"
+$platforms = "x64"
 
-if( Test-Path platform/platform_psvita.lua )
-{
+if( Test-Path platform/platform_psvita.lua ) {
     $platforms += ",psvita"
+}
+
+if( (Test-Path platform/platform_3ds.lua) -and (Test-Path env:FOO) ) {
+    $platforms += ",citra"
 }
 
 & "xmake" project -k vsxmake -y -m "Debug,Release,Package" -a $platforms ./build

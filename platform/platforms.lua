@@ -4,8 +4,10 @@ includes "platform_windows.lua"
 includes "platform_wasm.lua"
 includes "platform_linux.lua"
 
-includes "toolchains/i686-w64-mingw32.lua"  -- win32 toolchain
-includes "toolchains/3ds_arm-none-eabi.lua" -- 3ds toolchain
+if DEVKITARM then
+    includes "toolchains/i686-w64-mingw32.lua"  -- win32 toolchain
+    includes "toolchains/3ds_arm-none-eabi.lua" -- 3ds toolchain
+end
 
 local PLATFORMS = {
     { plat="windows", arch={ "x64", "x86"  }, load=load_platform_windows, target=target_platform_windows },
