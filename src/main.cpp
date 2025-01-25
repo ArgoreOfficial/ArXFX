@@ -11,6 +11,8 @@
 #endif
 
 #include <afx/Renderer/LowLevel/LowLevelGraphics.h>
+#include <afx/Renderer/LowLevel/Stubs/CitraGraphics.h>
+
 #include <afx/Managers/ResourceManager.h>
 
 
@@ -155,16 +157,25 @@ void vkCmdClearColorImage( C3D_FrameBuf* frameBuf, u32 clearColor )
 #endif
 int main()
 {
-	if ( !initWindow() ) return 1;
+
+	if ( !initWindow() ) 
+		return 1;
 
 	uint32_t frameNumber = 0;
 #ifdef AFX_ARCH_X64
 	g_graphics = afx::ILowLevelGraphics::alloc( "OpenGL" );
 #elif defined( AFX_ARCH_CITRA )
-	g_graphics = afx::ILowLevelGraphics::alloc( "Citra" );
+	// https://stackoverflow.com/questions/60794102/why-is-an-inline-static-variable-of-a-template-class-not-initialized
+	g_graphics = new afx::CitraGraphics();
+
+	if( g_graphics == nullptr ) // until we have proper debugging on 3ds
+		while ( true ) { }
 #endif
+
+
 	g_graphics->init();
 	
+#ifdef AFX_ARCH_X64
 	afx::CmdBuffer* cmdBuffer = g_graphics->createCmdBuffer();
 
 
@@ -197,7 +208,6 @@ int main()
 	g_graphics->bindBufferIndex( vb, 0 );
 	g_graphics->bindBufferIndex( screenDataBuffer, 1 );
 
-#ifdef AFX_SUPPORT_GLFW
 	while ( !glfwWindowShouldClose( window ) )
 	{
 		// update screen data buffer
@@ -233,6 +243,9 @@ int main()
 	consoleInit( GFX_BOTTOM, 0 );
 	printf( "test\n" );
 	printf( "test2 citra\n" );
+
+	printf( "Renderer: %s\n", afx::CitraGraphics::get_name().c_str() );
+	printf( "          %p\n", &afx::CitraGraphics::g_entry );
 
 	// Initialize the render target
 	C3D_RenderTarget* target = C3D_RenderTargetCreate( 240, 400, GPU_RB_RGBA8, GPU_RB_DEPTH24_STENCIL8 );
@@ -301,7 +314,7 @@ int initWindow()
 
 	glfwSwapInterval( 1 );
 #elif defined( AFX_ARCH_CITRA )
-
+	return 1;
 #else
 	return 0;
 #endif

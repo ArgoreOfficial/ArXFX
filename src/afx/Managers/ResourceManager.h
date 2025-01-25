@@ -49,7 +49,8 @@ public:
 
 		for( auto it = m_loadedAssets.begin(); it != m_loadedAssets.end(); ++it )
 		{
-			if( *it != reinterpret_cast<iAsset*>( *_pAsset ) )
+			iAsset* ptr = *it;
+			if( ptr != reinterpret_cast<iAsset*>( *_pAsset ) )
 				continue;
 
 			m_loadedAssets.erase( it );

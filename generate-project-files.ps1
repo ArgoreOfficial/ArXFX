@@ -4,7 +4,7 @@ if( Test-Path platform/platform_psvita.lua ) {
     $platforms += ",psvita"
 }
 
-if( (Test-Path platform/platform_3ds.lua) -and (Test-Path env:FOO) ) {
+if( (Test-Path platform/platform_3ds.lua) -and (Test-Path env:DEVKITARM) ) {
     $platforms += ",citra"
 }
 

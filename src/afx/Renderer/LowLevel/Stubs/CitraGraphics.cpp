@@ -66,8 +66,9 @@ void afx::CitraGraphics::bindVertexLayout( VertexLayout* _pVertexLayout )
 {
 }
 
-void afx::CitraGraphics::createBuffer( BufferDesc* _desc, BufferID* _pBuffer )
+afx::BufferID afx::CitraGraphics::createBuffer( BufferType _type, BufferUsage _usage, int32_t _size )
 {
+    return BufferID();
 }
 
 void afx::CitraGraphics::destroyBuffer( BufferID _buffer )
@@ -98,59 +99,64 @@ void afx::CitraGraphics::bindVertexBuffer( BufferID _vertexPullBuffer )
 {
 }
 
-void afx::CitraGraphics::_cmdBegin( const CmdBuffer& _cmd )
+afx::CmdBuffer* afx::CitraGraphics::createCmdBuffer()
+{
+	return nullptr;
+}
+
+void afx::CitraGraphics::_cmdBegin( CmdBuffer& _cmd )
 {
 }
 
-void afx::CitraGraphics::_cmdEnd( const CmdBuffer& _cmd )
+void afx::CitraGraphics::_cmdEnd( CmdBuffer& _cmd )
 {
 }
 
-void afx::CitraGraphics::_cmdSubmit( const CmdBuffer& _cmd )
+void afx::CitraGraphics::_cmdSubmit( CmdBuffer& _cmd )
 {
 }
 
-void afx::CitraGraphics::_cmdBeginRender( const CmdBuffer& _rCmd, Image& _rImage )
+void afx::CitraGraphics::_cmdBeginRender( CmdBuffer& _rCmd, Image& _rImage )
 {
 }
 
-void afx::CitraGraphics::_cmdEndRender( const CmdBuffer& _rCmd )
+void afx::CitraGraphics::_cmdEndRender( CmdBuffer& _rCmd )
 {
 }
 
-void afx::CitraGraphics::_cmdImageClear( const CmdBuffer& _cmd, const Image& _rImage, float _r, float _g, float _b, float _a )
+void afx::CitraGraphics::_cmdImageClear( CmdBuffer& _cmd, Image& _rImage, float _r, float _g, float _b, float _a )
 {
 }
 
-void afx::CitraGraphics::_cmdImageBlit( const CmdBuffer& _rCmd, const Image& _rSrc, const Image& _rDst )
+void afx::CitraGraphics::_cmdImageBlit( CmdBuffer& _rCmd, Image& _rSrc, Image& _rDst )
 {
 }
 
-void afx::CitraGraphics::_cmdBindPipeline( const CmdBuffer& _rCmd, const ShaderPipeline& _rShader )
+void afx::CitraGraphics::_cmdBindPipeline( CmdBuffer& _rCmd, ShaderPipeline& _rShader )
 {
 }
 
-void afx::CitraGraphics::_cmdDispatch( const CmdBuffer& _rCmd, uint32_t _numGroupsX, uint32_t _numGroupsY, uint32_t _numGroupsZ )
+void afx::CitraGraphics::_cmdDispatch( CmdBuffer& _rCmd, uint32_t _numGroupsX, uint32_t _numGroupsY, uint32_t _numGroupsZ )
 {
 }
 
-void afx::CitraGraphics::_cmdViewport( const CmdBuffer& _rCmd, uint32_t _x, uint32_t _y, uint32_t _width, uint32_t _height )
+void afx::CitraGraphics::_cmdViewport( CmdBuffer& _rCmd, uint32_t _x, uint32_t _y, uint32_t _width, uint32_t _height )
 {
 }
 
-void afx::CitraGraphics::_cmdDraw( const CmdBuffer& _rCmd, uint32_t _vertexCount, uint32_t _instanceCount, uint32_t _firstVertex, uint32_t _firstInstance )
+void afx::CitraGraphics::_cmdDraw( CmdBuffer& _rCmd, uint32_t _vertexCount, uint32_t _instanceCount, uint32_t _firstVertex, uint32_t _firstInstance )
 {
 }
 
-void afx::CitraGraphics::_cmdDrawIndexed( const CmdBuffer& _rCmd, uint32_t _indexCount, uint32_t _instanceCount, uint32_t _firstIndex, int32_t _vertexOffset, uint32_t _firstInstance )
+void afx::CitraGraphics::_cmdDrawIndexed( CmdBuffer& _rCmd, uint32_t _indexCount, uint32_t _instanceCount, uint32_t _firstIndex, int32_t _vertexOffset, uint32_t _firstInstance )
 {
 }
 
-void afx::CitraGraphics::_cmdCopyBuffer( const CmdBuffer& _rCmd, const Buffer& _rSrc, const Buffer& _rDst, size_t _srcOffset, size_t _dstOffset, size_t _size )
+void afx::CitraGraphics::_cmdCopyBuffer( CmdBuffer& _rCmd, Buffer& _rSrc, Buffer& _rDst, size_t _srcOffset, size_t _dstOffset, size_t _size )
 {
 }
 
-void afx::CitraGraphics::_cmdBindIndexBuffer( const CmdBuffer& _rCmd, const Buffer& _rIndexBuffer, size_t _offset, Type _type )
+void afx::CitraGraphics::_cmdBindIndexBuffer( CmdBuffer& _rCmd, Buffer& _rIndexBuffer, size_t _offset, Type _type )
 {
 }
 
