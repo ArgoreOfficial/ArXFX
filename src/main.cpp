@@ -165,6 +165,7 @@ int main()
 #ifdef AFX_ARCH_X64
 	g_graphics = afx::ILowLevelGraphics::alloc( "OpenGL" );
 #elif defined( AFX_ARCH_CITRA )
+	
 	// https://stackoverflow.com/questions/60794102/why-is-an-inline-static-variable-of-a-template-class-not-initialized
 	g_graphics = new afx::CitraGraphics();
 
@@ -172,9 +173,10 @@ int main()
 		while ( true ) { }
 #endif
 
-
 	g_graphics->init();
-	
+
+	printf( "Renderer: %s\n", g_graphics->name().c_str() );
+
 #ifdef AFX_ARCH_X64
 	afx::CmdBuffer* cmdBuffer = g_graphics->createCmdBuffer();
 
@@ -238,14 +240,9 @@ int main()
 	deinitWindow();
 #elif defined( AFX_ARCH_CITRA )
 
-	
 
-	consoleInit( GFX_BOTTOM, 0 );
 	printf( "test\n" );
 	printf( "test2 citra\n" );
-
-	printf( "Renderer: %s\n", afx::CitraGraphics::get_name().c_str() );
-	printf( "          %p\n", &afx::CitraGraphics::g_entry );
 
 	// Initialize the render target
 	C3D_RenderTarget* target = C3D_RenderTargetCreate( 240, 400, GPU_RB_RGBA8, GPU_RB_DEPTH24_STENCIL8 );

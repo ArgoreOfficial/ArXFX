@@ -20,6 +20,9 @@ namespace afx
 class ILowLevelGraphics : public arx::registry<ILowLevelGraphics>
 {
 public:
+	virtual std::string name() { return "NULL"; }
+
+	
 	virtual Result init() = 0;
 	virtual void viewport( int _x, int _y, int _width, int _height ) = 0;
 	

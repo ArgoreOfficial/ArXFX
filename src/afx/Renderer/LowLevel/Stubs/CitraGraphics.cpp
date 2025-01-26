@@ -11,6 +11,8 @@ afx::Result afx::CitraGraphics::init()
 	gfxInitDefault();
 	C3D_Init( C3D_DEFAULT_CMDBUF_SIZE );
 
+	consoleInit( GFX_BOTTOM, 0 );
+
     return Result::kSUCESS;
 }
 

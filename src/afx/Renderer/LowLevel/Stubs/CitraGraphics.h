@@ -11,6 +11,7 @@ class CitraGraphics : public arx::registar<CitraGraphics, ILowLevelGraphics>
 {
 public:
 	static std::string get_name() { return "Citra"; }
+	virtual std::string name() override { return CitraGraphics::get_name(); }
 	static ILowLevelGraphics* alloc( void* _pUserData ) { return new CitraGraphics(); }
 
 	// Inherited via ILowLevelRenderer
