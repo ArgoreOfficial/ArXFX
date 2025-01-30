@@ -35,4 +35,11 @@ typedef arx::strong_type<uint16_t, struct _ShaderProgramID>  ShaderModuleID;
 typedef arx::strong_type<uint16_t, struct _ShaderPipelineID> ShaderPipelineID;
 
 
+
+#ifdef _MSVC_LANG
+#define CPP_VERSION _MSVC_LANG
+#else
+#define CPP_VERSION __cplusplus
+#endif
+
 }

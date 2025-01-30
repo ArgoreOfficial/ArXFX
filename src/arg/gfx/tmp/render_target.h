@@ -6,7 +6,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-namespace wv
+namespace afx
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -16,7 +16,7 @@ namespace wv
 		int width = 0;
 		int height = 0;
 		
-		wv::ArgGfxTextureDesc* pTextureDescs = nullptr;
+		afx::ArgGfxTextureDesc* pTextureDescs = nullptr;
 		int numTextures = 0;
 	};
 
@@ -24,10 +24,10 @@ namespace wv
 
 	struct sRenderTarget
 	{
-		wv::Handle fbHandle = 0;
-		wv::Handle rbHandle = 0;
+		afx::Handle fbHandle = 0;
+		afx::Handle rbHandle = 0;
 
-		wv::TextureID* pTextureIDs = nullptr;
+		afx::TextureID* pTextureIDs = nullptr;
 		int numTextures = 0;
 
 		int width = 0;

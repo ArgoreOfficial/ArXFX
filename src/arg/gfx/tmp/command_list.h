@@ -5,7 +5,7 @@
 
 #include <vector>
 
-namespace wv
+namespace afx
 {
 	WV_DEFINE_ID( DrawListID );
 

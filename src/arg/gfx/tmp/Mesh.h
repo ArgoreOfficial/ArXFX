@@ -12,7 +12,7 @@
 #include <vector>
 #include <string>
 
-namespace wv
+namespace afx
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -24,11 +24,11 @@ namespace wv
 
 	struct Vertex
 	{
-		wv::cVector3f position;
-		wv::cVector3f normal;
-		wv::cVector3f tangent;
-		wv::cVector4f color;
-		wv::Vector2f  texCoord0;
+		afx::Vector3f position;
+		afx::Vector3f normal;
+		afx::Vector3f tangent;
+		afx::Vector4f color;
+		afx::Vector2f  texCoord0;
 	};
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -93,7 +93,7 @@ namespace wv
 
 	struct sMeshInstanceData
 	{
-		cMatrix4x4f model;                              // 64 bytes
+		Matrix4x4f model;                              // 64 bytes
 		uint64_t texturesHandles[ 4 ] = { 0, 0, 0, 0 }; // 32 bytes
 		int32_t hasAlpha = 0;
 

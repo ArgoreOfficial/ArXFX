@@ -105,19 +105,19 @@ void initBuffers()
 	screenDataBuffer = g_graphics->createBuffer( afx::BufferType::kDYNAMIC, afx::BufferUsage::kDYNAMIC_DRAW, sizeof( ScreenData ) );
 }
 
-template <typename T>
-T swap_endian( T u )
+template <typename _Ty>
+_Ty swap_endian( _Ty u )
 {
 	union
 	{
-		T u;
-		unsigned char u8[ sizeof( T ) ];
+		_Ty u;
+		unsigned char u8[ sizeof( _Ty ) ];
 	} source, dest;
 
 	source.u = u;
 
-	for ( size_t k = 0; k < sizeof( T ); k++ )
-		dest.u8[ k ] = source.u8[ sizeof( T ) - k - 1 ];
+	for ( size_t k = 0; k < sizeof( _Ty ); k++ )
+		dest.u8[ k ] = source.u8[ sizeof( _Ty ) - k - 1 ];
 
 	return dest.u;
 }
