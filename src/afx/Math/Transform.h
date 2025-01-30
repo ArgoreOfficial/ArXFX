@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-namespace afx {
+namespace arc {
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -17,12 +17,12 @@ class Transform
 
 public:
 
-	inline void setPosition( afx::Vector3<_Ty> _position ) { position = _position; }
-	inline void setRotation( afx::Vector3<_Ty> _rotation ) { rotation = _rotation; }
-	inline void setScale( afx::Vector3<_Ty> _scale ) { scale = _scale; }
+	inline void setPosition( arc::Vector3<_Ty> _position ) { position = _position; }
+	inline void setRotation( arc::Vector3<_Ty> _rotation ) { rotation = _rotation; }
+	inline void setScale( arc::Vector3<_Ty> _scale ) { scale = _scale; }
 
-	inline void translate( afx::Vector3<_Ty> _translation ) { position += _translation; }
-	inline void rotate( afx::Vector3<_Ty> _rotation ) { rotation += _rotation; }
+	inline void translate( arc::Vector3<_Ty> _translation ) { position += _translation; }
+	inline void rotate( arc::Vector3<_Ty> _rotation ) { rotation += _rotation; }
 
 	inline Matrix<_Ty, 4, 4> getMatrix() { return m_matrix; }
 

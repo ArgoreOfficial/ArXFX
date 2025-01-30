@@ -2,7 +2,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-namespace afx { namespace Const { namespace Float {
+namespace arc { namespace Const { namespace Float {
 
 constexpr float PI = 3.141592f;
 constexpr float EPSILON = 0.00000001f;

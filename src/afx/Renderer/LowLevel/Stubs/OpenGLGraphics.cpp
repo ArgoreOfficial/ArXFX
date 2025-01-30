@@ -28,14 +28,14 @@ static void glMessageCallback( GLenum _source, GLenum _type, GLuint _id, GLenum 
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-static GLenum getGlBufferEnum( afx::BufferType _type )
+static GLenum getGlBufferEnum( arc::BufferType _type )
 {
     switch( _type )
     {
-    case afx::BufferType::kVERTEX:  return GL_ARRAY_BUFFER;         break;
-    case afx::BufferType::kINDEX:   return GL_ELEMENT_ARRAY_BUFFER; break;
-    case afx::BufferType::kUNIFORM: return GL_UNIFORM_BUFFER;       break;
-    case afx::BufferType::kDYNAMIC: return GL_SHADER_STORAGE_BUFFER; break;
+    case arc::BufferType::kVERTEX:  return GL_ARRAY_BUFFER;         break;
+    case arc::BufferType::kINDEX:   return GL_ELEMENT_ARRAY_BUFFER; break;
+    case arc::BufferType::kUNIFORM: return GL_UNIFORM_BUFFER;       break;
+    case arc::BufferType::kDYNAMIC: return GL_SHADER_STORAGE_BUFFER; break;
     }
 
     return GL_NONE;
@@ -43,12 +43,12 @@ static GLenum getGlBufferEnum( afx::BufferType _type )
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-static GLenum getGlBufferUsage( afx::BufferUsage _usage )
+static GLenum getGlBufferUsage( arc::BufferUsage _usage )
 {
     switch( _usage )
     {
-    case afx::BufferUsage::kSTATIC_DRAW:  return GL_STATIC_DRAW; break;
-    case afx::BufferUsage::kDYNAMIC_DRAW: return GL_DYNAMIC_DRAW; break;
+    case arc::BufferUsage::kSTATIC_DRAW:  return GL_STATIC_DRAW; break;
+    case arc::BufferUsage::kDYNAMIC_DRAW: return GL_DYNAMIC_DRAW; break;
     }
 
     return GL_NONE;
@@ -56,7 +56,7 @@ static GLenum getGlBufferUsage( afx::BufferUsage _usage )
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-namespace afx {
+namespace arc {
 
 struct BufferData
 {
@@ -265,9 +265,9 @@ void OpenGLGraphics::bindVertexLayout( VertexLayout* _pVertexLayout )
         GLenum type = GL_NONE;
         switch( attrib->type )
         {
-        case afx::Type::kFLOAT:        type = GL_FLOAT;        break;
-        case afx::Type::kINT:          type = GL_INT;          break;
-        case afx::Type::kUNSIGNED_INT: type = GL_UNSIGNED_INT; break;
+        case arc::Type::kFLOAT:        type = GL_FLOAT;        break;
+        case arc::Type::kINT:          type = GL_INT;          break;
+        case arc::Type::kUNSIGNED_INT: type = GL_UNSIGNED_INT; break;
         }
 
         glVertexAttribPointer( i, attrib->componentCount, type, attrib->normalized, _pVertexLayout->stride, (const void*)pointer );

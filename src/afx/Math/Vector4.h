@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-namespace afx {
+namespace arc {
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -87,7 +87,7 @@ inline Vector4<_Ty> Vector4<_Ty>::operator+( const Vector4<_Ty>& _other )
 }
 
 template< typename _Ty >
-inline Vector4<_Ty> afx::Vector4<_Ty>::operator*( const float& _scalar )
+inline Vector4<_Ty> arc::Vector4<_Ty>::operator*( const float& _scalar )
 {
 	return Vector4<_Ty>( x * _scalar, y * _scalar, z * _scalar, w * _scalar );
 }
@@ -103,7 +103,7 @@ inline Vector4<_Ty>& Vector4<_Ty>::operator*=( const float& _scalar )
 }
 
 template< typename _Ty >
-inline Vector4<_Ty> afx::Vector4<_Ty>::operator/( const float& _scalar )
+inline Vector4<_Ty> arc::Vector4<_Ty>::operator/( const float& _scalar )
 {
 	return Vector4<_Ty>( x / _scalar, y / _scalar, z / _scalar, w / _scalar );
 }

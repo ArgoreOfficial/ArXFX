@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-afx::iCamera::iCamera( CameraType _type, float _fov, float _near, float _far ) :
+arc::iCamera::iCamera( CameraType _type, float _fov, float _near, float _far ) :
 	m_type{ _type },
 	fov{ _fov },
 	m_near{ _near },
@@ -49,7 +49,7 @@ bool afx::iCamera::beginRender( iLowLevelGraphics* _pLowLevelGraphics, eFillMode
 }
 	*/
 
-afx::Matrix4x4f afx::iCamera::getProjectionMatrix( void )
+arc::Matrix4x4f arc::iCamera::getProjectionMatrix( void )
 {
 	switch( m_type )
 	{
@@ -62,7 +62,7 @@ afx::Matrix4x4f afx::iCamera::getProjectionMatrix( void )
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-afx::Matrix4x4f afx::iCamera::getPerspectiveMatrix()
+arc::Matrix4x4f arc::iCamera::getPerspectiveMatrix()
 {
 	float aspect = m_width / m_height;
 	return MatrixUtil::perspective( 
@@ -74,7 +74,7 @@ afx::Matrix4x4f afx::iCamera::getPerspectiveMatrix()
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-afx::Matrix4x4f afx::iCamera::getOrthographicMatrix()
+arc::Matrix4x4f arc::iCamera::getOrthographicMatrix()
 {
 	return MatrixUtil::orthographic( 
 		m_width  / 2.0f, 
@@ -85,14 +85,14 @@ afx::Matrix4x4f afx::iCamera::getOrthographicMatrix()
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-afx::Matrix4x4f afx::iCamera::getViewMatrix( void )
+arc::Matrix4x4f arc::iCamera::getViewMatrix( void )
 {
 	return MatrixUtil::inverse( m_transform.getMatrix() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-afx::Vector3f afx::iCamera::getViewDirection()
+arc::Vector3f arc::iCamera::getViewDirection()
 {
 	float yaw   = Math::radians( m_transform.rotation.y - 90.0f );
 	float pitch = Math::radians( m_transform.rotation.x );

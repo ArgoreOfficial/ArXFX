@@ -1,6 +1,6 @@
 #pragma once
 
-namespace afx {
+namespace arc {
 
 
 struct Image

@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-namespace afx {
+namespace arc {
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -66,7 +66,7 @@ inline RayIntersection Ray::intersect<Triangle3f>( Triangle3f* _t )
 	float det = edge1.dot( pvec );
 
 #ifndef TEST_CULL
-	if ( det < afx::Const::Float::EPSILON )
+	if ( det < arc::Const::Float::EPSILON )
 		return {};
 
 	Vector3f tvec = start - _t->v0;

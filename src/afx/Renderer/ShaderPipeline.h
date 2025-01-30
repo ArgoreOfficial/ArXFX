@@ -2,7 +2,7 @@
 
 #include <afx/Common.h>
 
-namespace afx {
+namespace arc {
 
 enum class ShaderModuleType
 {

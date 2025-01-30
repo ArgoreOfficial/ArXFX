@@ -1,6 +1,6 @@
 #pragma once
 
-namespace afx {
+namespace arc {
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -73,7 +73,7 @@ inline Vector2<_Ty> Vector2<_Ty>::operator-( const Vector2<_Ty>& _other )
 }
 
 template< typename _Ty >
-inline Vector2<_Ty> afx::Vector2<_Ty>::operator*( const float& _scalar )
+inline Vector2<_Ty> arc::Vector2<_Ty>::operator*( const float& _scalar )
 {
 	return Vector2<_Ty>( x * _scalar, y * _scalar );
 }
@@ -87,7 +87,7 @@ inline Vector2<_Ty>& Vector2<_Ty>::operator*=( const float& _scalar )
 }
 
 template< typename _Ty >
-inline Vector2<_Ty> afx::Vector2<_Ty>::operator/( const float& _scalar )
+inline Vector2<_Ty> arc::Vector2<_Ty>::operator/( const float& _scalar )
 {
 	return Vector2<_Ty>( x / _scalar, y / _scalar );
 }

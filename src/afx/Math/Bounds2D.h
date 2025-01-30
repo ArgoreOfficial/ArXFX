@@ -1,6 +1,6 @@
 #pragma once
 
-namespace afx {
+namespace arc {
 
 template<typename _Ty>
 struct Bounds2D

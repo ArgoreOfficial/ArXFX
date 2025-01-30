@@ -9,7 +9,7 @@
 #include <compare>
 #endif
 
-namespace afx {
+namespace arc {
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -59,8 +59,8 @@ public:
 
 	static inline Vector3<_Ty> eulerToDirection( Vector3<_Ty> _vec )
 	{
-		_Ty pitch = afx::Math::radians( _vec.x );
-		_Ty yaw = afx::Math::radians( _vec.y );
+		_Ty pitch = arc::Math::radians( _vec.x );
+		_Ty yaw = arc::Math::radians( _vec.y );
 
 		return vec(
 			std::cos( pitch ) * std::sin( yaw ),
@@ -72,8 +72,8 @@ public:
 	static inline Vector3<_Ty> directionToEuler( Vector3<_Ty> _vec )
 	{
 		return Vector3<_Ty>(
-			afx::Math::degrees( std::asin( -_vec.y ) ),         // pitch
-			afx::Math::degrees( std::atan2( _vec.x, _vec.z ) ), // yaw
+			arc::Math::degrees( std::asin( -_vec.y ) ),         // pitch
+			arc::Math::degrees( std::atan2( _vec.x, _vec.z ) ), // yaw
 			0
 		);
 	}
@@ -150,13 +150,13 @@ inline Vector3<_Ty> Vector3<_Ty>::operator-( void ) const
 }
 
 template< typename _Ty >
-inline Vector3<_Ty> afx::Vector3<_Ty>::operator*( const _Ty& _scalar ) const
+inline Vector3<_Ty> arc::Vector3<_Ty>::operator*( const _Ty& _scalar ) const
 {
 	return Vector3<_Ty>( x * _scalar, y * _scalar, z * _scalar );
 }
 
 template< typename _Ty >
-inline Vector3<_Ty>& afx::Vector3<_Ty>::operator*=( const _Ty& _scalar )
+inline Vector3<_Ty>& arc::Vector3<_Ty>::operator*=( const _Ty& _scalar )
 {
 	x *= _scalar;
 	y *= _scalar;
@@ -165,13 +165,13 @@ inline Vector3<_Ty>& afx::Vector3<_Ty>::operator*=( const _Ty& _scalar )
 }
 
 template< typename _Ty >
-inline Vector3<_Ty> afx::Vector3<_Ty>::operator/( const _Ty& _scalar ) const
+inline Vector3<_Ty> arc::Vector3<_Ty>::operator/( const _Ty& _scalar ) const
 {
 	return Vector3<_Ty>( x / _scalar, y / _scalar, z / _scalar );
 }
 
 template< typename _Ty >
-inline Vector3<_Ty>& afx::Vector3<_Ty>::operator/=( const _Ty& _scalar )
+inline Vector3<_Ty>& arc::Vector3<_Ty>::operator/=( const _Ty& _scalar )
 {
 	x /= _scalar;
 	y /= _scalar;

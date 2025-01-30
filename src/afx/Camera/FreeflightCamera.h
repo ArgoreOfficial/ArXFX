@@ -10,7 +10,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-namespace afx {
+namespace arc {
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -37,9 +37,9 @@ private:
 	//cMouseEventListener m_mouseListener;
 	//cInputEventListener m_inputListener;
 
-	afx::Vector3f m_move;
-	afx::Vector2f m_rotate;
-	afx::Vector3f m_velocity;
+	arc::Vector3f m_move;
+	arc::Vector2f m_rotate;
+	arc::Vector3f m_velocity;
 
 	bool m_freecam_enabled = false;
 

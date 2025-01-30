@@ -6,7 +6,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-namespace afx
+namespace arc
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -16,7 +16,7 @@ namespace afx
 		int width = 0;
 		int height = 0;
 		
-		afx::ArgGfxTextureDesc* pTextureDescs = nullptr;
+		arc::ArgGfxTextureDesc* pTextureDescs = nullptr;
 		int numTextures = 0;
 	};
 
@@ -24,10 +24,10 @@ namespace afx
 
 	struct sRenderTarget
 	{
-		afx::Handle fbHandle = 0;
-		afx::Handle rbHandle = 0;
+		arc::Handle fbHandle = 0;
+		arc::Handle rbHandle = 0;
 
-		afx::TextureID* pTextureIDs = nullptr;
+		arc::TextureID* pTextureIDs = nullptr;
 		int numTextures = 0;
 
 		int width = 0;

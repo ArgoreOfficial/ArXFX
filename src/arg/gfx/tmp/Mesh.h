@@ -12,7 +12,7 @@
 #include <vector>
 #include <string>
 
-namespace afx
+namespace arc
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -24,11 +24,11 @@ namespace afx
 
 	struct Vertex
 	{
-		afx::Vector3f position;
-		afx::Vector3f normal;
-		afx::Vector3f tangent;
-		afx::Vector4f color;
-		afx::Vector2f  texCoord0;
+		arc::Vector3f position;
+		arc::Vector3f normal;
+		arc::Vector3f tangent;
+		arc::Vector4f color;
+		arc::Vector2f  texCoord0;
 	};
 
 ///////////////////////////////////////////////////////////////////////////////////////

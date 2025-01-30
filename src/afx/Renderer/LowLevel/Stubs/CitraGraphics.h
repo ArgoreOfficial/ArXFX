@@ -5,7 +5,7 @@
 #include <afx/Renderer/LowLevel/LowLevelGraphics.h>
 #include <arx/registry.hpp>
 
-namespace afx { 
+namespace arc { 
 
 class CitraGraphics : public arx::registar<CitraGraphics, ILowLevelGraphics>
 {

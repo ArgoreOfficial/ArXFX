@@ -42,12 +42,12 @@ GLFWwindow* window;
 
 const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
-afx::ILowLevelGraphics* g_graphics;
+arc::ILowLevelGraphics* g_graphics;
 
-afx::ShaderPipelineID pipelineID;
+arc::ShaderPipelineID pipelineID;
 
-afx::BufferID vb;
-afx::BufferID screenDataBuffer;
+arc::BufferID vb;
+arc::BufferID screenDataBuffer;
 
 ScreenData screenData;
 
@@ -61,14 +61,14 @@ void deinitWindow();
 #include <sstream>
 #include <fstream>
 
-struct ShaderAsset : public afx::iAsset
+struct ShaderAsset : public arc::iAsset
 {
 public:
-	afx::ShaderModuleID moduleID;
+	arc::ShaderModuleID moduleID;
 };
 
 template<>
-ShaderAsset* afx::ResourceManager::_loadImpl<ShaderAsset, afx::ShaderModuleType>( const std::string& _path, afx::ShaderModuleType _type )
+ShaderAsset* arc::ResourceManager::_loadImpl<ShaderAsset, arc::ShaderModuleType>( const std::string& _path, arc::ShaderModuleType _type )
 {
 	std::ifstream file{ _path };
 
@@ -79,7 +79,7 @@ ShaderAsset* afx::ResourceManager::_loadImpl<ShaderAsset, afx::ShaderModuleType>
 	buffer << file.rdbuf();
 	std::string str = buffer.str();
 
-	afx::ShaderProgramDesc desc{};
+	arc::ShaderProgramDesc desc{};
 	desc.type = _type;
 	desc.source = str.c_str();
 	
@@ -99,10 +99,10 @@ void initBuffers()
 		{  0.0f,  0.5f, 0.0f, 0.0f,    0.0f, 0.0f, 1.0f, 1.0f }
 	};
 
-	vb = g_graphics->createBuffer( afx::BufferType::kDYNAMIC, afx::BufferUsage::kDYNAMIC_DRAW, sizeof( vertices ) );
+	vb = g_graphics->createBuffer( arc::BufferType::kDYNAMIC, arc::BufferUsage::kDYNAMIC_DRAW, sizeof( vertices ) );
 	g_graphics->bufferSubData( vb, vertices, sizeof( vertices ), 0 );
 
-	screenDataBuffer = g_graphics->createBuffer( afx::BufferType::kDYNAMIC, afx::BufferUsage::kDYNAMIC_DRAW, sizeof( ScreenData ) );
+	screenDataBuffer = g_graphics->createBuffer( arc::BufferType::kDYNAMIC, arc::BufferUsage::kDYNAMIC_DRAW, sizeof( ScreenData ) );
 }
 
 template <typename _Ty>
@@ -163,11 +163,11 @@ int main()
 
 	uint32_t frameNumber = 0;
 #ifdef AFX_PLATFORM_WINDOWS
-	g_graphics = afx::ILowLevelGraphics::alloc( "OpenGL" );
+	g_graphics = arc::ILowLevelGraphics::alloc( "OpenGL" );
 #elif defined( AFX_PLATFORM_3DS )
 	
 	// https://stackoverflow.com/questions/60794102/why-is-an-inline-static-variable-of-a-template-class-not-initialized
-	g_graphics = new afx::CitraGraphics();
+	g_graphics = new arc::CitraGraphics();
 
 	if( g_graphics == nullptr ) // until we have proper debugging on 3ds
 		while ( true ) { }
@@ -178,14 +178,14 @@ int main()
 	printf( "Renderer: %s\n", g_graphics->name().c_str() );
 
 #ifdef AFX_PLATFORM_WINDOWS
-	afx::CmdBuffer* cmdBuffer = g_graphics->createCmdBuffer();
+	arc::CmdBuffer* cmdBuffer = g_graphics->createCmdBuffer();
 
 
-	afx::ResourceManager resourceManager{};
+	arc::ResourceManager resourceManager{};
 	
 	
-	ShaderAsset* vertShader = resourceManager.load<ShaderAsset>( "../../test_vert.glsl", afx::ShaderModuleType::kVERTEX );
-	ShaderAsset* fragShader = resourceManager.load<ShaderAsset>( "../../test_frag.glsl", afx::ShaderModuleType::kFRAGMENT );
+	ShaderAsset* vertShader = resourceManager.load<ShaderAsset>( "../../test_vert.glsl", arc::ShaderModuleType::kVERTEX );
+	ShaderAsset* fragShader = resourceManager.load<ShaderAsset>( "../../test_frag.glsl", arc::ShaderModuleType::kFRAGMENT );
 
 	//afx::VertexAttrib attribs[] = {
 	//	{ "aPosition", 3, afx::Type::kFLOAT, false, sizeof( float ) * 3 },
@@ -197,7 +197,7 @@ int main()
 	//layout.numAttributes = 2;
 	//layout.stride = sizeof( attribs );
 
-	afx::ShaderPipelineDesc desc;
+	arc::ShaderPipelineDesc desc;
 	desc.vertexProgram   = vertShader->moduleID;
 	desc.fragmentProgram = fragShader->moduleID;
 	desc.pVertexLayout = nullptr; // &layout;
@@ -217,7 +217,7 @@ int main()
 
 		g_graphics->bufferSubData( screenDataBuffer, &screenData, sizeof( ScreenData ), 0 );
 
-		afx::Image m{};
+		arc::Image m{};
 		g_graphics->_cmdBegin( *cmdBuffer );
 		
 		g_graphics->_cmdViewport( *cmdBuffer, 0, 0, screenData.width, screenData.height );
@@ -295,7 +295,7 @@ int initWindow()
 	glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 2 );
 	glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 0 );
 	glfwWindowHint( GLFW_TRANSPARENT_FRAMEBUFFER, 1 );
-	window = glfwCreateWindow( WINDOW_WIDTH, WINDOW_HEIGHT, "ArX FX", NULL, NULL );
+	window = glfwCreateWindow( WINDOW_WIDTH, WINDOW_HEIGHT, "ARC", NULL, NULL );
 
 	glfwMakeContextCurrent( window );
 

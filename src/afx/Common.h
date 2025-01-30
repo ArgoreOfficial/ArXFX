@@ -4,7 +4,7 @@
 
 #include <arx/strong_type.hpp>
 
-namespace afx {
+namespace arc {
 
 enum class Type
 {

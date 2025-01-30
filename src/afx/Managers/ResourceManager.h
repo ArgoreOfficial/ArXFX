@@ -6,7 +6,7 @@
 #include <mutex>
 #include <utility>
 
-namespace afx
+namespace arc
 {
 
 struct iAsset

@@ -14,7 +14,7 @@
 #include <unordered_map>
 #include <string>
 
-namespace afx
+namespace arc
 {
 
 class ILowLevelGraphics : public arx::registry<ILowLevelGraphics>

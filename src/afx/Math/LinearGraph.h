@@ -4,7 +4,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-namespace afx
+namespace arc
 {
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -57,7 +57,7 @@ private:
 ///////////////////////////////////////////////////////////////////////////////////////
 
 template<typename _Ty>
-inline afx::LinearGraph<_Ty>::LinearGraph( const std::vector<GraphPoint<_Ty>>& _points )
+inline arc::LinearGraph<_Ty>::LinearGraph( const std::vector<GraphPoint<_Ty>>& _points )
 {
 	m_linearEquations.resize( _points.size() );
 
@@ -71,7 +71,7 @@ inline afx::LinearGraph<_Ty>::LinearGraph( const std::vector<GraphPoint<_Ty>>& _
 }
 
 template<typename _Ty>
-inline _Ty afx::LinearGraph<_Ty>::getValue( const _Ty& _x )
+inline _Ty arc::LinearGraph<_Ty>::getValue( const _Ty& _x )
 {
 	for ( size_t i = 0; i < m_linearEquations.size(); i++ )
 	{

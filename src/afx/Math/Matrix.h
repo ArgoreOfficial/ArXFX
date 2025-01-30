@@ -9,7 +9,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-namespace afx {
+namespace arc {
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -199,7 +199,7 @@ Matrix<_Ty, _Cols, _Rows> transpose( const Matrix<_Ty, _Rows, _Cols>& _m )
 }
 
 template<typename _Ty>
-Matrix<_Ty, 4, 4> translate( const Matrix<_Ty, 4, 4>& _m, const afx::Vector3<_Ty>& _pos )
+Matrix<_Ty, 4, 4> translate( const Matrix<_Ty, 4, 4>& _m, const arc::Vector3<_Ty>& _pos )
 {
 	Matrix<_Ty, 4, 4> mat( _Ty( 1 ) );
 
@@ -209,7 +209,7 @@ Matrix<_Ty, 4, 4> translate( const Matrix<_Ty, 4, 4>& _m, const afx::Vector3<_Ty
 }
 
 template<typename _Ty>
-Matrix<_Ty, 4, 4> scale( const Matrix<_Ty, 4, 4>& _m, const afx::Vector3<_Ty>& _scale )
+Matrix<_Ty, 4, 4> scale( const Matrix<_Ty, 4, 4>& _m, const arc::Vector3<_Ty>& _scale )
 {
 	Matrix<_Ty, 4, 4> mat( 1.0 );
 

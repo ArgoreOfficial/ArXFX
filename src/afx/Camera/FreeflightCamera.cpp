@@ -9,7 +9,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-afx::FreeflightCamera::FreeflightCamera( CameraType _type, float _fov, float _near, float _far ) :
+arc::FreeflightCamera::FreeflightCamera( CameraType _type, float _fov, float _near, float _far ) :
 	iCamera( _type, _fov, _near, _far )
 {
 
@@ -17,7 +17,7 @@ afx::FreeflightCamera::FreeflightCamera( CameraType _type, float _fov, float _ne
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-void afx::FreeflightCamera::onCreate()
+void arc::FreeflightCamera::onCreate()
 {
 	//m_inputListener.hook();
 	//m_mouseListener.hook();
@@ -25,7 +25,7 @@ void afx::FreeflightCamera::onCreate()
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-void afx::FreeflightCamera::handleInput()
+void arc::FreeflightCamera::handleInput()
 {
 	//
 	//sMouseEvent mouseEvent;
@@ -68,7 +68,7 @@ void afx::FreeflightCamera::handleInput()
 	//}
 }
 
-void afx::FreeflightCamera::update( double _delta_time )
+void arc::FreeflightCamera::update( double _delta_time )
 {
 	handleInput();
 
