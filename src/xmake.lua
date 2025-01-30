@@ -9,5 +9,6 @@ target "ArXFX"
     add_includedirs( "../ArX/include" )
     add_includedirs( "./" )
 
-    target_platform()   
+    config_platform()
 target_end()
+

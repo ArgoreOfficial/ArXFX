@@ -7,17 +7,19 @@ set_version( "0.0.1" )
 set_symbols "debug"
 set_optimize "none"
 
--- add_rules("plugin.vsxmake.autoupdate")
-
 if is_mode( "Package" ) then
     set_runtimes "MT"
 else
     set_runtimes "MTd"
 end
 
-set_allowedarchs( "x64", "x86", "x86_64", "psvita", "citra" )
+set_allowedarchs( "x64",     "psp2", "arm_3ds" )
+set_allowedplats( "windows", "psp2", "3ds" )
 
-includes( "platform/platforms.lua" )
-load_platform()
+includes "xmake/platforms.lua"
+init_platform()
+
+set_targetdir "bin/$(plat)/$(mode)/"
+set_objectdir "build/obj/"
 
 includes( "src/xmake.lua" )

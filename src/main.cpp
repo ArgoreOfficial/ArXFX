@@ -1,11 +1,11 @@
 #include <stdio.h>
 
-#ifdef AFX_ARCH_X64
+#ifdef AFX_PLATFORM_WINDOWS
 #define GLFW_INCLUDE_NONE
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
-#elif defined(AFX_ARCH_CITRA)
+#elif defined(AFX_PLATFORM_3DS)
 #include <3ds.h>
 #include <citro3d.h>
 #endif
@@ -121,7 +121,7 @@ T swap_endian( T u )
 
 	return dest.u;
 }
-#ifdef AFX_ARCH_CITRA
+#ifdef AFX_PLATFORM_3DS
 #define CLEAR_COLOR 0x68B0D8FF
 
 #define DISPLAY_TRANSFER_FLAGS \
@@ -162,9 +162,9 @@ int main()
 		return 1;
 
 	uint32_t frameNumber = 0;
-#ifdef AFX_ARCH_X64
+#ifdef AFX_PLATFORM_WINDOWS
 	g_graphics = afx::ILowLevelGraphics::alloc( "OpenGL" );
-#elif defined( AFX_ARCH_CITRA )
+#elif defined( AFX_PLATFORM_3DS )
 	
 	// https://stackoverflow.com/questions/60794102/why-is-an-inline-static-variable-of-a-template-class-not-initialized
 	g_graphics = new afx::CitraGraphics();
@@ -177,7 +177,7 @@ int main()
 
 	printf( "Renderer: %s\n", g_graphics->name().c_str() );
 
-#ifdef AFX_ARCH_X64
+#ifdef AFX_PLATFORM_WINDOWS
 	afx::CmdBuffer* cmdBuffer = g_graphics->createCmdBuffer();
 
 
@@ -238,7 +238,7 @@ int main()
 	}
 
 	deinitWindow();
-#elif defined( AFX_ARCH_CITRA )
+#elif defined( AFX_PLATFORM_3DS )
 
 
 	printf( "test\n" );
@@ -288,7 +288,7 @@ int main()
 
 int initWindow()
 {
-#ifdef AFX_ARCH_X64
+#ifdef AFX_PLATFORM_WINDOWS
 	if ( !glfwInit() )
 		return 0;
 
@@ -310,7 +310,7 @@ int initWindow()
 	SetWindowDisplayAffinity( hWnd, WDA_NONE );
 
 	glfwSwapInterval( 1 );
-#elif defined( AFX_ARCH_CITRA )
+#elif defined( AFX_PLATFORM_3DS )
 	return 1;
 #else
 	return 0;
