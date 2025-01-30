@@ -55,7 +55,8 @@ function config_platform()
     
     after_build(function( _target )
         local config = import( "core.project.config" )
-
+        local option = import( "core.base.option" )
+        
         if option.get("verbose") then
             print( "after_build", config.arch() )
         end
