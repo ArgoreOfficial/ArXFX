@@ -26,8 +26,8 @@ public:
 
 	enum CameraType
 	{
-		WV_CAMERA_TYPE_PERSPECTIVE,
-		WV_CAMERA_TYPE_ORTHOGRAPHIC
+		PERSPECTIVE,
+		ORTHOGRAPHIC
 	};
 
 	iCamera( CameraType _type, float _fov = 60.0f, float _near = 0.01f, float _far = 10000.0f );
@@ -49,6 +49,9 @@ public:
 
 	float fov = 60.0f;
 
+	float width = 1;
+	float height = 1;
+
 ///////////////////////////////////////////////////////////////////////////////////////
 
 protected:
@@ -63,11 +66,8 @@ protected:
 	float m_near = 0.01f;
 	float m_far = 100.0f;
 
-	float m_width = 1;
-	float m_height = 1;
-
 	Transformf m_transform;
-	CameraType m_type = WV_CAMERA_TYPE_PERSPECTIVE;
+	CameraType m_type = PERSPECTIVE;
 };
 
 }

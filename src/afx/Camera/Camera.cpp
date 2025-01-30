@@ -53,8 +53,8 @@ arc::Matrix4x4f arc::iCamera::getProjectionMatrix( void )
 {
 	switch( m_type )
 	{
-	case WV_CAMERA_TYPE_PERSPECTIVE:  return getPerspectiveMatrix (); break;
-	case WV_CAMERA_TYPE_ORTHOGRAPHIC: return getOrthographicMatrix(); break;
+	case PERSPECTIVE:  return getPerspectiveMatrix (); break;
+	case ORTHOGRAPHIC: return getOrthographicMatrix(); break;
 	}
 
 	return Matrix4x4f{ 1.0f };
@@ -64,7 +64,7 @@ arc::Matrix4x4f arc::iCamera::getProjectionMatrix( void )
 
 arc::Matrix4x4f arc::iCamera::getPerspectiveMatrix()
 {
-	float aspect = m_width / m_height;
+	float aspect = width / height;
 	return MatrixUtil::perspective( 
 		aspect, 
 		Math::radians( fov ), 
@@ -77,8 +77,8 @@ arc::Matrix4x4f arc::iCamera::getPerspectiveMatrix()
 arc::Matrix4x4f arc::iCamera::getOrthographicMatrix()
 {
 	return MatrixUtil::orthographic( 
-		m_width  / 2.0f, 
-		m_height / 2.0f, 
+		width  / 2.0f, 
+		height / 2.0f, 
 		-1000.0f, 1000.0f 
 	);
 }

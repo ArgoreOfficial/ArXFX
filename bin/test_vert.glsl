@@ -1,12 +1,5 @@
 #version 430 core
 
-struct ScreenData
-{
-    //mat4x4 proj;
-    int width;
-    int height;
-};
-
 struct Vertex
 {
 	vec4 pos;
@@ -18,7 +11,7 @@ layout(binding = 0, std430) buffer ssbo2 {
 };
 
 layout(binding = 1, std430) buffer ssbo1 {
-    ScreenData screenData;
+    mat4x4 viewProj;
 };
 
 out gl_PerVertex
@@ -32,6 +25,6 @@ void main()
 {
     Vertex vert = vertexBuffer[ gl_VertexID ];
     
-    gl_Position = vec4( vert.pos.xyz, 1.0 );
+    gl_Position = viewProj * vec4( vert.pos.xyz, 1.0 );
     Color = vert.col;
 }

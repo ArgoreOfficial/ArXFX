@@ -15,7 +15,8 @@
 
 #include <afx/Managers/ResourceManager.h>
 
-
+#include <afx/Camera/FreeflightCamera.h>
+#include <afx/Math/Matrix.h>
 
 struct Vertex
 {
@@ -32,8 +33,7 @@ struct Vertex
 
 struct ScreenData
 {
-	int width;
-	int height;
+	arc::Matrix4x4f viewProjectionMatrix;
 };
 
 #ifdef AFX_SUPPORT_GLFW
@@ -210,19 +210,39 @@ int main()
 	g_graphics->bindBufferIndex( vb, 0 );
 	g_graphics->bindBufferIndex( screenDataBuffer, 1 );
 
+	arc::FreeflightCamera camera( arc::iCamera::CameraType::PERSPECTIVE );
+	
 	while ( !glfwWindowShouldClose( window ) )
 	{
 		// update screen data buffer
-		glfwGetWindowSize( window, &screenData.width, &screenData.height );
+		float flash = fabs( sin( frameNumber / 60.0f ) );
+		float flash1 = sin( frameNumber / 60.0f );
+		float flash2 = fabs( sin( frameNumber / 120.0f ) );
+		float flash3 = sin( frameNumber / 240.0f );
 
+		int width, height;
+		glfwGetWindowSize( window, &width, &height );
+		{
+			camera.width  = width;
+			camera.height = height;
+		
+			camera.getTransform().position = { flash3 * 1.0f, 0.0f, flash2 * 5.0f + 1.0f };
+			camera.getTransform().rotation = { flash1 * 14.0f, 0.0f, 0.0f };
+			
+			camera.update( 1.0 / 60.0 );
+
+			arc::Matrix4x4f view = camera.getViewMatrix();
+			arc::Matrix4x4f proj = camera.getProjectionMatrix();
+			screenData.viewProjectionMatrix = view * proj;
+		}
+		
 		g_graphics->bufferSubData( screenDataBuffer, &screenData, sizeof( ScreenData ), 0 );
 
 		arc::Image m{};
 		g_graphics->_cmdBegin( *cmdBuffer );
 		
-		g_graphics->_cmdViewport( *cmdBuffer, 0, 0, screenData.width, screenData.height );
+		g_graphics->_cmdViewport( *cmdBuffer, 0, 0, width, height );
 
-		float flash = fabs( sin( frameNumber / 60.0f ) );
 		g_graphics->_cmdImageClear( *cmdBuffer, m, flash, 0.0f, flash, 1.0f );
 
 		g_graphics->_cmdEnd( *cmdBuffer );
