@@ -20,7 +20,7 @@ class iLowLevelGraphics;
 class iCamera
 {
 
-//WV_DECLARE_INTERFACE( iCamera )
+//ARC_DECLARE_INTERFACE( iCamera )
 
 public:
 

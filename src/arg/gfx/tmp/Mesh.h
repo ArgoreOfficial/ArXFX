@@ -35,8 +35,8 @@ namespace arc
 
 	enum eMeshDrawType
 	{
-		WV_MESH_DRAW_TYPE_VERTICES,
-		WV_MESH_DRAW_TYPE_INDICES
+		ARC_MESH_DRAW_TYPE_VERTICES,
+		ARC_MESH_DRAW_TYPE_INDICES
 	};
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -72,7 +72,7 @@ namespace arc
 		int32_t baseIndex  = 0;
 		int32_t numIndices = 0;
 
-		eMeshDrawType drawType = WV_MESH_DRAW_TYPE_VERTICES;
+		eMeshDrawType drawType = ARC_MESH_DRAW_TYPE_VERTICES;
 		
 		cMaterial* pMaterial = nullptr;
 

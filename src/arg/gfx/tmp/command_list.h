@@ -7,7 +7,7 @@
 
 namespace arc
 {
-	WV_DEFINE_ID( DrawListID );
+	ARC_DEFINE_ID( DrawListID );
 
 	struct sDrawIndexedIndirectCommand
 	{

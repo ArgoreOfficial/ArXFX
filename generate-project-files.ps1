@@ -4,8 +4,8 @@ if( Test-Path xmake/psp2/xmake.lua ) {
     # $platforms += ",psp2"
 }
 
-if( (Test-Path xmake/arm_3ds/xmake.lua ) -and (Test-Path env:DEVKITARM) ) {
-    # $platforms += ",arm_3ds"
+if( (Test-Path xmake/arm_3ds ) -and (Test-Path env:DEVKITARM) ) {
+    $platforms += ",arm_3ds"
 }
 
 & "xmake" f -c --vs=2022

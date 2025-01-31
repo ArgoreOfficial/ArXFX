@@ -1,6 +1,6 @@
 #include "OpenGLGraphics.h"
 
-#ifdef AFX_SUPPORT_OPENGL
+#ifdef ARC_SUPPORT_OPENGL
 
 #include <stdio.h>
 #include <string.h>

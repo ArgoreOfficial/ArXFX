@@ -1,4 +1,4 @@
-#ifdef AFX_PLATFORM_3DS
+#ifdef ARC_PLATFORM_3DS
 
 #include "CitraGraphics.h"
 

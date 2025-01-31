@@ -4,32 +4,32 @@
 
 enum TextureChannels
 {
-	WV_TEXTURE_CHANNELS_R = 1,
-	WV_TEXTURE_CHANNELS_RG,
-	WV_TEXTURE_CHANNELS_RGB,
-	WV_TEXTURE_CHANNELS_RGBA
+	ARC_TEXTURE_CHANNELS_R = 1,
+	ARC_TEXTURE_CHANNELS_RG,
+	ARC_TEXTURE_CHANNELS_RGB,
+	ARC_TEXTURE_CHANNELS_RGBA
 };
 
 enum eTextureFormat
 {
-	WV_TEXTURE_FORMAT_BYTE,
-	WV_TEXTURE_FORMAT_INT,
-	WV_TEXTURE_FORMAT_FLOAT
+	ARC_TEXTURE_FORMAT_BYTE,
+	ARC_TEXTURE_FORMAT_INT,
+	ARC_TEXTURE_FORMAT_FLOAT
 };
 
 enum eTextureFiltering
 {
-	WV_TEXTURE_FILTER_NEAREST,
-	WV_TEXTURE_FILTER_LINEAR,
+	ARC_TEXTURE_FILTER_NEAREST,
+	ARC_TEXTURE_FILTER_LINEAR,
 };
 
 class cTextureResource;
 
 struct ArgGfxTextureDesc
 {
-	TextureChannels   channels  = WV_TEXTURE_CHANNELS_RGB;
-	eTextureFormat    format    = WV_TEXTURE_FORMAT_BYTE;
-	eTextureFiltering filtering = WV_TEXTURE_FILTER_NEAREST;
+	TextureChannels   channels  = ARC_TEXTURE_CHANNELS_RGB;
+	eTextureFormat    format    = ARC_TEXTURE_FORMAT_BYTE;
+	eTextureFiltering filtering = ARC_TEXTURE_FILTER_NEAREST;
 	int width = 0;
 	int height = 0;
 	int numChannels = 0;

@@ -33,7 +33,7 @@ void arc::FreeflightCamera::handleInput()
 	//{
 	//	afx::iDeviceContext* ctx = afx::cEngine::get()->context;
 
-	//	if ( mouseEvent.buttondown && mouseEvent.button == sMouseEvent::WV_MOUSE_BUTTON_RIGHT )
+	//	if ( mouseEvent.buttondown && mouseEvent.button == sMouseEvent::ARC_MOUSE_BUTTON_RIGHT )
 	//	{
 	//		m_freecam_enabled = !m_freecam_enabled;
 	//		ctx->setMouseLock( m_freecam_enabled );
@@ -52,14 +52,14 @@ void arc::FreeflightCamera::handleInput()
 	//	{
 	//		switch ( inputEvent.key )
 	//		{
-	//		case 'W' /* WV_KEY_W */: m_move.z += -button_delta; break;
-	//		case 'S' /* WV_KEY_S */: m_move.z +=  button_delta; break;
-	//		case 'A' /* WV_KEY_A */: m_move.x += -button_delta; break;
-	//		case 'D' /* WV_KEY_D */: m_move.x +=  button_delta; break;
-	//		case 'E' /* WV_KEY_E */: m_move.y +=  button_delta; break; // up
-	//		case 'Q' /* WV_KEY_Q */: m_move.y += -button_delta; break; // down
+	//		case 'W' /* ARC_KEY_W */: m_move.z += -button_delta; break;
+	//		case 'S' /* ARC_KEY_S */: m_move.z +=  button_delta; break;
+	//		case 'A' /* ARC_KEY_A */: m_move.x += -button_delta; break;
+	//		case 'D' /* ARC_KEY_D */: m_move.x +=  button_delta; break;
+	//		case 'E' /* ARC_KEY_E */: m_move.y +=  button_delta; break; // up
+	//		case 'Q' /* ARC_KEY_Q */: m_move.y += -button_delta; break; // down
 
-	//		case WV_KEY_LEFT_SHIFT:
+	//		case ARC_KEY_LEFT_SHIFT:
 	//			m_speed += button_delta * 1000.0f;
 	//			break;
 

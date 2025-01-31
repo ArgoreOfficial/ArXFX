@@ -19,8 +19,8 @@ arc::iCamera::iCamera( CameraType _type, float _fov, float _near, float _far ) :
 	sGPUBufferDesc ubDesc;
 	ubDesc.name  = "UbCameraData";
 	ubDesc.size  = sizeof( sUbCameraData );
-	ubDesc.type  = WV_BUFFER_TYPE_UNIFORM;
-	ubDesc.usage = WV_BUFFER_USAGE_DYNAMIC_DRAW;
+	ubDesc.type  = ARC_BUFFER_TYPE_UNIFORM;
+	ubDesc.usage = ARC_BUFFER_USAGE_DYNAMIC_DRAW;
 
 	m_uniformBufferID = pGraphics->createGPUBuffer( 0, &ubDesc );
 	*/

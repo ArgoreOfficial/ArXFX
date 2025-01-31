@@ -1,12 +1,4 @@
-function on_config( _target )
-    local root = "./"
-
-    _target:set( "languages", "c17", "cxx20" )
-    _target:add( "defines", "AFX_C17", "AFX_CPP20" )
-    _target:add( "defines", "AFX_PLATFORM_WINDOWS" )
-
-    _target:add( "defines", "AFX_SUPPORT_OPENGL", "AFX_SUPPORT_OPENGLES" )
-
+function on_load( _target )
     -- add supports
     --_target:add( "deps", "GLAD" )
     _target:add( "files", "./libs/**.c" )
@@ -17,7 +9,7 @@ function on_config( _target )
 	_target:set( "objectdir", "./build/obj/Windows/$(mode)" )
 
     if _target:is_arch( "x64" ) then
-        import( root .. "x64.modules.support.glfw" )( _target )
+        import( "support.glfw" )( _target )
 
         -- icon resource
         _target:add( "files", "$(projectdir)\\resources\\resource.rc" )
@@ -31,7 +23,5 @@ function on_config( _target )
 
     end
 
-    import( root.."x64.modules.support.imgui" )( _target ) 
-    --import(root.."support.libsdl")(_target) 
-    --import(root.."support.joltphysics")(_target) 
+    import( "support.imgui" )( _target )
 end

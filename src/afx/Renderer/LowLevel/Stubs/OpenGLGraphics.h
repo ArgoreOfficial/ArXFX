@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef AFX_SUPPORT_OPENGL
+#ifdef ARC_SUPPORT_OPENGL
 
 #include <afx/Renderer/LowLevel/LowLevelGraphics.h>
 #include <arx/registry.hpp>

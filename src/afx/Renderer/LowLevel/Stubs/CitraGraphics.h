@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef AFX_PLATFORM_3DS
+#ifdef ARC_PLATFORM_3DS
 
 #include <afx/Renderer/LowLevel/LowLevelGraphics.h>
 #include <arx/registry.hpp>

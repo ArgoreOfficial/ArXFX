@@ -55,22 +55,22 @@ public:
 
 	void setRow( const size_t& _r, std::array<_Ty, _Cols> _v );
 
-#ifndef AFX_PLATFORM_PSVITA
+#ifndef ARC_CPP20
 	template<typename = if_4x4::type>
 #endif
 	Vector4<_Ty>& right( void ) { return *reinterpret_cast<Vector4<_Ty>*>( m[ 0 ] ); }
 
-#ifndef AFX_PLATFORM_PSVITA
+#ifndef ARC_CPP20
 	template<typename = if_4x4::type>
 #endif
 	Vector4<_Ty>& up( void ) { return *reinterpret_cast<Vector4<_Ty>*>( m[ 1 ] ); }
 
-#ifndef AFX_PLATFORM_PSVITA
+#ifndef ARC_CPP20
 	template<typename = if_4x4::type>
 #endif
 	Vector4<_Ty>& at( void ) { return *reinterpret_cast<Vector4<_Ty>*>( m[ 2 ] ); }
 
-#ifndef AFX_PLATFORM_PSVITA
+#ifndef ARC_CPP20
 	template<typename = if_4x4::type>
 #endif
 	Vector4<_Ty>& pos( void ) { return *reinterpret_cast<Vector4<_Ty>*>( m[ 3 ] ); }

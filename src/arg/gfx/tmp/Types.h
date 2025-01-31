@@ -8,14 +8,14 @@
 
 namespace arc
 {
-	WV_DEFINE_ID( PipelineID );
-	WV_DEFINE_ID( RenderTargetID );
-	WV_DEFINE_ID( ProgramID );
-	WV_DEFINE_ID( BufferID );
-	WV_DEFINE_ID( TextureID );
-	WV_DEFINE_ID( MeshID );
+	ARC_DEFINE_ID( PipelineID );
+	ARC_DEFINE_ID( RenderTargetID );
+	ARC_DEFINE_ID( ProgramID );
+	ARC_DEFINE_ID( BufferID );
+	ARC_DEFINE_ID( TextureID );
+	ARC_DEFINE_ID( MeshID );
 
-	WV_DEFINE_ID( BufferBindingIndex );
+	ARC_DEFINE_ID( BufferBindingIndex );
 
 	struct sMeshDesc;
 	struct sMeshNode;
@@ -45,9 +45,9 @@ namespace arc
 
 	enum eFillMode
 	{
-		WV_FILL_MODE_SOLID,
-		WV_FILL_MODE_WIREFRAME,
-		WV_FILL_MODE_POINTS
+		ARC_FILL_MODE_SOLID,
+		ARC_FILL_MODE_WIREFRAME,
+		ARC_FILL_MODE_POINTS
 	};
 
 }

@@ -1,11 +1,11 @@
 #include <stdio.h>
 
-#ifdef AFX_PLATFORM_WINDOWS
+#ifdef ARC_PLATFORM_WINDOWS
 #define GLFW_INCLUDE_NONE
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
-#elif defined(AFX_PLATFORM_3DS)
+#elif defined(ARC_PLATFORM_3DS)
 #include <3ds.h>
 #include <citro3d.h>
 #endif
@@ -36,7 +36,7 @@ struct ScreenData
 	arc::Matrix4x4f viewProjectionMatrix;
 };
 
-#ifdef AFX_SUPPORT_GLFW
+#ifdef ARC_SUPPORT_GLFW
 GLFWwindow* window;
 #endif
 
@@ -121,7 +121,7 @@ _Ty swap_endian( _Ty u )
 
 	return dest.u;
 }
-#ifdef AFX_PLATFORM_3DS
+#ifdef ARC_PLATFORM_3DS
 #define CLEAR_COLOR 0x68B0D8FF
 
 #define DISPLAY_TRANSFER_FLAGS \
@@ -162,9 +162,9 @@ int main()
 		return 1;
 
 	uint32_t frameNumber = 0;
-#ifdef AFX_PLATFORM_WINDOWS
+#ifdef ARC_PLATFORM_WINDOWS
 	g_graphics = arc::ILowLevelGraphics::alloc( "OpenGL" );
-#elif defined( AFX_PLATFORM_3DS )
+#elif defined( ARC_PLATFORM_3DS )
 	
 	// https://stackoverflow.com/questions/60794102/why-is-an-inline-static-variable-of-a-template-class-not-initialized
 	g_graphics = new arc::CitraGraphics();
@@ -177,7 +177,7 @@ int main()
 
 	printf( "Renderer: %s\n", g_graphics->name().c_str() );
 
-#ifdef AFX_PLATFORM_WINDOWS
+#ifdef ARC_PLATFORM_WINDOWS
 	arc::CmdBuffer* cmdBuffer = g_graphics->createCmdBuffer();
 
 
@@ -258,7 +258,7 @@ int main()
 	}
 
 	deinitWindow();
-#elif defined( AFX_PLATFORM_3DS )
+#elif defined( ARC_PLATFORM_3DS )
 
 
 	printf( "test\n" );
@@ -308,7 +308,7 @@ int main()
 
 int initWindow()
 {
-#ifdef AFX_PLATFORM_WINDOWS
+#ifdef ARC_PLATFORM_WINDOWS
 	if ( !glfwInit() )
 		return 0;
 
@@ -330,7 +330,7 @@ int initWindow()
 	SetWindowDisplayAffinity( hWnd, WDA_NONE );
 
 	glfwSwapInterval( 1 );
-#elif defined( AFX_PLATFORM_3DS )
+#elif defined( ARC_PLATFORM_3DS )
 	return 1;
 #else
 	return 0;
@@ -343,7 +343,7 @@ int initWindow()
 
 void deinitWindow()
 {
-#ifdef AFX_SUPPORT_GLFW
+#ifdef ARC_SUPPORT_GLFW
 	glfwDestroyWindow( window );
 	glfwTerminate();
 #endif

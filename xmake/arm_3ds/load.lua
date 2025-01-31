@@ -1,17 +1,15 @@
-
+includes "toolchains/arm-none-eabi.lua" -- 3ds toolchain
 
 rule("3ds.picasso")
     set_extensions( ".pica" )
     
     on_build_file(function (target, sourcefile, opt)
         import("core.project.depend")
-        local penv = import("./platform.env")
-        local DEVKITPRO = penv.get_safe_env("DEVKITPRO")
-        local DEVKITARM = penv.get_safe_env("DEVKITARM")
         
         -- make sure build directory exists
         os.mkdir(target:targetdir())
         
+        local DEVKITARM = "C:/devkitPro/devkitARM" -- os.getenv( "DEVKITARM" )
         local filename = path.basename(sourcefile)
         local shbinFile = "build/" .. filename .. ".shbin"
         local headerFile = "include/" .. filename .. ".h"
@@ -38,6 +36,31 @@ rule("3ds.picasso")
     end)
 rule_end()
 
-add_platformdirs("./platforms/")
-add_toolchaindirs("./toolchains/")
-add_moduledirs("./modules/")
+rule("3ds.package")
+    after_build(function(target)
+        local DEVKITARM = "C:/devkitPro/devkitARM" -- os.getenv( "DEVKITARM" )
+        os.vrunv(DEVKITARM .."/bin/arm-none-eabi-gcc-nm", { 
+            "-CSn", target:targetdir() .. "/3DS.elf"
+            }, {stdout = target:targetdir() .. "/3DS.lst"} )
+
+        os.vrunv("C:/devkitPro/tools/bin/3dsxtool", { 
+            target:targetdir() .. "/3DS.elf",
+            target:targetdir() .. "/3DS.3dsx",
+            -- "--smdh=/d/dev/3ds/3ds.smdh"
+            })
+    end)
+rule_end()
+
+function load()
+    set_languages( "c17", "cxx17" )
+    add_defines( "ARC_C17", "ARC_CPP17" )
+    add_defines( "ARC_PLATFORM_3DS" )
+
+    set_toolchains( "arm-none-eabi" )
+end
+
+PLATFORMS[ "arm_3ds" ] = { 
+    plat="3ds",
+    arch={ "arm_3ds", "arm_3ds"  },
+    load=load
+}
